@@ -107,7 +107,9 @@ make_surv_cc <- function(trial, treat, surv_cond_chars) {
                     ggsurvplot()
                 })
   
-  #coding? explain
+  
+  #I didn't quite understand this chunk and the next chunk of codes ( lines 98 - 132 ). 
+ 
   
   
   
