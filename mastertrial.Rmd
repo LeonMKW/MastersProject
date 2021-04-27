@@ -42,7 +42,7 @@ The __Rlistdown__ package highly integrates a bundle of computational components
 
 
 ```{css, echo = FALSE}
-<center> <h1>2 Basic Overview</h1> </center>
+<center> <h1>2 Background</h1> </center>
 ```
 
 
@@ -77,15 +77,21 @@ class(comp)
 
 ## 2.1 Creating the document using Package Listdown
 
-The list containing the plots is now saved as a R object named _comp-comp.rds_.
+The list containing the plots is now saved as a R object named _comp-comp.rds_. From here, the document goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. Then deciding how the elements in the list will be presented in the document. 
 
 Now we load in the listdown package to make a document. We define how the list of objects will be loaded into R. The header for the markdown file is also embedded, shown in the example named _doc_. 
+
 ```{r}
 library(listdown)
 
 ld <- listdown(load_cc_expr = readRDS("comp-comp.rds"),
 package = "ggplot2")
+```
 
+
+
+
+```{r}
 anscombeexample <- c(
  as.character(ld_rmarkdown_header("Anscombe's Quartet",
 author = "Francis Anscombe",
@@ -101,6 +107,11 @@ writeLines(anscombeexample, "anscome-example.rmd")
 render("anscome-example.rmd",html_document())
 system("open anscome-example.html")
 ```
+
+
+
+
+
 
 
 #MoreComplicated example
