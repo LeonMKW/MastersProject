@@ -20,6 +20,7 @@ library(rmarkdown)
 library(plotly)
 library(gapminder)
 library(trelliscopejs)
+library(DT)
 ```
 
 
@@ -40,16 +41,16 @@ The __Rlistdown__ package highly integrates a bundle of computational components
 
 
 
+```{css, echo = FALSE}
+<center> <h1>2 Basic Overview</h1> </center>
+```
 
 
+Lets suppose the data analyzing part and all coding work has completed. The results of the analysis containing summary tables, data tables and plots which we referred to computational components, are collected into a list of objects. They are roughly in the order of which we would like to present them, the next thing is to present the components in a document like html. This is a typical order of a data analyzing work processes, but it is not definite. 
 
+Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is particularly important to centralize them. There are many advantages turning them in lists. Firstly, turning them into list of elements naturally provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components.  
 
-
-#2BasicOverview
-
-Lets suppose the data analyzing part of work is completed, results of the analysis contains summary tables, data tables, plots etc. Each one of the objects are stored as a list of which will be presented in order in a document like html.
-
-The data Anscombe Quartet is used in this example. Four scatter plot was saved as the markdown file named _computational components_, we can see the class of the object _comp_ is a list. 
+The data Anscombe Quartet from the __datasets__ package( R Core Team 2012) is used in this first example. Four scatter plot produced using __ggplot2__ was saved in the markdown file named _computational components_ as lists. They are named "Linear", "Non Linear", "Outlier Vertical" and " Outlier Horizontal", each contains their corresponding graphics. We can see the class of the R object _comp_ is a list. 
 ```{r}
 library(ggplot2)
 
@@ -73,7 +74,12 @@ class(comp)
 
 ```
 
-Now we load in the listdown package to make a document. We define how the list of objects will be loaded into R, along with the library required to do so. The header for the markdown file is also embedded, shown in the example named _doc_. 
+
+## 2.1 Creating the document using Package Listdown
+
+The list containing the plots is now saved as a R object named _comp-comp.rds_.
+
+Now we load in the listdown package to make a document. We define how the list of objects will be loaded into R. The header for the markdown file is also embedded, shown in the example named _doc_. 
 ```{r}
 library(listdown)
 

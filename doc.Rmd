@@ -1,0 +1,84 @@
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+library(gtsummary)
+library(flextable)
+library(DT)
+library(ggplot2)
+library(plotly)
+
+cc_list <- readRDS("surv-cc.rds")
+```
+
+# Table 1
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+cc_list$`Table 1`
+```
+
+# Survival Plots
+
+## Overall
+
+### plot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 6}
+cc_list$`Survival Plots`$Overall$plot
+```
+
+### data.survplot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Overall$data.survplot)
+```
+
+### data.survtable
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Overall$data.survtable)
+```
+
+## Stage
+
+### plot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 6}
+cc_list$`Survival Plots`$Stage$plot
+```
+
+### data.survplot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Stage$data.survplot)
+```
+
+### data.survtable
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Stage$data.survtable)
+```
+
+## Grade
+
+### plot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 6}
+cc_list$`Survival Plots`$Grade$plot
+```
+
+### data.survplot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Grade$data.survplot)
+```
+
+### data.survtable
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Grade$data.survtable)
+```
+
+# test
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+cc_list$test
+```
