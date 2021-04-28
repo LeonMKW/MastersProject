@@ -47,14 +47,23 @@ Before a highly informative presentation, multiple explanatory analyses are ofte
 
 The advantage of R markdown’s narrative feature can be demonstrated in multiple prospects. Firstly, R markdown is as its names implies, a Markdown mark-up language of R. By using combinations of codes and embedding symbols to control the formatting and layout of a R object file, users gets the desired final output document. All of these are easy to achieve without extensive skills in coding and consumes less time and effort to learn. Packages such as “bookdown” (Xie, 2016) demonstrates the easiness for users indenting to edit long narrative components in contrast of using another commonly-used markup language – Latex. While latex may be more expressive in terms of proficiency in terms of academical writing, the coding alike syntax required to produce documents takes a substantial amount of time and effort to learn and is relatively more complicated than R markdown’s syntax. 
 
+<<<<<<< HEAD
 On the other hand, statistical reports and presentations often contains numerous computational and narrative components. R markdown supports multiple file formats once a R object is completed and read for publishing. The function in R markdown for this objective is called “knit”. The process includes running all computational components, then formats the outputs along with the narrative components. 
 Each computational component starts with ```{}, with the language name between the curly brackets and ends with ```. During the knitting process, computation components along with their results are laid out precedingly. Each narrative component, which is so called ordinary text with out code is combined within the computational components, resulting in a desired file.  
 The final result is also customizable not only as in pdf or HTML format, but also includes editable formats such as Microsoft word documents. This conforms with the intention for a typical statistical report or presentation, that is, to make audience understand statistics with less to no statistical knowledge (Baumer, Cetinkaya-Rundel, Bray, Loi, and Horton, 2014).  R markdown fulfils this concept by offering modifiable documents for collaborators and other users to develop narrative components based on the statistical analysis results generated beforehand. 
 While PDF and Word formats are commonly used by researchers in the fields for their formatting specification, they do not provide a pragmatical solution for interactive plots and graphics. Compared to static graphics, interactive graphics are extremely powerful for explanatory analysis, and complements the visualization prospect of statistical visualizations (Theus & Urbanek, 2008). HTML, another format producible by R markdown, is often underestimated in its ability for interactive visualizations. R has numerous packages that supports interactive widgets which can by knitted and shown on HTML webpages. This paper will demonstrate how the interactive graphics can be implemented into HTML using package Listdown. 
+=======
+```{css, echo = FALSE}
+<center> <h1>2 Background</h1> </center>
+```
+>>>>>>> 4fe94c4ed74d6d7536bea441b3cc66bc341a055f
 
 
+Lets suppose the data analyzing part and all coding work has completed. The results of the analysis containing summary tables, data tables and plots which we referred to computational components, are collected into a list of objects. They are roughly in the order of which we would like to present them, the next thing is to present the components in a document like html. This is a typical order of a data analyzing work processes, but it is not definite. 
 
+Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is particularly important to centralize them. There are many advantages turning them in lists. Firstly, turning them into list of elements naturally provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components.  
 
+<<<<<<< HEAD
 
 R Listdown
 Nonetheless, the data cleaning and other processes iteratively repeats each time generating documents for presentation whenever knitr is used in a R markdown file. A R markdown file usually lacks semantic structure. When all computational components and narrative components are stored in one single file manually paragraphed by the author, extracting and editing components partially in a R markdown file often leads to increase of workloads after the changes are committed. 
@@ -83,6 +92,8 @@ Lets suppose the data analyzing part and all coding work has completed. The resu
 
 Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is particularly important to centralize them. There are many advantages turning them in lists. Firstly, turning them into list of elements naturally provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components.  
 
+=======
+>>>>>>> 4fe94c4ed74d6d7536bea441b3cc66bc341a055f
 The data Anscombe Quartet from the __datasets__ package( R Core Team 2012) is used in this first example. Four scatter plot produced using __ggplot2__ was saved in the markdown file named _computational components_ as lists. They are named "Linear", "Non Linear", "Outlier Vertical" and " Outlier Horizontal", each contains their corresponding graphics. We can see the class of the R object _comp_ is a list. 
 ```{r}
 library(ggplot2)
@@ -112,16 +123,28 @@ class(comp)
 
 The list containing the plots is now saved as a R object named _comp-comp.rds_. From here, the document goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. Then deciding how the elements in the list will be presented in the document. 
 
+<<<<<<< HEAD
+=======
+Now we load in the listdown package to make a document. We define how the list of objects will be loaded into R. The header for the markdown file is also embedded, shown in the example named _doc_. 
+
+>>>>>>> 4fe94c4ed74d6d7536bea441b3cc66bc341a055f
 ```{r}
 library(listdown)
 
 ld <- listdown(load_cc_expr = readRDS("comp-comp.rds"),
 package = "ggplot2")
 ```
+<<<<<<< HEAD
 
 The R object named __ld__ is now ready to create the document. To make the document more sufficient, the document is further processed with header. The listdown package has native support in R markdown and __workflowr__ as yml objects. All objects are part of the list in the document, and can be edited by using codes.
 
 
+=======
+
+
+
+
+>>>>>>> 4fe94c4ed74d6d7536bea441b3cc66bc341a055f
 ```{r}
 anscombeexample <- c(
  as.character(ld_rmarkdown_header("Anscombe's Quartet",
@@ -142,6 +165,11 @@ render("anscome-example.rmd",html_document())
 ```
 
 ## 2.2 Docorators for more complicated computational compontents
+
+
+
+
+
 
 
 
