@@ -1,0 +1,32 @@
+---
+title: Covid plots
+author: Leon
+date: '2021'
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(scales)
+
+cc_list <- readRDS("comp-comp_covid.rds")
+```
+
+# regions
+
+```{r}
+cc_list$regions
+```
+
+# p1
+
+```{r}
+cc_list$p1
+```
+
+# p2
+
+```{r}
+cc_list$p2
+```

@@ -1,0 +1,31 @@
+---
+title: covid-example
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(scales)
+library(plotly)
+
+cc_list <- readRDS("comp-comp_covid.rds")
+```
+
+# regions
+
+```{r}
+cc_list$regions
+```
+
+# p1
+
+```{r}
+plot_ly(cc_list$p1)
+```
+
+# p2
+
+```{r}
+plot_ly(cc_list$p2)
+```

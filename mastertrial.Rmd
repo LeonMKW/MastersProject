@@ -21,6 +21,8 @@ library(plotly)
 library(gapminder)
 library(trelliscopejs)
 library(DT)
+library(rmarkdown)
+library(knitr)
 ```
 
 
@@ -147,8 +149,73 @@ By calling the document name, we can see a glimpse of the document, the contents
 # Write the document.
 writeLines(anscombeexample, "anscome-example.rmd")
 render("anscome-example.rmd",html_document())
-# system("open anscome-example.html")
+#system("open anscome-example.html")
 ```
+
+## Covid regions example
+```{r}
+library(tidyverse)
+library(scales)
+#creating ld items
+
+computational_components_covid <- list( 
+  regions = read.csv("COVID-regions-2021.csv", 
+                    colClasses=c("character", "Date", rep("numeric", 2))),
+p1 = ggplot(regions, aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region)) + 
+  geom_area() + facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region") + scale_y_continuous(expand = rep(0,2),labels = label_comma()),
+
+p2 = ggplot(data = regions,
+       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point()
+)
+         
+#Save file to the disk
+ saveRDS(computational_components_covid, "comp-comp_covid.rds")
+ 
+comp_covid <- readRDS("comp-comp_covid.rds")
+class(comp_covid)
+#Making a listodnw object
+library(listdown)
+library(knitr)
+ld_new <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
+package = c("ggplot2", "tidyverse","scales"))
+
+covidexample <- c(
+ as.character(ld_rmarkdown_header("Covid plots",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_new))
+
+
+  writeLines(covidexample, "covid-example.Rmd")
+  render("covid-example.Rmd",html_document())
+  system("open covid-example.html")
+```
+
+## Covid with decorators
+```{r}
+#Add in data and decorators
+
+ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
+package = c("ggplot2", "tidyverse","scales", "plotly"),
+decorator = list(ggplot = plot_ly))
+
+
+coviddecoratorexample <- c(
+  as.character(ld_rmarkdown_header("covid-example")),
+          ld_make_chunks(ld_decorator))
+
+
+ writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
+  render("covid-decorator-example.Rmd",html_document())
+  system("open covid-decorator-example.html")
+```
+
+
+
+
+
+
+
 
 ## 2.2 Docorators for more complicated computational compontents
 
