@@ -13,10 +13,10 @@ library(scales)
 cc_list <- readRDS("comp-comp_covid.rds")
 ```
 
-# regions
+# Data
 
 ```{r}
-cc_list$regions
+cc_list$Data
 ```
 
 # p1

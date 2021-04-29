@@ -21,7 +21,6 @@ library(plotly)
 library(gapminder)
 library(trelliscopejs)
 library(DT)
-library(rmarkdown)
 library(knitr)
 ```
 
@@ -153,14 +152,19 @@ render("anscome-example.rmd",html_document())
 ```
 
 ## Covid regions example
+
+Now the data is not originally from a package, but a data set we choose. 
+
 ```{r}
 library(tidyverse)
 library(scales)
 #creating ld items
+regionsdf = read.csv("COVID-regions-2021.csv", 
+                    colClasses=c("character", "Date", rep("numeric", 2)))
+
 
 computational_components_covid <- list( 
-  regions = read.csv("COVID-regions-2021.csv", 
-                    colClasses=c("character", "Date", rep("numeric", 2))),
+  Data = regionsdf,
 p1 = ggplot(regions, aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region)) + 
   geom_area() + facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region") + scale_y_continuous(expand = rep(0,2),labels = label_comma()),
 
@@ -185,7 +189,9 @@ author = "Leon",
  date = "2021")),
 ld_make_chunks(ld_new))
 
-
+library(DT)
+library(rmarkdown)
+library(knitr)
   writeLines(covidexample, "covid-example.Rmd")
   render("covid-example.Rmd",html_document())
   system("open covid-example.html")
