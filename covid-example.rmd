@@ -19,14 +19,14 @@ cc_list <- readRDS("comp-comp_covid.rds")
 cc_list$Data
 ```
 
-# p1
+# Case by region
 
 ```{r}
-cc_list$p1
+cc_list$`Case by region`
 ```
 
-# p2
+# Cases against Death
 
 ```{r}
-cc_list$p2
+cc_list$`Cases against Death`
 ```

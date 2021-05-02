@@ -18,14 +18,14 @@ cc_list <- readRDS("comp-comp_covid.rds")
 cc_list$Data
 ```
 
-# p1
+# Case by region
 
 ```{r}
-plot_ly(cc_list$p1)
+ggplotly(cc_list$`Case by region`)
 ```
 
-# p2
+# Cases against Death
 
 ```{r}
-plot_ly(cc_list$p2)
+ggplotly(cc_list$`Cases against Death`)
 ```

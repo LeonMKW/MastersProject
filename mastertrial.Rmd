@@ -49,9 +49,12 @@ Before a highly informative presentation, multiple explanatory analyses are ofte
 The advantage of R markdown’s narrative feature can be demonstrated in multiple prospects. Firstly, R markdown is as its names implies, a Markdown mark-up language of R. By using combinations of codes and embedding symbols to control the formatting and layout of a R object file, users gets the desired final output document. All of these are easy to achieve without extensive skills in coding and consumes less time and effort to learn. Packages such as “bookdown” (Xie, 2016) demonstrates the easiness for users indenting to edit long narrative components in contrast of using another commonly-used markup language – Latex. While latex may be more expressive in terms of proficiency in terms of academical writing, the coding alike syntax required to produce documents takes a substantial amount of time and effort to learn and is relatively more complicated than R markdown’s syntax. 
 
 On the other hand, statistical reports and presentations often contains numerous computational and narrative components. R markdown supports multiple file formats once a R object is completed and read for publishing. The function in R markdown for this objective is called “knit”. The process includes running all computational components, then formats the outputs along with the narrative components. 
+
 Each computational component starts with ```{}, with the language name between the curly brackets and ends with ```. During the knitting process, computation components along with their results are laid out precedingly. Each narrative component, which is so called ordinary text with out code is combined within the computational components, resulting in a desired file.  
+
 The final result is also customizable not only as in pdf or HTML format, but also includes editable formats such as Microsoft word documents. This conforms with the intention for a typical statistical report or presentation, that is, to make audience understand statistics with less to no statistical knowledge (Baumer, Cetinkaya-Rundel, Bray, Loi, and Horton, 2014).  R markdown fulfils this concept by offering modifiable documents for collaborators and other users to develop narrative components based on the statistical analysis results generated beforehand. 
-While PDF and Word formats are commonly used by researchers in the fields for their formatting specification, they do not provide a pragmatical solution for interactive plots and graphics. Compared to static graphics, interactive graphics are extremely powerful for explanatory analysis, and complements the visualization prospect of statistical visualizations (Theus & Urbanek, 2008). HTML, another format producible by R markdown, is often underestimated in its ability for interactive visualizations. R has numerous packages that supports interactive widgets which can by knitted and shown on HTML webpages. This paper will demonstrate how the interactive graphics can be implemented into HTML using package Listdown. 
+
+While PDF and Word formats are commonly used by researchers in the fields for their formatting specification, they do not provide a pragmatical solution for interactive plots and graphics. Compared to static graphics, interactive graphics are extremely powerful for explanatory analysis, and complements the visualization prospect of statistical visualizations (Theus & Urbanek, 2008). Interactive graphics not only enhances the overall aesthetics of a visualization component, but could also reveal un-spotted insights. The findings may change conclusions and affect the narrative components, further changing the conclusion of a work (Healy,2018). Moreover, interactive visualization potentially provides a solution to readers with visual perception diseases such as color blindness (Wilke,2019). HTML, another format producible by R markdown, is often underestimated in its ability for interactive visualization and animations. R has a variety of packages that supports interactive widgets which can by knitted and shown on HTML webpages. Despite the numerous packages and functions supported by R to create an interactive visualization, most of them requires an increase of workload in the computational components. A optimal solution of merging computational components that produce interactive graphics and the associated narrative components can be achieved by using the R list down package (Kane,Jiang and Urbanek, 2020). This paper will demonstrate firstly, workflow on how the listdown package generates documents. This is a background summoning the previous work done by the package's developers (Kane,Jiang and Urbanek, 2020). Chapter 3 uses example to show how the interactive graphics can be implemented into HTML using package Listdown's decorator function.
 
 ```{css, echo = FALSE}
 <center> <h1>2 Background</h1> </center>
@@ -90,86 +93,32 @@ Lets suppose the data analyzing part and all coding work has completed. The resu
 Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is particularly important to centralize them. There are many advantages turning them in lists. Firstly, turning them into list of elements naturally provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components.  
 
 
-The data Anscombe Quartet from the __datasets__ package( R Core Team 2012) is used in this first example. Four scatter plot produced using __ggplot2__ was saved in the markdown file named _computational components_ as lists. They are named "Linear", "Non Linear", "Outlier Vertical" and " Outlier Horizontal", each contains their corresponding graphics. We can see the class of the R object _comp_ is a list.
+
+
+
+
+
+
+
+
+The data regions from the __COVID-regions-2021.csv__ file( World Health Organization 2021) is used in this first example. The data set contains some key information of the current world spreading disease Covid-19. The number of new cases and new deaths are groupped by WHO regions in the order of date reported from 2020-01-03 to 2020-06-17. Two plots produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "Case by region" and "Cases against Death", each contains their corresponding graphics. After assessing the class of the R object _comp_covid_, that is, a list, the next step is to create a listdown object.
 
 ```{r}
 library(ggplot2)
-
- # Load the Anscombe Quartet.
- data(anscombe)
- 
-# Create the ggplot objects to display.
- computational_components <- list(
- Linear = ggplot(anscombe, aes(x = x1, y = y1)) + geom_point(),
- `Non Linear` = ggplot(anscombe, aes(x = x2, y = y2)) + geom_point(),
- `Outlier Vertical`= ggplot(anscombe, aes(x = x3, y = y3)) +
- geom_point(),
- `Outlier Horizontal` = ggplot(anscombe, aes(x = x4, y = y4)) +
- geom_point())
-
- # Save the file to disk to be read by the output R Markdown document.
- saveRDS(computational_components, "comp-comp.rds")
- 
-comp <- readRDS("comp-comp.rds")
-class(comp)
-
-```
-
-
-## 2.1 Creating the document using Package Listdown
-
-The list containing the plots is now saved as a R object named _comp-comp.rds_. From here, the document goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. Then deciding how the elements in the list will be presented in the document. 
-
-Now we load in the listdown package to make a document. We define how the list of objects will be loaded into R. The header for the markdown file is also embedded, shown in the example named _doc_. 
-
-```{r}
-library(listdown)
-
-ld <- listdown(load_cc_expr = readRDS("comp-comp.rds"),
-package = "ggplot2")
-```
-
-The R object named __ld__ is now ready to create the document. To make the document more sufficient, the document is further processed with header. The listdown package has native support in R markdown and __workflowr__ as yml objects. All objects are part of the list in the document, and can be edited by using codes.
-
-
-```{r}
-anscombeexample <- c(
- as.character(ld_rmarkdown_header("Anscombe's Quartet",
-author = "Francis Anscombe",
- date = "1973")),
-ld_make_chunks(ld))
-
-anscombeexample
-```
-
-By calling the document name, we can see a glimpse of the document, the contents are clearly listed out along with the type of the object. To make the document fully reproducible, the library required for the computational components are also listed. The below codes renders __anscombeexample__ into a _html_ document. 
-
-```{r}
-# Write the document.
-writeLines(anscombeexample, "anscome-example.rmd")
-render("anscome-example.rmd",html_document())
-#system("open anscome-example.html")
-```
-
-## Covid regions example
-
-Now the data is not originally from a package, but a data set we choose. 
-
-```{r}
 library(tidyverse)
 library(scales)
-#creating ld items
-regionsdf = read.csv("COVID-regions-2021.csv", 
+# Load the regions data set.
+regions = read.csv("COVID-regions-2021.csv", 
                     colClasses=c("character", "Date", rep("numeric", 2)))
 
-
+# Creating the computational components
 computational_components_covid <- list( 
-  Data = regionsdf,
-p1 = ggplot(regions, aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region)) + 
+  Data = regions,
+`Case by region` = ggplot(regions, aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region)) + 
   geom_area() + facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region") + scale_y_continuous(expand = rep(0,2),labels = label_comma()),
 
-p2 = ggplot(data = regions,
-       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point()
+`Cases against Death` = ggplot(data = regions,
+       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point() + labs(title = "Number of COVID cases against death by WHO region")
 )
          
 #Save file to the disk
@@ -177,33 +126,62 @@ p2 = ggplot(data = regions,
  
 comp_covid <- readRDS("comp-comp_covid.rds")
 class(comp_covid)
-#Making a listodnw object
+
+```
+
+
+## Creating the document using Package Listdown
+
+The list containing the plots is now saved as a R object named _comp-comp.rds_. From here, the document goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. From the regions data example, library```ggplot2```, ```tidyverse``` and ```scales``` are required, they are specified and loaded together with the saved computational object. Then the author decides how the elements in the list will be presented in the document. 
+
+
+```{r}
+#Making a listdown object
 library(listdown)
 library(knitr)
 ld_new <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
 package = c("ggplot2", "tidyverse","scales"))
 
+ld_new
+```
+
+
+The listdown object named __ld_new__ is now ready to create the document. To regularize the document output in terms of formats, it is further processed with a header. The listdown package has native support in R markdown and __workflowr__ as yml objects (Kane,Jiang and Urbanek, 2020). The header objects are part of the list in the document, and can be edited by using ```ld_rmarkdown_header()```. By calling the document name, a glimpse of the document content is shown, the names are clearly listed out along with the type of these objects. 
+
+```{r}
 covidexample <- c(
  as.character(ld_rmarkdown_header("Covid plots",
 author = "Leon",
  date = "2021")),
 ld_make_chunks(ld_new))
 
-library(DT)
-library(rmarkdown)
+covidexample
+```
+
+ The below codes renders __covidexample__ into a _html_ document. 
+
+```{r}
 library(knitr)
+# Write the document.
   writeLines(covidexample, "covid-example.Rmd")
   render("covid-example.Rmd",html_document())
   system("open covid-example.html")
 ```
 
-## Covid with decorators
+```{css, echo = FALSE}
+<center> <h1>3 The Usage of Decorators </h1> </center>
+```
+
+## Covid Example with decorators
+
+In the previous chapter, the complete workflow of creating a document using listdown package is demonstrated. 
+
 ```{r}
 #Add in data and decorators
 
 ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
 package = c("ggplot2", "tidyverse","scales", "plotly"),
-decorator = list(ggplot = plot_ly))
+decorator = list(ggplot = ggplotly))
 
 
 coviddecoratorexample <- c(
