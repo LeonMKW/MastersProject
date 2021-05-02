@@ -172,9 +172,9 @@ library(knitr)
 <center> <h1>3 The Usage of Decorators </h1> </center>
 ```
 
-## Covid Example with decorators
+## 3.1 Covid Example with decorators
 
-In the previous chapter, the complete workflow of creating a document using listdown package is demonstrated. 
+In the previous chapter, the complete work flow of creating a document using listdown package is demonstrated. The example is relatively simple and straight forward. Statistically, two main point of interest arises after the document is rendered and produced. After all, the plots are informative, but they are also static. This limits the overall power of both plots.As the data set contains information for each individual day consistently, but only the overall trends and robust numbers are shown in the first plot. More detailed information are lost as a trade-off to revealing the trend by regions. In the second plot, the scattered points also fails to give any addition information of the data, even though it had the mechanisms of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), hence the decorator control of list down could be customized for an interactive plot. The plotly package (Sievert, 2020)) provides a native support turning ggplot objects into interactive HTML widgets. 
 
 ```{r}
 #Add in data and decorators
@@ -196,12 +196,22 @@ coviddecoratorexample <- c(
 
 
 
+## 3.2 Docorators for more complicated computational compontents
+
+Another usful technique commoonly used is animation. 
+
+```{r}
 
 
 
 
 
-## 2.2 Docorators for more complicated computational compontents
+
+
+```
+
+
+
 
 
 
@@ -283,8 +293,12 @@ rld(ld_surv)
 
 
 ```{css, echo = FALSE}
-<center> <h1>2 Interactive Graphics</h1> </center>
+<center> <h1>2 Trelliscopejs Example</h1> </center>
 ```
+
+
+
+
 
 #trelliscopejs example
 The decorators example has displayed the data despite the huge amount of data in the actual dataset. 
@@ -310,10 +324,65 @@ qplot(year, lifeExp, data = subset(gapminder, continent == "Oceania")) +
 
 Too much plots if we plot it stright away, the final layout is folded, hence the trelliscopejs package allows us to search plots via interactive interface. 
 ```{r}
-qplot(year, lifeExp, data = gapminder) +
-  xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
-  facet_wrap(~ country + continent)
+library(listdown)
+library(gapminder)
+library(trelliscopejs)
+library(ggplot2)
+library(tidyverse)
+library(DT)
+library(pdp)
+library(rmarkdown)
 
+# Load the gapminder data set.
+ data(gapminder)
+
+# Creating the computational components
+computational_components_gapminder <- list( 
+  Data = gapminder,
+`life expectancy` = qplot(year, lifeExp, data = gapminder) + xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
+  facet_wrap(~ country + continent) + labs(title = "life expectancy by continent"))
+
+#Save file to the disk
+ saveRDS(computational_components_gapminder, "comp-comp_gapminder.rds")
+ 
+
+ld_gapminder <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder"))
+
+gapminderexample <- c(
+ as.character(ld_rmarkdown_header("gapminder plots",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder))
+
+ writeLines(gapminderexample, "gapminder-example.Rmd")
+  render("gapminder-example.Rmd",html_document())
+  system("open gapminder-example.html")
+
+
+# TrelliscopeJS 
+
+ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs", "pdp"),
+decorator = list(qplot = facet_trelliscope),
+init_expr = {
+  facet_trelliscope <- partial(qplot, facet_wrap = facet_trelliscope)
+})
+
+
+gapmindertrellisexample <- c(
+ as.character(ld_rmarkdown_header("gapminder plots with trelliscope",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis))
+
+ writeLines(gapmindertrellisexample, "gapminder-trellis-example.Rmd")
+  render("gapminder-trellis-example.Rmd",html_document())
+  system("open gapminder-trellis-example.html")
+
+  
+  
+  
 #trelliscope instead of facet
 library(trelliscopejs)
 qplot(year, lifeExp, data = gapminder) +
