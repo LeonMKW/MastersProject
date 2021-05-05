@@ -1,57 +1,84 @@
 
-```{r}
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+library(gtsummary)
+library(flextable)
+library(DT)
 library(ggplot2)
-library(tidyverse)
-library(scales)
 library(plotly)
 
-cc_list <- readRDS("comp-comp_covid.rds")
+cc_list <- readRDS("surv-cc.rds")
 ```
 
-```{r}
-cc_list$``
+# Table 1
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+cc_list$`Table 1`
 ```
 
-```{r}
-cc_list$``
+# Survival Plots
+
+## Overall
+
+### plot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 6}
+cc_list$`Survival Plots`$Overall$plot
 ```
 
-```{r}
-plot_ly(cc_list$``)
+### data.survplot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Overall$data.survplot)
 ```
 
-```{r}
-plot_ly(cc_list$``)
+### data.survtable
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Overall$data.survtable)
 ```
 
-# Data
+## Stage
 
-## WHO_region
+### plot
 
-```{r}
-cc_list$Data$WHO_region
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 6}
+cc_list$`Survival Plots`$Stage$plot
 ```
 
-## Date_reported
+### data.survplot
 
-```{r}
-cc_list$Data$Date_reported
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Stage$data.survplot)
 ```
 
-## New_cases
+### data.survtable
 
-```{r}
-cc_list$Data$New_cases
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Stage$data.survtable)
 ```
 
-## New_deaths
+## Grade
 
-```{r}
-cc_list$Data$New_deaths
+### plot
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 6}
+cc_list$`Survival Plots`$Grade$plot
 ```
 
-## WHO_region
+### data.survplot
 
-```{r}
-cc_list$Data$WHO_region
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Grade$data.survplot)
+```
+
+### data.survtable
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+datatable(cc_list$`Survival Plots`$Grade$data.survtable)
+```
+
+# test
+
+```{r echo = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4.5}
+cc_list$test
 ```
