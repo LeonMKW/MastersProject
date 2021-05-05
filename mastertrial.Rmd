@@ -346,6 +346,7 @@ init_expr = {
   facet_trelliscope <- partial(qplot, facet_wrap = facet_trelliscope)
 })
 
+
 gapmindertrellisexample <- c(
  as.character(ld_rmarkdown_header("gapminder plots with trelliscope",
 author = "Leon",
