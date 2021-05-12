@@ -83,9 +83,10 @@ The __Rlistdown__ package highly integrates a bundle of computational components
 
 
 
-The data regions from the __COVID-regions-2021.csv__ file( World Health Organization 2021) is used in this first example. In this data set, 4 key information are obtained. Firstly, all the WHO member countries around the globe are grouped spatialy and culturally according to the World Health Organization into regions. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. These regions are shown in each of their corresponding abbreviations under the variable _"WHO_region"_. Secondly, the date information for all of 2020 and the first quarter of 2021 is recorded under the _"Date_reported"_ variable, to be more exact, from 2020-01-03 to 2021-03-15. Thirdly, The number of new cases and the number of new deaths for each day of the regions has been included and named _"New_cases"_ and _"New_deaths"_. 4 visualizations produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "New cases per day for each region", "New cases per day for each region facet", "Cases against Death" and "Cases against Death facet", each containing their corresponding graphics. After assessing the class of the R object _comp_covid_, that is, a list, the next step is to create a listdown object.
+The data regions from the __COVID-regions-2021.csv__ file( World Health Organization 2021) is used in this first example. In this data set, 4 key information are obtained. Firstly, all the WHO member countries around the globe are grouped spatialy and culturally according to the World Health Organization into regions. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. These regions are shown in each of their corresponding abbreviations under the variable _"WHO_region"_. Secondly, the date information for all of 2020 and the first quarter of 2021 is recorded under the _"Date_reported"_ variable, to be more exact, from 2020-01-03 to 2021-03-15. Thirdly, The number of new cases and the number of new deaths for each day of the regions has been included and named _"New_cases"_ and _"New_deaths"_. 4 visualizations produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "New cases per day for each region", "New cases per day for each region facet", "Cases against Death" and "Cases against Death facet", each containing their corresponding graphics. The first two plots used ```geom_area()``` to show the number of new cases recorded each day for all the regions in the given time frame. While the third and fourth plot shows the relationship of new cases against death recorded by day, and is plotted with ```geom_point()```. Once data has been read into R, the computational component is created and stored along with the data into a named list, in this case, is called "computational_components_covid". It is then saved to the current directory as a R object.
 
 ```{r covid-example-step1}
+library(listdown)
 library(ggplot2)
 library(tidyverse)
 library(scales)
@@ -102,13 +103,20 @@ computational_components_covid <- list(
     geom_area(aes(Date_reported, New_cases, colour=WHO_region, fill=WHO_region), 
               stat="smooth", 
               alpha=.2, position="identity",
-              method="loess", span=.1)+ labs(title = "Number of daily COVID cases by WHO region"),
+              method="loess", span=.1)+ labs(title = "Number of daily COVID cases by WHO region") +
+    scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+    scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+                 expand = expansion(0),
+                 label = label_date_short()),
     
 
 `New cases per day for each region facet` = ggplot(regions, 
                                                    aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region,
                                                                 stat = "smooth",  method="loess", span=.1)) + geom_area( alpha=.5) + 
-  facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region facet") + scale_y_continuous(expand = rep(0,4),labels = label_comma()),
+  facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region facet") + scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+     scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+                 expand = expansion(0),
+                 label = label_date_short()),
 
 
 `Cases against Death` = ggplot(data = regions,
@@ -134,17 +142,17 @@ computational_components_covid <- list(
  saveRDS(computational_components_covid, "comp-comp_covid.rds")
  
 comp_covid <- readRDS("comp-comp_covid.rds")
+
 ld_cc_dendro(comp_covid)
 
 ```
 
-The function __ld_cc_dendro()__ shows each object in the listdown in an descending order of depth (Kane,Jiang and Urbanek, 2020). Becuase every object in the component is named, it is also labeled in prior to the description of each object.
-
+After reading in our computational component that has been saved, the next step is to create a listdown object. The function __ld_cc_dendro()__ shows each object in the listdown in an descending order of depth (Kane,Jiang and Urbanek, 2020). Because every object in the component is named, it is also labeled in prior to the description of each object. 
 
 
 ## Creating the document using Package Listdown
 
-The list containing the plots is now saved as a R object named _comp-comp_covid.rds_. From here, the document goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. From the regions data example, library```ggplot2```, ```tidyverse``` and ```scales``` are required, they are specified and loaded together with the saved computational object. Then the author decides how the elements in the list will be presented in the document. 
+From the previous step, the list containing the plots now saved as a R object named _comp-comp_covid.rds_ goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. From the regions data example, library```ggplot2```, ```tidyverse``` and ```scales``` are required, they are specified and loaded together with the saved computational object. Then the author decides how the elements in the list will be presented in the document. 
 
 
 ```{r covid-example-step2}
@@ -173,14 +181,14 @@ While the next major step is rendering the listdown object __covidexample__ into
 
 ```{r covid-example-step4}
 library(knitr)
+library(rmarkdown)
 # Write the document.
   writeLines(covidexample, "covid-example.Rmd")
   render("covid-example.Rmd",html_document())
  system("open covid-example.html")
 ```
 
-From the html document produced using listdown, the output of the computational components are shown directly to the reader. The first plot shows the number of new covid cases by regions. The tiny spike raised in the Western Pacific region's office indicated when the virus was first discovered in the People's Republic of China, and soon began it's transmission across the other regions. 
-
+From the html document produced using listdown, the output of the computational components are shown directly to the reader. The first plot shows the number of new covid cases by regions. The tiny spike raised in the Western Pacific region's office indicated when the virus was first discovered in the People's Republic of China, and soon began it's transmission across the other regions. By March,the region of the Americas and the region of Europeans has increasing new cases inevitably. While European region seems to see a steady drop till July, the South-East Asia Region, Eastern Mediterranean Region and Africa region has shown noticeable number of new cases. Region of Americas at this time had new cases increasing rapidly towards the first peak. Region of Europeans soon showed an increase in the new cases after July, and the rate of increase is also increasing. Regions of America had the same trend with a higher rate of increase at the third quarter, along with region of Europeans, is contributing number of new cases much higher than other regions  towards the end of 2020. The situation up till today still does not seem to be optimistic. The Second graph plotted regions separately along a common unaligned scale. The overlapping areas from the first plot can now be visualized clearer. However, separation by regions for new cases is not as effective as showing the number of new cases against death in the third and fourth graph. 
 
 
 # 3 The Usage of Decorators 
