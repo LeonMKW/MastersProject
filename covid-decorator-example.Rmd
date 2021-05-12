@@ -7,6 +7,7 @@ output: html_document
 library(ggplot2)
 library(tidyverse)
 library(scales)
+library(dplyr)
 library(plotly)
 
 cc_list <- readRDS("comp-comp_covid.rds")
@@ -18,14 +19,26 @@ cc_list <- readRDS("comp-comp_covid.rds")
 cc_list$Data
 ```
 
-# Case by region
+# New cases per day for each region
 
 ```{r}
-ggplotly(cc_list$`Case by region`)
+ggplotly(cc_list$`New cases per day for each region`)
+```
+
+# New cases per day for each region facet
+
+```{r}
+ggplotly(cc_list$`New cases per day for each region facet`)
 ```
 
 # Cases against Death
 
 ```{r}
 ggplotly(cc_list$`Cases against Death`)
+```
+
+# Cases against Death facet
+
+```{r}
+ggplotly(cc_list$`Cases against Death facet`)
 ```
