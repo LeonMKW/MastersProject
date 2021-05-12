@@ -11,7 +11,7 @@ library(gapminder)
 library(trelliscopejs)
 library(pdp)
 
-facet_trelliscope <- partial(qplot, facet_wrap = facet_trelliscope)
+facet_trelliscope <- partial(facet_trelliscope, facet_trelliscope = facet_trelliscope(path = "."))
 
 cc_list <- readRDS("comp-comp_gapminder.rds")
 ```

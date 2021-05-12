@@ -341,10 +341,7 @@ ld_make_chunks(ld_gapminder))
 
 ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
 package = c("ggplot2","gapminder", "trelliscopejs", "pdp"),
-decorator = list(qplot = facet_trelliscope),
-init_expr = {
-  facet_trelliscope <- partial(qplot, facet_wrap = facet_trelliscope)
-})
+decorator = list(qplot = facet_trelliscope(path=".")))
 
 
 gapmindertrellisexample <- c(
