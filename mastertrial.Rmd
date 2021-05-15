@@ -220,28 +220,7 @@ system("open covid-decorator-example.html")
 ## 3.2 Docorators for more complicated computational compontents
 
 
-```{r}
-
-
-
-
-
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-#MoreComplicated example
-In the previous example, the _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects. In the following example, we have used another set of data from the _survminer_ package. The original data was added into the document, and are presented in the form of data tables, that is, a type of decorator for the data. 
+In the previous example, the _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects. In the following example, we have used another set of data from the _gapminder_ package. The original data was added into the document, and are presented in the form of data tables, that is, a type of decorator for the data. 
 
 The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
 ```{r}
@@ -251,14 +230,6 @@ rld <- function(ld) {
   system("open doc.html")
 }
 ```
-
-
-
-# Trelliscopejs Example
-
-
-
-
 
 #trelliscopejs example
 Previous examples has displayed the data despite the huge amount of data in the actual data set. 
