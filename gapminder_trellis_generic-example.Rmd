@@ -1,0 +1,26 @@
+---
+title: gapminder plots trelliscope generic
+author: Leon
+date: '2021'
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(gapminder)
+library(trelliscopejs)
+
+cc_list <- readRDS("comp-comp_gapminder.rds")
+```
+
+# Data
+
+```{r}
+cc_list$Data
+```
+
+# life expectancy
+
+```{r}
+facet_wrap2ts(cc_list$`life expectancy`)
+```
