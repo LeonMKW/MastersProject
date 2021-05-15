@@ -283,6 +283,8 @@ qplot(year, lifeExp, data = subset(gapminder, continent == "Oceania")) +
 ```
 
 Too much plots if we plot it stright away, the final layout is folded, hence the trelliscopejs package allows us to search plots via interactive interface. 
+
+# Facetting the gapminder data
 ```{r}
 library(listdown)
 library(gapminder)
@@ -336,7 +338,7 @@ ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) +
 
 ```
   
-# Adding telliscopejs the easy way
+# Adding telliscopejs facetting the easy way
 ```{r}
 # Creating the computational components, this time without the 'facet_wrap' call.
 comp_comp_gapminder_trellis <- list(
