@@ -394,20 +394,66 @@ ld_make_chunks(ld_gapminder_trellis_generic))
 ```
 
 
-
-
-
-
-
-
-same survminer data try using plotly
+# covid data with countries using trelliscope
 ```{r}
-yrlfexp <- gapminder[sample(nrow(gapminder), 500), ]
-plot_ly(yrlfexp, x = yrlfexp$year, y = yrlfexp$lifeExp, 
-        text = paste("continent: ", yrlfexp$continent),
-        mode = "markers", color = yrlfexp$country, 
-        size = yrlfexp$lifeExp)
+library(trelliscopejs)
+library(listdown)
+#Reading in the data
+countries <- read.csv("COVID-countries.csv", 
+                      colClasses=c("Date", rep("character", 3), 
+                                   rep("numeric", 2)))
+
+# Creating the list
+comp_comp_covid_trellis <- list(
+  Data = countries,
+  `New cases per day for each Country` = ggplot(countries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country)) + 
+  geom_line(aes(x=Date_reported, y=New_cases, group=Country)) +
+  theme_bw() + 
+  labs(title = "New cases per day by Country") + 
+    facet_wrap(vars(Country))
+    )
+
+#Save file to the disk
+ saveRDS(comp_comp_covid_trellis, "comp-comp_covid_trellis.rds")
+ 
+ 
+# Creating the listdown package
+ld_covid_tellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
+package = c("ggplot2","trelliscopejs"),
+decorator = list(ggplot = facet_wrap2ts)
+)
+
+# Adding a header
+covid_trellis_example <- c(
+ as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_covid_tellis))
+
+# Rendering
+ writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
+  render("covid_trellis-example.Rmd",html_document())
+  system("open covid_trellis-example.html")
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
