@@ -7,7 +7,6 @@ output: html_document
 library(ggplot2)
 library(tidyverse)
 library(scales)
-library(dplyr)
 library(plotly)
 
 cc_list <- readRDS("comp-comp_covid.rds")
