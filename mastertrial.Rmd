@@ -77,13 +77,17 @@ Some useful areas of statistical analysis benefiting from the listdown package a
 
 The __Rlistdown__ package highly integrates a bundle of computational components into a list of objects. When it comes to visualization components (ie. trelliscope), the plot is often fixed to a specific form pre-defined in the computation component. The goal is to make it live and interactive. This is achievable by using the decorator function in listdown.
 
+#########
+
+########
 
 
 
 
 
+The data regions from the __COVID-regions-2021.csv__ file( World Health Organization 2021) is used in this first example. In this data set, 4 key information are obtained. Firstly, all the WHO member countries around the globe are grouped spatialy and culturally according to the World Health Organization into regions. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. These regions are shown in each of their corresponding abbreviations under the variable _"WHO_region"_. Secondly, the date information for all of 2020 and the first quarter of 2021 is recorded under the _"Date_reported"_ variable, to be more exact, from 2020-01-03 to 2021-03-15. Thirdly, The number of new cases and the number of new deaths for each day of the regions has been included and named _"New_cases"_ and _"New_deaths"_. 4 visualizations produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "New cases per day for each region", "New cases per day for each region facet", "Cases against Death" and "Cases against Death facet", each containing their corresponding graphics. The first two plots used ```geom_area()``` to show the number of new cases recorded each day for all the regions in the given time frame. While the third and fourth plot shows the relationship of new cases against death recorded by day, and is plotted with ```geom_point()```. The main difference within the first and second plot, the third and the fourth plot, is the additional function call ```facet_wrap()``` in the ggplot function. In the ```facet_wrap()``` arguments, a variable must be defined, such that the original data is seperately plotted in respect to the defined variable of the argument. This function allows each panel in the plot to show a subset of the data, and has advantage in comparing patterns and trends, expecially in the situation where the data points are severly overlapped, or when there are too much ( but not over numbered) levels in the defined variables. 
 
-The data regions from the __COVID-regions-2021.csv__ file( World Health Organization 2021) is used in this first example. In this data set, 4 key information are obtained. Firstly, all the WHO member countries around the globe are grouped spatialy and culturally according to the World Health Organization into regions. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. These regions are shown in each of their corresponding abbreviations under the variable _"WHO_region"_. Secondly, the date information for all of 2020 and the first quarter of 2021 is recorded under the _"Date_reported"_ variable, to be more exact, from 2020-01-03 to 2021-03-15. Thirdly, The number of new cases and the number of new deaths for each day of the regions has been included and named _"New_cases"_ and _"New_deaths"_. 4 visualizations produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "New cases per day for each region", "New cases per day for each region facet", "Cases against Death" and "Cases against Death facet", each containing their corresponding graphics. The first two plots used ```geom_area()``` to show the number of new cases recorded each day for all the regions in the given time frame. While the third and fourth plot shows the relationship of new cases against death recorded by day, and is plotted with ```geom_point()```. Once data has been read into R, the computational component is created and stored along with the data into a named list, in this case, is called "computational_components_covid". It is then saved to the current directory as a R object.
+Once data has been read into R, the computational component is created and stored along with the data into a named list, in this case, is called "computational_components_covid". It is then saved to the current directory as a R object.
 
 ```{r covid-example-step1}
 library(listdown)
@@ -195,7 +199,7 @@ From the html document produced using listdown, the output of the computational 
 
 ## 3.1 Covid Example with decorators
 
-In the previous chapter, the complete work flow of creating a document using listdown package is demonstrated. The example is relatively simple and straight forward. Statistically, two main point of interest arises after the document is rendered and produced. After all, the plots are informative, but they are also static. This limits the overall demonstrative ability of both plots.As the data set contains information for each individual day consistently, but only the overall trends and robust numbers are shown in the first plot. More detailed information are lost as a trade-off to revealing the robust trend of new cases daily by regions. In the second plot, the scattered points also fails to give any addition information of the data, even though it had the mechanisms of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), hence the decorator control of list down could be customized for an interactive plot. The plotly package (Sievert, 2020)) provides a native support turning ggplot objects into interactive HTML widgets. 
+In the previous chapter, the complete work flow of creating a document using listdown package is demonstrated. The example is relatively simple and straight forward. Statistically, two main point of interest arises after the document is rendered and produced. After all, the plots are informative, but they are also static. This limits the overall demonstrative ability of both plots.As the data set contains information for each individual day consistently, but only the overall trends and robust numbers are shown in the first plot. More detailed information are lost as a trade-off to revealing the robust trend of new cases daily by regions. In the second plot, the scattered points also fails to give any addition information of the data, even though it had the data indormation of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), the listdown package adapts this idea and allows author implanting addition decorators to the original listdown object during the processing of producing the document. The decorator control of listdown could be customized for an interactive plot, for example, Package plotly(Sievert, 2020). The package provides a native support turning ggplot objects into interactive HTML widgets. 
 
 ```{r covid-decorator-example-step1}
 #Add in data and decorators
@@ -220,16 +224,14 @@ system("open covid-decorator-example.html")
 ## 3.2 Docorators for more complicated computational compontents
 
 
-In the previous example, the _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects. In the following example, we have used another set of data from the _gapminder_ package. The original data was added into the document, and are presented in the form of data tables, that is, a type of decorator for the data. 
+In the previous example, the _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects, in other words, function ggplotly uses the same pathway as ggplot when it is seeking the details of plotting. In the following example, we have used another set of data from the _gapminder_ package (Bryan, 2017). There are two main aspects demonstrated by the following example. Firstly, during some cases, the "decorator" seeks a different pathway in the plotting process that is not originally defined in the computational component from the list. 
 
-The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
-```{r}
-rld <- function(ld) {
-  writeLines(ld_make_chunks(ld), "doc.Rmd")
-  render("doc.Rmd",html_document())
-  system("open doc.html")
-}
-```
+
+
+
+The original data was added into the list of files, and are presented in the form of data tables, that is, a type of decorator for the data to be presented. 
+
+
 
 #trelliscopejs example
 Previous examples has displayed the data despite the huge amount of data in the actual data set. 
@@ -436,7 +438,14 @@ ld_make_chunks(ld_covid_tellis))
   system("open covid_trellis-example.html")
 ```
 
-
+The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
+```{r}
+rld <- function(ld) {
+  writeLines(ld_make_chunks(ld), "doc.Rmd")
+  render("doc.Rmd",html_document())
+  system("open doc.html")
+}
+```
 
 
 
