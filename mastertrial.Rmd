@@ -28,7 +28,7 @@ library(knitr)
 
 # Abstract 
 
-Statisticians and analysts have been using R for a long time. R programming environment has reproducible document standards embedded, such as R markdown. While R markdown requires the programmer to manually construct the structure of reproducible file, R list-down Package provides a programmatic solution to generate the files. On top of the already available R list down package, this paper demonstrates implanting graphs and interactive plots when users generate any reproducible documents by using ```trelliscopejs package```. The concept is followed by a demonstration using gapminder dataset. 
+Statisticians and analysts have been using R for a long time. R programming environment has reproducible document standards embedded, such as R markdown. While R markdown requires the programmer to manually construct the structure of reproducible file, the ```listdown``` Package provides a programmatic solution to generate documents containing computational and narrative components efficiently, including those tasks with mass visualizations. On top of the already available ```listdown``` package from the Comprehensive R Archive Network (CRAN), this paper demonstrates implanting graphical and interactive plots when users generate any reproducible documents by using ```trelliscopejs package```. The concept is followed by a demonstration using gapminder dataset. 
 \newpage
 
 
