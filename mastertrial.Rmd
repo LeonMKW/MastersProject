@@ -26,7 +26,7 @@ library(knitr)
 
 
 
-# Abstract {-}
+# Abstract 
 
 Statisticians and analysts have been using R for a long time. R programming environment has reproducible document standards embedded, such as R markdown. While R markdown requires the programmer to manually construct the structure of reproducible file, R list-down Package provides a programmatic solution to generate the files. On top of the already available R list down package, this paper demonstrates implanting graphs and interactive plots when users generate any reproducible documents by using ```trelliscopejs package```. The concept is followed by a demonstration using gapminder dataset. 
 \newpage
@@ -64,7 +64,7 @@ To Summarize, this paper will demonstrate firstly, workflow on how the listdown 
 
 R Listdown
 
-Lets suppose the data analyzing part and all coding work has completed. The results of the analysis containing summary tables, data tables and plots which we referred to computational components, are collected into a list of objects. They are roughly in the order of which we would like to present them, the next thing is to present the components in a document like html. This is a typical order of a data analyzing work processes, but it is not definite. 
+Lets suppose the data analyzing part and all coding work has completed. The results of the analysis containing summary tables, data tables and plots which we referred to computational components, are collected into a list of objects. They are roughly in the order of which the author would like to present them, the next thing is to present the components in a document like html. This is a typical order of a data analyzing work processes, but it is not definite. 
 
 Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is particularly important to centralize them. There are many advantages turning them in lists. Firstly, turning them into list of elements naturally provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components.  
 
@@ -448,6 +448,8 @@ rld <- function(ld) {
 ```
 
 
+## Conclusion and Further Work
+The objective from this article, to 
 
 
 
@@ -463,20 +465,6 @@ rld <- function(ld) {
 
 
 
-
-
-
-
-#for fun
-```{r}
-library(networkD3)
-data(MisLinks, MisNodes)
-forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = "source",
-             Target = "target", Value = "value", NodeID = "name",
-             Group = "group", opacity = 0.4)
-
-
-```
 
 
 
