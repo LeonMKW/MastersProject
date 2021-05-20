@@ -394,18 +394,22 @@ ld_make_chunks(ld_gapminder_trellis_generic))
 ```
 
 
-# covid data with countries using trelliscope
+# covid data with countries using trelliscope include tyding
 ```{r}
 library(trelliscopejs)
 library(listdown)
+library(tidyverse)
+library(rmarkdown)
+
+
 #Reading in the data
 countries <- read.csv("COVID-countries.csv", 
                       colClasses=c("Date", rep("character", 3), 
-                                   rep("numeric", 2)))
+                                   rep("numeric", 2)), fileEncoding="UTF-8-BOM")
 
 # Creating the list
 comp_comp_covid_trellis <- list(
-  Data = countries,
+  Data = covidcountries,
   `New cases per day for each Country` = ggplot(countries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country)) + 
   geom_line(aes(x=Date_reported, y=New_cases, group=Country)) +
   theme_bw() + 
@@ -458,14 +462,54 @@ ld_make_chunks(ld_covid_tellis))
 
 
 
-#for fun
+#latest data
 ```{r}
-library(networkD3)
-data(MisLinks, MisNodes)
-forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = "source",
-             Target = "target", Value = "value", NodeID = "name",
-             Group = "group", opacity = 0.4)
+library(trelliscopejs)
+library(listdown)
+library(tidyverse)
+library(rmarkdown)
 
+
+covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
+                     colClasses=c("Date", rep("character", 3), 
+                                   rep("numeric", 4)), fileEncoding="UTF-8-BOM")
+
+
+covidcountries <- covidraw %>% select(-Cumulative_cases, -Cumulative_deaths)
+
+
+# Creating the list
+comp_comp_covid_trellis_latest <- list(
+  Data = covidcountries,
+  `New cases per day for each Country` = ggplot(covidcountries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country)) + 
+   geom_line(aes(x=Date_reported, y=New_cases, group=Country)) +
+   scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") +
+  theme_bw() + 
+  labs(title = "New cases per day by Country") + 
+    facet_wrap(vars(Country))
+    )
+
+#Save file to the disk
+ saveRDS(comp_comp_covid_trellis_latest, "comp_comp_covid_trellis_latest.rds")
+ 
+ 
+# Creating the listdown package
+ld_covid_tellis_latest <- listdown(load_cc_expr = readRDS("comp_comp_covid_trellis_latest.rds"),
+package = c("ggplot2","trelliscopejs"),
+decorator = list(ggplot = facet_wrap2ts)
+)
+
+# Adding a header
+covid_trellis_latest_example <- c(
+ as.character(ld_rmarkdown_header("latest Covid plots using trelliscopeJS",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_covid_tellis_latest))
+
+# Rendering
+ writeLines(covid_trellis_latest_example, "covid_trellis_latest-example.Rmd")
+  render("covid_trellis_latest-example.Rmd",html_document())
+  system("open covid_trellis_latest-example.html")
 
 ```
 
