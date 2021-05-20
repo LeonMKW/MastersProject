@@ -2,8 +2,9 @@
 title: "mastertrial"
 author: "Mingkun Wu"
 date: "11/26/2020"
-output: 
-  html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r libraries}
