@@ -83,7 +83,7 @@ For the next part, the above steps will be explained in detail using a real worl
 
 ### 2.2.2 Case Study: COVID-19 Dataset Example
 
-The data regions from the __COVID-regions-2021.csv__ file( World Health Organization 2021) is used in this first example. In this data set, 4 key information are contained. Firstly, all the WHO membership countries around the globe are grouped spatially and culturally according to the World Health Organization into regions. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. These regions are shown in each of their corresponding abbreviations under the variable _"WHO_region"_. Secondly, the date information for all of 2020 and the first quarter of 2021 is recorded under the _"Date_reported"_ variable, to be more exact, from 2020-01-03 to 2021-03-15. Thirdly, The number of new cases and the number of new deaths for each day of the regions has been included and named _"New_cases"_ and _"New_deaths"_. 4 visualizations produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "New cases per day for each region", "New cases per day for each region facet", "Cases against Death" and "Cases against Death facet", each containing their corresponding graphics. The first two plots used ```geom_area()``` to show the number of new cases recorded each day for all the regions in the given time frame. While the third and fourth plot shows the relationship of new cases against death recorded by day, and is plotted with ```geom_point()```. The main difference within the first and second plot, the third and the fourth plot, is the additional function call ```facet_wrap()``` in the ggplot function. In the ```facet_wrap()``` arguments, a variable must be defined, such that the original data is seperately plotted in respect to the defined variable of the argument. This function allows each panel in the plot to show a subset or a proportion of the data, and has advantage in comparing patterns and trends. The function works well especially in the situation where there are severely overlapping data points, or when there are too much (but not over numbered) levels in the defined variable. Later in the journal, we will discuss advanced solutions to big data sets with multiple levels needing to be visualized effectively.  
+The data set regions from the __COVID-regions-2021.csv__ file( World Health Organization, 2021) is used in this first example. In this data set, 4 key information are contained. Firstly, all the WHO membership countries around the globe are grouped spatially and culturally according to the World Health Organization into regions. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. These regions are shown in each of their corresponding abbreviations under the variable _"WHO_region"_. Secondly, the date information for all of 2020 and the first quarter of 2021 is recorded under the _"Date_reported"_ variable, to be more exact, from 2020-01-03 to 2021-03-15. Thirdly, The number of new cases and the number of new deaths for each day of the regions has been included and named _"New_cases"_ and _"New_deaths"_. 4 visualizations produced using __ggplot2__ were saved in the markdown file named _computational_components_covid_ as lists. They are named "New cases per day for each region", "New cases per day for each region facet", "Cases against Death" and "Cases against Death facet", each containing their corresponding graphics. The first two plots used ```geom_area()``` to show the number of new cases recorded each day for all the regions in the given time frame. While the third and fourth plot shows the relationship of new cases against death recorded by day, and is plotted with ```geom_point()```. The main difference within the first and second plot, the third and the fourth plot, is the additional function call ```facet_wrap()``` in the ggplot function. In the ```facet_wrap()``` arguments, a variable must be defined, such that the original data is seperately plotted in respect to the defined variable of the argument. This function allows each panel in the plot to show a subset or a proportion of the data, and has advantage in comparing patterns and trends. The function works well especially in the situation where there are severely overlapping data points, or when there are too much (but not over numbered) levels in the defined variable. Later in the journal, we will discuss advanced solutions to big data sets with multiple levels needing to be visualized effectively.  
 
 Once data has been read into R, the computational component is created and stored along with the data into a named list, in this case, is called "computational_components_covid". It is then saved to the current directory as a R object. 
 
@@ -202,7 +202,7 @@ From the html document produced using listdown, the output of the computational 
 
 ## 3.1 Case Study: COVID-19 Dataset Example with decorators 
 
-In the previous chapter, the complete work flow of creating a document using listdown package is demonstrated. The example is relatively simple and straight forward. Statistically, two main point of interest arises after the document is rendered and produced. After all, the plots are informative, but they are also static. This limits the overall demonstrative ability of both plots.As the data set contains information for each individual day consistently, but only the overall trends and robust numbers are shown in the first plot. More detailed information are lost as a trade-off to revealing the robust trend of new cases daily by regions. In the second plot, the scattered points also fails to give any addition information of the data, even though it had the data indormation of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), the listdown package adapts this idea and allows author implanting addition decorators to the original listdown object during the processing of producing the document. The decorator control of listdown could be customized for an interactive plot, for example, Package plotly(Sievert, 2020). The package provides a native support turning ggplot objects into interactive HTML widgets. 
+In the previous chapter, the complete workflow of creating a document using listdown package is demonstrated. The example is relatively simple and straight forward. Usually, two main points of interest arises after the document is rendered and produced after a glimpse. After all, the plots are informative, but they are also static. This limits the overall demonstrative ability of both plots. As the data set contains information for each individual day consistently, but only the overall trends and robust numbers are shown in the first plot. More detailed information are lost as a trade-off to revealing the robust trend of new cases daily by regions. In the second plot, the scattered points also fails to give any addition information of the data, even though it had the data indormation of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), the listdown package adapts this idea and allows author implanting addition decorators to the original listdown object during the processing of producing the document. The decorator control of listdown could be customized for an interactive plot, for example, Package plotly(Sievert, 2020). The package provides a native support turning ggplot objects into interactive HTML widgets. 
 
 ```{r covid-decorator-example-step1}
 #Add in data and decorators
@@ -226,7 +226,7 @@ system("open covid-decorator-example.html")
 
 ## 3.2 Docorators for more complicated computational compontents
 
-
+### 3.2.1 Visualizing the Gapminder Data Set
 In the previous example, the _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects, in other words, function ggplotly uses the same pathway as ggplot when it is seeking the details of plotting. In the following example, we have used another set of data from the _gapminder_ package (Bryan, 2017). There are two main aspects demonstrated by the following example. Firstly, during some cases, the "decorator" seeks a different pathway in the plotting process that is not originally defined in the computational component from the list. 
 
 
@@ -234,12 +234,12 @@ In the previous example, the _ggplot_ contains both the plotting mechanism for t
 The original data was added into the list of files, and are presented in the form of data tables, that is, a type of decorator for the data to be presented. 
 
 
-#trelliscopejs example
 Previous examples has displayed the data despite the huge amount of data in the actual data set. 
 
 Now, by using trelliscopejs package, we are trying to fit multiple interactive plots in the listdown files as objects, further displaying after rendering into html. The following example shows how trelliscope works in R. 
 
 We have used the data from package _gapminder_. There are 5 continents, and we plotted the Oceania one.
+
 ```{r}
 library(ggplot2)
 library(gapminder)
@@ -258,7 +258,7 @@ qplot(year, lifeExp, data = subset(gapminder, continent == "Oceania")) +
 
 Too much plots if we plot it stright away, the final layout is folded, hence the trelliscopejs package allows us to search plots via interactive interface. 
 
-# Facetting the gapminder data
+### 3.2.2 Facetting the gapminder Data Set
 ```{r}
 library(listdown)
 library(gapminder)
@@ -300,6 +300,7 @@ ld_make_chunks(ld_gapminder))
   system("open gapminder-example.html")
 ```
 
+### 3.2.3 Facetting using Package TrelliscopeJS 
 
 ```{r}  
 # What trelliscope would look like when we use trelliscope instead of facet
@@ -311,8 +312,11 @@ ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) +
 
 
 ```
-  
-# Adding telliscopejs facetting the easy way
+
+# CH4 Solution using Decorators
+
+## 4.1 Adding telliscopejs facet for Gapminder Data Set
+
 ```{r}
 # Creating the computational components, this time without the 'facet_wrap' call.
 comp_comp_gapminder_trellis <- list(
@@ -352,7 +356,9 @@ ld_make_chunks(ld_gapminder_trellis))
 ```
 
 
-# TrelliscopeJS with a more generic funciton
+## 4.2 A More Generalized Solution
+
+### 4.2.1 Function facet_wrap2ts
 
 ```{r}  
 # Created a generic function for telliscope
@@ -372,11 +378,20 @@ facet_wrap2ts <- function(y){
   y + eval(c)
   } else y
 }
+```
 
+The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
+
+```{r}
+rld <- function(ld) {
+  writeLines(ld_make_chunks(ld), "doc.Rmd")
+  render("doc.Rmd",html_document())
+  system("open doc.html")
+}
 ```
 
 
-# Make the file and rendering the document using Package listdown 
+### 4.2.2 Testing facet_wrap2ts on Gapminder Data set
 
 ```{r}
 ## Same data set as the first example, switching the decorator this time instead of adding initial expression
@@ -397,26 +412,27 @@ ld_make_chunks(ld_gapminder_trellis_generic))
 ```
 
 
-## 5 Case Study: Reporting number of new cases and Death information for COVID Data
+# CH5 Case Study: Reporting number of new cases and Death information from COVID Data
 From the previous examples, the trelliscopeJS works especially well with big data set having variables with multiple levels. 
 
 
-# covid data with countries using trelliscope
+## 5.1 Applying the decorator
 ```{r}
 library(trelliscopejs)
 library(listdown)
+library(tidyverse)
 library(rmarkdown)
 #Reading in the data
-countries <- read.csv("COVID-countries.csv", 
-                      colClasses=c("Date", rep("character", 3), 
-                                   rep("numeric", 2)))
+covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
+                     colClasses=c("Date", rep("character", 3), 
+                                   rep("numeric", 4)), fileEncoding="UTF-8-BOM")
 
 # Creating the list
 comp_comp_covid_trellis <- list(
-  Data = countries,
-  `New cases per day for each Country` = ggplot(countries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country)) + 
-  geom_line(aes(x=Date_reported, y=New_cases, group=Country)) +
-  theme_bw() + 
+  Data = covidcountries,
+  `New cases per day for each Country` = ggplot(covidcountries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country), size = 0.6) + 
+  geom_line(aes(x=Date_reported, y=New_cases, group=Country), size = 0.4) +  scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") +
+    theme_bw() +
   labs(title = "New cases per day by Country") + 
     facet_wrap(vars(Country))
     )
@@ -426,7 +442,7 @@ comp_comp_covid_trellis <- list(
  
  
 # Creating the listdown package
-ld_covid_tellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
+ld_covid_trellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
 package = c("ggplot2","trelliscopejs"),
 decorator = list(ggplot = facet_wrap2ts)
 )
@@ -436,32 +452,28 @@ covid_trellis_example <- c(
  as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS",
 author = "Leon",
  date = "2021")),
-ld_make_chunks(ld_covid_tellis))
+ld_make_chunks(ld_covid_trellis))
 
 # Rendering
  writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
   render("covid_trellis-example.Rmd",html_document())
   system("open covid_trellis-example.html")
-```
-
-The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
-```{r}
-rld <- function(ld) {
-  writeLines(ld_make_chunks(ld), "doc.Rmd")
-  render("doc.Rmd",html_document())
-  system("open doc.html")
-}
+  
 ```
 
 
-## Discussion
+
+
+## 5.2 Discussion
 
 
 
-## Conclusion and Further Work
+# CH6 Conclusion and Further Work
+
+## 6.1 Conclusion
 The objective from this article, to 
 
-
+## 6.2 Further Work
 
 
 

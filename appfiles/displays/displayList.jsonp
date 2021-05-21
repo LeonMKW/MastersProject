@@ -3,11 +3,11 @@ __loadDisplayList__f94c586c([
     "group": "common",
     "name": "by_Country",
     "desc": "New cases per day by Country",
-    "n": 215,
+    "n": 237,
     "height": 500,
     "width": 500,
-    "updated": "2021-05-16 16:25:15",
-    "keySig": "6baabea06b6d87bf7bc141414fd3f1b0"
+    "updated": "2021-05-21 20:35:39",
+    "keySig": "9f6729013836d28074813087713c9ef8"
   },
   {
     "group": "common",
