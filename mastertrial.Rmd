@@ -154,8 +154,7 @@ After reading in our computational component that has been saved, the next step 
 
 #### Creating a Listdown object
 
-From the previous step, the list containing the plots now saved as a R object named _comp-comp_covid.rds_ goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. From the regions data example, library```ggplot2```, ```tidyverse``` and ```scales``` are required, they are specified and loaded together with the saved computational object. Then the author decides how the elements in the list will be presented in the document. 
-
+From the previous step, the list containing the plots now saved as a R object named _comp-comp_covid.rds_ goes through the following steps: A ```listdown``` object will be created. The object will be loaded into the designated document with a specified way, along with the libraries and codes required for the computational component. In this example, building the computational components in the list requires library ggplot2, tidyverse and scales, hence they are specified and loaded together with the saved computational object. Then the author decides how the elements in the list will be presented in the document. From the output, we can see ld_new is a listdown class object, the descriptions are as shown. Here, no decorators are added, the ggplot objects will be rendered just like any normal R markdown file. 
 
 ```{r covid-example-step2}
 #Making a listdown object
@@ -212,15 +211,19 @@ In the previous chapter, the complete workflow of creating a document using list
 
 ```{r covid-decorator-example-step1}
 #Add in data and decorators
+library(listdown)
 
 ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
 package = c("ggplot2", "tidyverse","scales", "plotly"),
 decorator = list(ggplot = ggplotly))
+
+class(ld_decorator)
+ld_decorator
 ```
 
+In this example, the RDS file __comp-comp_covid.rds__ remains the same as the previous example. From the description of the ld object, the computational components are identical, the only difference tends to be the decorators and it's associated packages imported.
 
-
-Referring to step 3 in chapter 2.2.1, the decorator is a description of the function from the computational components in the list being created. The decorator Itself is not a function call evaluatable by R, it describes the method of the function to be rendered during the process of knitting. When Knitr renders the R markdown file into a HTML document, the description stated in the decorator are injected to the markdown file telling the knitr to use the decribed method in the decorator instead of the original function arguments. In this case, the first step is to attach the packages required for listdown to render the document from the listdown object. Building the computational components in the list requires library ggplot2, tidyverse and scales, hence they are stated. And because we are using ```ggplotly``` from the plotly package as a decorator, library plotly is also attached. The next step is to replace the ggplot function call with the decorator ggplotly. This means when the listdown objects are rendered, method ggplotly will be used instead of ggplot and will be applied on all ggplot class objects within the list. From here, a simple header will be added and the HTML document will be rendered.  
+Referring to step 3 in chapter 2.2.1, the decorator is a description of the function from the computational components in the list being created. The decorator Itself is not a function call evaluatable by R, it describes the method of the function to be rendered during the process of knitting. When Knitr renders the R markdown file into a HTML document, the description stated in the decorator are injected to the markdown file telling the knitr to use the decribed method in the decorator instead of the original function arguments. In this case, the first step is to attach the packages required for listdown to render the document from the listdown object. In addition to the case study in chapter 2.2.2, because we are using ```ggplotly``` from the plotly package as a decorator, package plotly is also attached along with the other packages. The next step is to replace the ggplot function call with the decorator ggplotly. This means when the listdown objects are rendered, the method ggplotly will be used instead of ggplot and will be applied on all ggplot class objects within the list. From here, a simple header will be added and the HTML document will be produced. 
 
 ```{r}
 coviddecoratorexample <- c(
@@ -233,11 +236,18 @@ render("covid-decorator-example.Rmd",html_document())
 system("open covid-decorator-example.html")
 ```
 
+##### Number of New Cases
+
+##### Number of New Cases and Death
 
 
 ## 3.2 Docorators for more complicated computational compontents
 
-In the previous example, the _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects. In other words, function ggplotly seeks the same directory as a ggplot when it is seeking the details of plotting. In the following example, we have used another set of data from the _gapminder_ package (Bryan, 2017). There are two main aspects demonstrated by the following example. Firstly, during some cases, the "decorator" seeks a different pathway in the plotting process that is not originally defined in the computational component from the list. 
+The previous example reflected the improvements in visual perception by using decorators compared to static plots. However, both cases were considered as basic usage in prospect of the decorator introduction from On the Programmatic Generation of Reproducible Documents (Kane,Jiang and Urbanek, 2020). 
+
+<!-- ##WRITE FROM HERE## -->
+
+The _ggplot_ contains both the plotting mechanism for the scatter plots and the actual plots stored as list type objects. In other words, function ggplotly seeks the same directory as a ggplot when it is seeking the details of plotting. In the following example, we have used another set of data from the _gapminder_ package (Bryan, 2017). There are two main aspects demonstrated by the following example. Firstly, during some cases, the "decorator" seeks a different pathway in the plotting process that is not originally defined in the computational component from the list. 
 
 ### 3.2.1 Visualizing the Gapminder Data Set
 
