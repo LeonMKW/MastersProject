@@ -242,10 +242,14 @@ render("covid-decorator-example.Rmd",html_document())
 system("open covid-decorator-example.html")
 ```
 
-##### Number of New Cases
+##### 3.1.1 Number of New Cases with decorators
 
-##### Number of New Cases and Death
+After using ggplotly as a decorator method, the exact numbers of new cases can new be assessed directly in the plotting area. To be general, only the highest number of new cases from each region with the date observed will be report. The rest of the information are left with interest for the readers to interpret and explore. The first set of plots shows the highest number of new cases in a single day in the given time frame was 769,644 cases observed from the region of Americas, and it was the 19th of September 2020. The highest new cases observed in a single day in the regions of Africa was the 3rd of January, 2021, with the exact number of 40456. The highest new cases observed in a single day in the regions of Eastern Mediterranean was the 1st of December, 2020, with the exact number of 62206. The highest new cases observed in a single day in the regions of European was the 8th of November, 2020, with the exact number of 346573. The highest new cases observed in a single day in the regions of South East Asia was the 23th of December, 2020, with the exact number of 78377. Finally, the "lowest" region with highest observed number of new cases in a single day was Western Pacific region, at the number of 15155, on the 13th of February, 2020. 
 
+
+##### 3.1.2 Number of New Cases and Death with decorators
+
+The highest number of death and the date observed were also revealed. To be general, the information will be reported like chapter 3.1.1, rest of the information are also with interest for the readers to interpret and explore. 
 
 ## 3.2 Docorators for more complicated computational compontents
 
@@ -258,35 +262,15 @@ takes two main arguments when producing a plot. First, the source of the data de
 
 ### 3.2.1 Visualizing the Gapminder Data Set
 
-
-The original data was added into the list of files, and are presented in the form of data tables, that is, a type of decorator for the data to be presented. 
-
-
-Previous examples has displayed the data despite the huge amount of data in the actual data set. 
-
-Now, by using trelliscopejs package, we are trying to fit multiple interactive plots in the listdown files as objects, further displaying after rendering into html. The following example shows how trelliscope works in R. 
-
-We have used the data from package _gapminder_. There are 5 continents, and we plotted the Oceania one.
+The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set 
 
 ```{r}
 library(ggplot2)
 library(gapminder)
-head(gapminder)
-summary(gapminder$continent)
-```
-
-
-
-```{r}
-#just oceania 
-qplot(year, lifeExp, data = subset(gapminder, continent == "Oceania")) +
-  facet_wrap(~ country + continent) + theme_bw()
-
 ```
 
 Too much plots if we plot it stright away, the final layout is folded, hence the trelliscopejs package allows us to search plots via interactive interface. 
 
-### 3.2.2 Facetting the gapminder Data Set
 ```{r}
 library(listdown)
 library(gapminder)
@@ -328,7 +312,7 @@ ld_make_chunks(ld_gapminder))
   system("open gapminder-example.html")
 ```
 
-### 3.2.3 Facetting using Package TrelliscopeJS 
+### 3.2.2 Facetting using Package TrelliscopeJS 
 
 ```{r}  
 # What trelliscope would look like when we use trelliscope instead of facet
@@ -337,7 +321,6 @@ library(trelliscopejs)
 ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) +
   xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
   facet_trelliscope(~ country + continent, nrow = 2, ncol = 7, width = 300)
-
 
 ```
 
@@ -386,7 +369,10 @@ ld_make_chunks(ld_gapminder_trellis))
 
 ## 4.2 A More Generalized Solution
 
-### 4.2.1 Function facet_wrap2ts
+
+### 4.3 facet_wrap to facet_trelliscope
+
+#### 4.3.1 Function facet_wrap2ts
 
 ```{r}  
 # Created a generic function for telliscope
@@ -402,7 +388,8 @@ facet_wrap2ts <- function(y){
   ## construct the formula
   form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
   ## construct call
-  c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),ncol = 2,path="."))
+  c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),
+                   ncol = 2,path="."))
   y + eval(c)
   } else y
 }
@@ -419,7 +406,7 @@ rld <- function(ld) {
 ```
 
 
-### 4.2.2 Testing facet_wrap2ts on Gapminder Data set
+#### 4.3.2 Testing facet_wrap2ts on Gapminder Data set
 
 ```{r}
 ## Same data set as the first example, switching the decorator this time instead of adding initial expression
@@ -440,8 +427,51 @@ ld_make_chunks(ld_gapminder_trellis_generic))
 ```
 
 
+### 4.4 facet_wrap directly to facet_trelliscope with plotly
+
+#### 4.4.1 Function facet_tsplotly
+
+```{r}
+facet_tsplotly <- function(p) {
+  if (is(p$facet, "Facet") && !is(p, "FacetNull")) {
+    v = p$facet$vars()
+    o = ggplot()
+    FacetNull = o$facet
+    p$facet = FacetNull
+    form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
+    c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),
+                     ncol = 2,path=".", as_plotly = TRUE))
+    p + eval(c)
+  }  else p
+}
+```
+
+
+#### 4.4.2 Testing facet_tsplotly on Gapminder Data set
+
+```{r}
+## Still the same data set as the first example
+ld_gapminder_trellis_plotly <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs","plotly"),
+decorator = list(ggplot = facet_tsplotly)
+)
+
+gapminder_trellis_plotly_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots trelliscope plotly",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis_plotly))
+
+ writeLines(gapminder_trellis_plotly_example, "gapminder_trellis_plotly-example.Rmd")
+  render("gapminder_trellis_plotly-example.Rmd",html_document())
+  system("open gapminder_trellis_plotly-example.html")
+```
+
+
+
+
 # CH5 Case Study: Reporting number of new cases and Death information from COVID Data
-From the previous examples, the trelliscopeJS works especially well with big data set having variables with multiple levels. 
+From the previous examples, the trelliscopeJS works especially well with big data set having variables with multiple levels. The plotly interactive plots show more details on individual plots. 
 
 
 ## 5.1 Applying the decorator
@@ -472,7 +502,7 @@ comp_comp_covid_trellis <- list(
 # Creating the listdown package
 ld_covid_trellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
 package = c("ggplot2","trelliscopejs"),
-decorator = list(ggplot = facet_wrap2ts)
+decorator = list(ggplot = facet_tsplotly)
 )
 
 # Adding a header
