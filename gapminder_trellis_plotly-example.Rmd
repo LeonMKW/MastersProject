@@ -1,0 +1,27 @@
+---
+title: gapminder plots trelliscope plotly
+author: Leon
+date: '2021'
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(gapminder)
+library(trelliscopejs)
+library(plotly)
+
+cc_list <- readRDS("comp-comp_gapminder.rds")
+```
+
+# Data
+
+```{r}
+cc_list$Data
+```
+
+# life expectancy
+
+```{r}
+facet_tsplotly(cc_list$`life expectancy`)
+```

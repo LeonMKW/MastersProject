@@ -262,16 +262,12 @@ takes two main arguments when producing a plot. First, the source of the data de
 
 ### 3.2.1 Visualizing the Gapminder Data Set
 
-The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown process, the RDS file saved are used in the next chapter for advanced solutions.  
+The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much seperate plots. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. 
 
 ```{r}
+
 library(ggplot2)
 library(gapminder)
-```
-
-Too much plots if we plot it stright away, the final layout is folded, hence the trelliscopejs package allows us to search plots via interactive interface. 
-
-```{r}
 library(listdown)
 library(gapminder)
 library(trelliscopejs)
@@ -311,7 +307,13 @@ ld_make_chunks(ld_gapminder))
   system("open gapminder-example.html")
 ```
 
-### 3.2.2 Facetting using Package TrelliscopeJS 
+### 3.2.2 TrelliscopeJS
+
+In the previous writings, trelliscopejs package was mentionaed several times as a substitution to facetting functions in ggplot. The idea behind trelliscope described as D&R, standing for divide and recombine (Guha, Hafen, Rounds, Xia, Li, Xi, & Cleveland, 2012), was an approach in analytical method to solve large complex data visualizations. In a trelliscope system, the data set are splited into subets, with a visualization method applied to each subsets. The output is a structurally arrayed panel displaying the visualizations(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013). To implant this approach into ggplot2 interface, __facet_trelliscope()__ was introduced. The next example shows a simple change in the function solving the problem in chapter 3.2.1. 
+
+## 3.2.3 Facetting using Package TrelliscopeJS 
+
+After using __facet_trelliscope()__, the gapminder data set returns an visual output much more interpretable than before. However, this was created in a normal R markdown workflow. 
 
 ```{r}  
 # What trelliscope would look like when we use trelliscope instead of facet
@@ -323,9 +325,16 @@ ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) +
 
 ```
 
+### 3.3 facet_trelliscope() workflow
+
+Despite the example in next section (chapter 3.3) works flawlessly with a simple swap of function from __facet_wrap()__ to __facet_trelliscope()__, the mechaism behind is different. Firstly, most objects in R has a class attribution that defines the class of the object it belongs to. The __inherits()__ function in __facet_trelliscope()__ searches for the attributions to find a class for data. If the __inherits()__ function successfully finds from the attributes list, the data's class, it uses the data's attribute found from first layers of the attributes list, and that is the case of using __facet_trelliscope()__ in listdown. In another case, data's attribute may not be available and user will have to supply it in the argument. Up to this situation, the attribute of data is specified as "WAIVER" object, indicating the calling function should just use the default value. Sometimes, if the data's attribute is "NULL", or perhaps, the data itself does not exist, the function will return an error message stating the corresponding errors. There is a problem from this workflow in regards to the first situation when __facet_trelliscope()__ is used in listdown. The default for it is NULL, the path cannot be specified. 
+
+
+
+
 # CH4 Solution using Decorators
 
-## 4.1 Adding telliscopejs facet for Gapminder Data Set
+## 4.1 Adding telliscopejs facet for Gapminder in listdown
 
 ```{r}
 # Creating the computational components, this time without the 'facet_wrap' call.
@@ -449,6 +458,7 @@ facet_tsplotly <- function(p) {
 #### 4.4.2 Testing facet_tsplotly on Gapminder Data set
 
 ```{r}
+library(plotly)
 ## Still the same data set as the first example
 ld_gapminder_trellis_plotly <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
 package = c("ggplot2","gapminder", "trelliscopejs","plotly"),
