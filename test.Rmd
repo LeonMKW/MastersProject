@@ -1,0 +1,162 @@
+---
+title: "Untitled"
+author: "Mingkun Wu"
+date: "23/05/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries}
+Sys.setenv(LANG = "en")
+library(listdown)
+library(ggplot2)
+library(gtsummary)
+library(flextable)
+library(dplyr)
+library(survival)
+library(survminer)
+library(rmarkdown)
+library(plotly)
+library(gapminder)
+library(trelliscopejs)
+library(DT)
+library(knitr)
+```
+
+## rmd to html in rmd to html
+
+```{r covid-example-make1, include=FALSE}
+library(knitr)
+knitr::opts_knit$set(unnamed.chunk.label="covid-ex-1")
+knitr::opts_chunk$set(echo=FALSE)
+library(rmarkdown)
+# Write chunks
+writeLines(ld_make_chunks(ld_new), "covid-example1.Rmd")
+render("covid-example1.Rmd",html_document(), run_pandoc=FALSE, quiet=TRUE)
+```
+```{r covid-example-out1, results="asis", echo=FALSE}
+cat(paste(readLines("covid-example1.knit.md"), collapse="\n"))
+```
+
+
+```{r covid-example-step1}
+library(listdown)
+library(ggplot2)
+library(tidyverse)
+library(scales)
+library(dplyr)
+# Read in the regions data set.
+regions = read.csv("COVID-regions-2021.csv", 
+                    colClasses=c("character", "Date", rep("numeric", 2)))
+
+# Creating the computational components
+computational_components_covid <- list( 
+  Data = regions,
+  
+  `New cases per day for each region` = ggplot(regions) + 
+    geom_area(aes(Date_reported, New_cases, colour=WHO_region, fill=WHO_region), 
+              stat="smooth", 
+              alpha=.2, position="identity",
+              method="loess", span=.1)+ labs(title = "Number of daily COVID cases by WHO region") +
+    scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+    scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+                 expand = expansion(0),
+                 label = label_date_short()),
+
+`New cases per day for each region facet` = ggplot(regions, 
+                                                   aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region,
+                                                                stat = "smooth",  method="loess", span=.1)) + geom_area( alpha=.5) + 
+  facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region facet") + scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+     scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+                 expand = expansion(0),
+                 label = label_date_short()),
+
+
+`Cases against Death` = ggplot(data = regions,
+       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point(alpha = .2) + 
+    scale_x_sqrt() +
+    scale_y_sqrt() +
+  labs(title = "Number of COVID cases against death by WHO region"),
+     
+
+`Cases against Death facet` = ggplot(filter(regions, New_cases >= 0),
+       aes(New_cases, New_deaths, colour=WHO_region)) + 
+    geom_point(alpha=.2) +
+    scale_x_sqrt() +
+    scale_y_sqrt() +
+    facet_wrap(vars(WHO_region)) +
+    theme(aspect.ratio=1, legend.position="none") +
+    labs(title = "Number of COVID cases against death by WHO region by facet")
+
+)
+
+#Save file to the disk
+ saveRDS(computational_components_covid, "comp-comp_covid.rds")
+ 
+comp_covid <- readRDS("comp-comp_covid.rds")
+
+ld_cc_dendro(comp_covid)
+
+```
+
+```{r covid-example-step2}
+#Making a listdown object
+library(listdown)
+library(knitr)
+ld_new <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
+package = c("ggplot2", "tidyverse","scales"))
+
+class(ld_new)
+ld_new
+```
+
+```{r covid-example-step3}
+covidexample <- c(
+ as.character(ld_rmarkdown_header("Covid plots",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_new))
+
+covidexample
+```
+
+```{r covid-example-step4}
+library(knitr)
+library(rmarkdown)
+# Write the document.
+  writeLines(covidexample, "covid-example.Rmd")
+  render("covid-example.Rmd",html_document())
+ # system("open covid-example.html")
+```
+
+
+```{r covid-decorator-example-step1}
+#Add in data and decorators
+library(listdown)
+
+ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
+package = c("ggplot2", "tidyverse","scales", "plotly"),
+decorator = list(ggplot = ggplotly))
+
+class(ld_decorator)
+ld_decorator
+```
+
+```{r}
+coviddecoratorexample <- c(
+  as.character(ld_rmarkdown_header("covid-example")),
+          ld_make_chunks(ld_decorator))
+
+
+writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
+
+```
+
+```{r}
+render("covid-decorator-example.Rmd",html_document())
+system("open covid-decorator-example.html")
+```
+
