@@ -1,0 +1,29 @@
+---
+title: gapminder plots using trelliscope
+author: Leon
+date: '2021'
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(gapminder)
+library(trelliscopejs)
+
+ggtre = function(x) x + facet_trelliscope(~country + continent, 
+    nrow = 2, ncol = 7, width = 300, path = ".")
+
+cc_list <- readRDS("comp-comp_gapminder_trellis.rds")
+```
+
+# Data
+
+```{r}
+cc_list$Data
+```
+
+# life expectancy full
+
+```{r}
+ggtre(cc_list$`life expectancy full`)
+```

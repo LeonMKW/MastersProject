@@ -125,6 +125,7 @@ library(knitr)
 knitr::opts_knit$set(unnamed.chunk.label="covid-example-make-1")
 knitr::opts_chunk$set(echo=FALSE)
 knitr::opts_chunk$set(warning = FALSE)
+datatable(data.frame(x = 1))
 library(rmarkdown)
 # Write chunks
 writeLines(covidexample1, "covid-example.Rmd")

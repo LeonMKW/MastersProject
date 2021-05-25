@@ -7,15 +7,13 @@ output:
   pdf_document: default
 ---
 
-```{r libraries}
+```{r libraries, include = FALSE, echo=FALSE, warning=FALSE,message=FALSE}
 Sys.setenv(LANG = "en")
 library(listdown)
 library(ggplot2)
 library(gtsummary)
 library(flextable)
 library(dplyr)
-library(survival)
-library(survminer)
 library(rmarkdown)
 library(plotly)
 library(gapminder)
@@ -277,8 +275,10 @@ library(DT)
 library(rmarkdown)
 
 # Load the gapminder data set.
- data(gapminder)
+data(gapminder)
+# gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
 
+ 
 # Creating the computational components
 comp_comp_gapminder <- list(
   Data = gapminder,
@@ -319,7 +319,8 @@ After using __facet_trelliscope()__, the gapminder data set returns an visual ou
 # What trelliscope would look like when we use trelliscope instead of facet
 library(ggplot2)
 library(trelliscopejs)
-ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) +
+library(gapminder)
+ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) +
   xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
   facet_trelliscope(~ country + continent, nrow = 2, ncol = 7, width = 300)
 
@@ -327,17 +328,19 @@ ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) +
 
 ### 3.3 facet_trelliscope() workflow
 
-Despite the example in next section (chapter 3.3) works flawlessly with a simple swap of function from __facet_wrap()__ to __facet_trelliscope()__, the mechaism behind is different. Firstly, most objects in R has a class attribution that defines the class of the object it belongs to. The __inherits()__ function in __facet_trelliscope()__ searches for the attributions to find a class for data. If the __inherits()__ function successfully finds from the attributes list, the data's class, it uses the data's attribute found from first layers of the attributes list, and that is the case of using __facet_trelliscope()__ in listdown. In another case, data's attribute may not be available and user will have to supply it in the argument. Up to this situation, the attribute of data is specified as "WAIVER" object, indicating the calling function should just use the default value. Sometimes, if the data's attribute is "NULL", or perhaps, the data itself does not exist, the function will return an error message stating the corresponding errors. There is a problem from this workflow in regards to the first situation when __facet_trelliscope()__ is used in listdown. The default for it is NULL, the path cannot be specified. 
-
-
-
+Despite the example in next section (chapter 3.3) works flawlessly with a simple swap of function from __facet_wrap()__ to __facet_trelliscope()__, the mechaism behind is as describes Firstly, most objects in R has a class attribution that defines the class of the object it belongs to. The __inherits()__ function in __facet_trelliscope()__ searches for the attributions to find the data. If the __inherits()__ function successfully finds the data from the attributes list, it uses the data found from first layers of the attributes list, and that is the case of using __facet_trelliscope()__ in listdown. In another case, data may not be available and user will have to supply it in the argument. In this situation, the attribute of data is specified as "WAIVER" object, indicating the calling function should just use the default value. Sometimes, if the data's attribute is "NULL", meaning the data itself does not exist, the function will return an error message stating the corresponding errors. There is a problem from this workflow in regards to the first situation when __facet_trelliscope()__ is used in listdown. The default for __inherits()__ searching data is NULL, the pathway tells the function call there is no available data, but infact, the data is present in the listdown object. In the next chapter, several approaches to solve this issue are discussed.  
 
 # CH4 Solution using Decorators
 
+As previous examples demonstrated. The decorator indicates a name of method or function that are applied to the stated class of object in the listdown file during kniting process. The goal is to swap __facet_wrap()__ with __facet_trelliscope()__, and it requires partially changing the function call of the ggplot object in listdown. One fast solution was to exclude the __facet_wrap()__ function from the listdown file and add __facet_trelliscope()__ through __initial_expr()__ argument. The code chunk in __initial_expr()__ is inserted immediately once the required libraries are loaded. When render is kntting the listdown object, codes in __initial_expr()__ is evaluated before the listdown objects are rendered. The following example demonstrates this approach.
+
 ## 4.1 Adding telliscopejs facet for Gapminder in listdown
+
+To exclude the facet argument, we recreated the computational component with no facet arguments, and save the list into an RDS file named _comp-comp_gapminder_trellis.rds_. Everything else remains the same  within a normal R markdown workflow. 
 
 ```{r}
 # Creating the computational components, this time without the 'facet_wrap' call.
+
 comp_comp_gapminder_trellis <- list(
   Data = gapminder,
   `life expectancy full` = ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
@@ -349,19 +352,28 @@ comp_comp_gapminder_trellis <- list(
  saveRDS(comp_comp_gapminder_trellis, "comp-comp_gapminder_trellis.rds")
 ```
 
+The new function __ggtre()__ is created in the intial expression. The function consists of two parts, the first being the original function call. In this example, it was the ggplot objects in the listfown file. The dseonf part is the __facet_trelliscope()__ arguments with the facetting variables and other parameters. The crucial key here is the pathway of the function call. Trelliscope attempts to find the variable attributes with default, which is NULLdata. By adding a pathway using __path="."__ argument, facet_trelliscope now changes the pathway to the current working directory. once knitr is called from rendering the listdown object, initial expression gets evaluated first. The decorator method is directed to the right pathway containing the elements need for the trelliscope argument. 
 
 ```{r}
+library(listdown)
 # Adding trelliscope call in the initial expressions, notice the description: Path ="."
 
 ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder_trellis.rds"),
 package = c("ggplot2","gapminder", "trelliscopejs"),
-decorator = list(ggplot = gaptre), 
+decorator = list(ggplot = ggtre), 
 init_expr = {
-  gaptre = function(x) x + facet_trelliscope(~ country + continent,
+  ggtre = function(x) x + facet_trelliscope(~ country + continent,
                                            nrow = 2, ncol = 7, width = 300, path = ".")
 }
 )
+ld_gapminder_trellis
+```
 
+From the description of the listdown method above, the initial expression that gets to run immediately after packages are loaded are now included. The decorator method for ggplot class objects are now rendered using the method __ggtre()__ described in the initial expression. The next chunk of codes follows a normal listdown workflow and produces the docuemnt _gapminder_trellis-example.html_, implementing trelliscope to ggplot. 
+
+
+```{r}
+library(rmarkdown)
 gapminder_trellis_example <- c(
  as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
 author = "Leon",
@@ -374,16 +386,25 @@ ld_make_chunks(ld_gapminder_trellis))
 
 ```
 
+### UNABLE TO SOLVE 
+
+Error: lexical error: invalid bytes in UTF8 string.
+          Cook Islands","Costa Rica","C������te d������Ivoire","Croati
+                     (right here) ------^
+
+
+
+Each country can now be shown clearly like the output from a normal R markdown workflow. However, in this approach, the function in the listdown file was modified specially to fit the requirement for using __ggtre()__ added. It was also suggested that the number of initial expression and the complexity of the initial expression shall be kept minimal (Kane,Jiang and Urbanek, 2020). The initial expression is considereably long in this case, and could be even longer if further arguments were added. Furthermore, the variables from function __ggtre()__ only works for this specific data. If the user wishes to visualize another data set, not only the function of the ggplot within the listdown file needs to be modified, but also the variables in __ggtre()__ needs to be the same as the original ggplot's facet argument. A more generalized approach shall be developed. 
 
 ## 4.2 A More Generalized Solution
 
-
 ### 4.3 facet_wrap to facet_trelliscope
+The common ground for  __facet_wrap()__ and __facet_trelliscope()__ is their ability to divied the data into smaller subsets and recombine them into either a panel or multiple arrays of plots. For the two different methods, the variable used as the subsetting condition is the same throught out the process. If a function could pull the facetting variables out from __facet_wrap()__, then places it into __facet_trelliscope()__, then we could get rid of the __facet_wrap()__ in the function without the need to modify the original ggplot funtion from listdown. The only problem remains is the facetting layer left in the old ggplot arguments which needs to be removed and replaced by the new trelliscope facets. The function __facet_wrap2ts()__ was designed to solve the issues mention above. This solves the problem from chapter 4.1 in a more generalized way, no modifications needs to be carried out on the original listdown functions. 
 
 #### 4.3.1 Function facet_wrap2ts
 
 ```{r}  
-# Created a generic function for telliscope
+# Created a generic function for trelliscope
 # y is an ggplot object
 facet_wrap2ts <- function(y){
   if (is(y$facet, "Facet") && !is(y, "FacetNull")) {
@@ -396,21 +417,49 @@ facet_wrap2ts <- function(y){
   ## construct the formula
   form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
   ## construct call
-  c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),
-                   ncol = 2,path="."))
+  c = as.call(list(quote(facet_trelliscope), form,
+                   ncol = 2, path="."))
   y + eval(c)
   } else y
 }
+
 ```
+
+This function works as follows: 
+
+1. we assume y is a ggplot class object in the listdown object, and it has an argument for facet. The first __if__ statement states that facet argument of the ggplot objecy y must have a facet and must not be the class "facetNULL", or empty, which means there simply is no facet. Then the transfomation process is continued. 
+
+2. Next, a vector v is created, which obtains the variable names from the facet argument within the ggplot object y. The variable names in v are important because it will be passed to __facet_trelliscope()__'s facet arguments. We are not changing any variables of the data to visualize at this step, but the function of which the variables gets fed into. 
+
+3. Now, because the ggplot object y still has the original layer of facet that needs to be replaced by the new trelliscope facet, we created an empty ggplot object __o__. Then the empty facet attribution named _facetNULL_ in object __o__ gets pulled out. _facetNULL_ are then injected into the already existing facet attributes in y. Up to this step, y still remains to be the exact same ggplot object as original, except without the facet argument. 
+
+4. The formula is then created using the original facet variables previously stored in v and the correct syntax. It is converted from an R object of the character class to an R object of the expression class. Before step 5, it is evaluated and ready to be used to build the function call. 
+
+5. The next step is constructing the function call. __facet_trelliscope()__ argument were implanted with the new formula named _form_ from the previous steps. 
+
+6. The last step is to call the original ggplot object y combined with the evaluated result of the new function __c__. This returns an output that shall look identical to using __facet_trelliscope()__ in normal R markdown files.
+
+7. There are also cases this decorator is applied improperly, for example when the ggplot object y does not contain any facet arguments, that is the attribute being facetNULL. This is encountered by using the __else__ from the if loop. The output remains the exact same of y untouched. If users intend to add a __facet_wrap()__ as a decorator, then function style __ggtre__ can be used. It requires the user to manually set the variables for facetting, and the decorator function shall be included as an intial expresison, which gets evaluated before the knitting process. 
+
 
 The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
 
 ```{r}
-rld <- function(ld) {
+rld <- function(ld, header, author, date) {
   writeLines(ld_make_chunks(ld), "doc.Rmd")
   render("doc.Rmd",html_document())
   system("open doc.html")
 }
+
+gapminder_trellis_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis))
+
+ writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
+  render("gapminder_trellis-example.Rmd",html_document())
+  system("open gapminder_trellis-example.html")
 ```
 
 
@@ -492,7 +541,7 @@ library(rmarkdown)
 #Reading in the data
 covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
                      colClasses=c("Date", rep("character", 3), 
-                                   rep("numeric", 4)), fileEncoding="UTF-8-BOM")
+                                   rep("numeric", 4)))
 
 # Creating the list
 comp_comp_covid_trellis <- list(
