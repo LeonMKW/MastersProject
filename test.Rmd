@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r libraries}
+```{r libraries, include=FALSE}
 Sys.setenv(LANG = "en")
 library(listdown)
 library(ggplot2)
@@ -28,21 +28,7 @@ library(knitr)
 
 ## rmd to html in rmd to html
 
-```{r covid-example-make1, include=FALSE}
-library(knitr)
-knitr::opts_knit$set(unnamed.chunk.label="covid-ex-1")
-knitr::opts_chunk$set(echo=FALSE)
-library(rmarkdown)
-# Write chunks
-writeLines(ld_make_chunks(ld_new), "covid-example1.Rmd")
-render("covid-example1.Rmd",html_document(), run_pandoc=FALSE, quiet=TRUE)
-```
-```{r covid-example-out1, results="asis", echo=FALSE}
-cat(paste(readLines("covid-example1.knit.md"), collapse="\n"))
-```
-
-
-```{r covid-example-step1}
+```{r covid-example-step1, message=FALSE,warning=FALSE}
 library(listdown)
 library(ggplot2)
 library(tidyverse)
@@ -106,57 +92,48 @@ ld_cc_dendro(comp_covid)
 #Making a listdown object
 library(listdown)
 library(knitr)
+library(DT)
 ld_new <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
-package = c("ggplot2", "tidyverse","scales"))
+package = c("ggplot2", "tidyverse","scales", "DT"),
+decorator = list(data.frame = datatable))
 
 class(ld_new)
 ld_new
 ```
 
 ```{r covid-example-step3}
-covidexample <- c(
+covidexample1 <- c(
  as.character(ld_rmarkdown_header("Covid plots",
 author = "Leon",
  date = "2021")),
 ld_make_chunks(ld_new))
 
-covidexample
+covidexample1
 ```
 
 ```{r covid-example-step4}
-library(knitr)
-library(rmarkdown)
+# library(knitr)
+# library(rmarkdown)
 # Write the document.
-  writeLines(covidexample, "covid-example.Rmd")
-  render("covid-example.Rmd",html_document())
- # system("open covid-example.html")
+# writeLines(covidexample1, "covid-example.Rmd")
+# render("covid-example.Rmd",html_document())
+# system("open covid-example.html")
+```
+
+```{r covid-example-make1, include=FALSE}
+library(knitr)
+knitr::opts_knit$set(unnamed.chunk.label="covid-example-make-1")
+knitr::opts_chunk$set(echo=FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+library(rmarkdown)
+# Write chunks
+writeLines(covidexample1, "covid-example.Rmd")
+render("covid-example.Rmd",html_document(), run_pandoc=FALSE, quiet=TRUE)
 ```
 
 
-```{r covid-decorator-example-step1}
-#Add in data and decorators
-library(listdown)
-
-ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
-package = c("ggplot2", "tidyverse","scales", "plotly"),
-decorator = list(ggplot = ggplotly))
-
-class(ld_decorator)
-ld_decorator
+```{r covid-example-out1, results="asis", echo=FALSE}
+cat(paste(readLines("covid-example.knit.md"), collapse="\n"))
 ```
 
-```{r}
-coviddecoratorexample <- c(
-  as.character(ld_rmarkdown_header("covid-example")),
-          ld_make_chunks(ld_decorator))
-
-
-writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
-
-```
-
-```{r}
-render("covid-decorator-example.Rmd",html_document())
-system("open covid-decorator-example.html")
-```
 
