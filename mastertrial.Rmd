@@ -260,8 +260,8 @@ takes two main arguments when producing a plot. First, the source of the data de
 
 ### 3.2.1 Visualizing the Gapminder Data Set
 
-The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much seperate plots. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. 
-
+The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown workflow process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much plots inserted onto the same panel. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. This package provides us a potential tool expanding each seperate plot on multiple panels, which will be discussed later in the paper. 
+. 
 ```{r}
 
 library(ggplot2)
@@ -399,7 +399,7 @@ Each country can now be shown clearly like the output from a normal R markdown w
 ## 4.2 A More Generalized Solution
 
 ### 4.3 facet_wrap to facet_trelliscope
-The common ground for  __facet_wrap()__ and __facet_trelliscope()__ is their ability to divied the data into smaller subsets and recombine them into either a panel or multiple arrays of plots. For the two different methods, the variable used as the subsetting condition is the same throught out the process. If a function could pull the facetting variables out from __facet_wrap()__, then places it into __facet_trelliscope()__, then we could get rid of the __facet_wrap()__ in the function without the need to modify the original ggplot funtion from listdown. The only problem remains is the facetting layer left in the old ggplot arguments which needs to be removed and replaced by the new trelliscope facets. The function __facet_wrap2ts()__ was designed to solve the issues mention above. This solves the problem from chapter 4.1 in a more generalized way, no modifications needs to be carried out on the original listdown functions. 
+The common ground for  __facet_wrap()__ and __facet_trelliscope()__ is their concept of dividing the data into smaller subsets and recombine them into either a panel or multiple arrays of plots. For the two different arguments, the variable used as the subsetting condition is the same through out the process. If a function could pull the facetting variables out from __facet_wrap()__, then places it into __facet_trelliscope()__, then we could get rid of the __facet_wrap()__ in the function without the need to modify the original ggplot funtion from listdown. The only problem remains is the facetting layer left in the old ggplot arguments which needs to be removed and replaced by the new trelliscope facets. The function __facet_wrap2ts()__ was designed to solve the issues mention above. This solves the problem from chapter 4.1 in a more generalized way, no modifications needs to be carried out on the original ggplot function in listdown. 
 
 #### 4.3.1 Function facet_wrap2ts
 
@@ -439,31 +439,11 @@ This function works as follows:
 
 6. The last step is to call the original ggplot object y combined with the evaluated result of the new function __c__. This returns an output that shall look identical to using __facet_trelliscope()__ in normal R markdown files.
 
-7. There are also cases this decorator is applied improperly, for example when the ggplot object y does not contain any facet arguments, that is the attribute being facetNULL. This is encountered by using the __else__ from the if loop. The output remains the exact same of y untouched. If users intend to add a __facet_wrap()__ as a decorator, then function style __ggtre__ can be used. It requires the user to manually set the variables for facetting, and the decorator function shall be included as an intial expresison, which gets evaluated before the knitting process. 
-
-
-The _rld_ function shows a general syntax for rendering a listdown file into a html document. The header like the previous example can be added seperately. 
-
-```{r}
-rld <- function(ld, header, author, date) {
-  writeLines(ld_make_chunks(ld), "doc.Rmd")
-  render("doc.Rmd",html_document())
-  system("open doc.html")
-}
-
-gapminder_trellis_example <- c(
- as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis))
-
- writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
-  render("gapminder_trellis-example.Rmd",html_document())
-  system("open gapminder_trellis-example.html")
-```
-
+7. There are also cases this decorator is applied improperly, for example when the ggplot object y does not contain any facet arguments, that is the attribute being facetNULL. This is encountered by using the __else__ from the if loop. The output remains the exact same of y untouched. If users intend to add a __facet_wrap()__ as a decorator, then function style __ggtre__ can be used. It requires the user to manually set the variables for facetting, and the decorator function shall be included as an intial expression, which gets evaluated before the knitting process. 
 
 #### 4.3.2 Testing facet_wrap2ts on Gapminder Data set
+
+To testify if the function works for the gapminder data set, the same listdown object was used from chapter 3.2.1. This time, the initial expression was removed, and the decorator was changed to the new function. the listdown object was saved as _ld_gapminder_trellis_generic_. After adding the headers, we rendered the document to check the outputs. 
 
 ```{r}
 ## Same data set as the first example, switching the decorator this time instead of adding initial expression
@@ -483,8 +463,13 @@ ld_make_chunks(ld_gapminder_trellis_generic))
   system("open gapminder_trellis_generic-example.html")
 ```
 
+After applying the __facet_wrap2ts__ decorator function, the rendering showed a promising result of the HTML document. 
+
 
 ### 4.4 facet_wrap directly to facet_trelliscope with plotly
+
+The  __facet_wrap2ts__ was successful in turning ggplot objects with facet argument into trelliscope plots in listdown. However, during big data set visualizations, we saw the power of ggplotly as a decorator from example 3.1. 
+
 
 #### 4.4.1 Function facet_tsplotly
 
