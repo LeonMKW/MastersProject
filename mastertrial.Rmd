@@ -371,7 +371,6 @@ ld_gapminder_trellis
 
 From the description of the listdown method above, the initial expression that gets to run immediately after packages are loaded are now included. The decorator method for ggplot class objects are now rendered using the method __ggtre()__ described in the initial expression. The next chunk of codes follows a normal listdown workflow and produces the docuemnt _gapminder_trellis-example.html_, implementing trelliscope to ggplot. 
 
-
 ```{r}
 library(rmarkdown)
 gapminder_trellis_example <- c(
@@ -391,6 +390,8 @@ ld_make_chunks(ld_gapminder_trellis))
 Error: lexical error: invalid bytes in UTF8 string.
           Cook Islands","Costa Rica","C������te d������Ivoire","Croati
                      (right here) ------^
+                     
+UPDATE: Works in Windows machine, doesnt work on mac machine
 
 
 
@@ -402,6 +403,8 @@ Each country can now be shown clearly like the output from a normal R markdown w
 The common ground for  __facet_wrap()__ and __facet_trelliscope()__ is their concept of dividing the data into smaller subsets and recombine them into either a panel or multiple arrays of plots. For the two different arguments, the variable used as the subsetting condition is the same through out the process. If a function could pull the facetting variables out from __facet_wrap()__, then places it into __facet_trelliscope()__, then we could get rid of the __facet_wrap()__ in the function without the need to modify the original ggplot funtion from listdown. The only problem remains is the facetting layer left in the old ggplot arguments which needs to be removed and replaced by the new trelliscope facets. The function __facet_wrap2ts()__ was designed to solve the issues mention above. This solves the problem from chapter 4.1 in a more generalized way, no modifications needs to be carried out on the original ggplot function in listdown. 
 
 #### 4.3.1 Function facet_wrap2ts
+
+The function __facet_wrap2ts__ designed to be a dcorator method for the listdown package is shown below. 
 
 ```{r}  
 # Created a generic function for trelliscope
@@ -463,17 +466,20 @@ ld_make_chunks(ld_gapminder_trellis_generic))
   system("open gapminder_trellis_generic-example.html")
 ```
 
-After applying the __facet_wrap2ts__ decorator function, the rendering showed a promising result of the HTML document. 
+After applying the __facet_wrap2ts__ decorator function, the rendering showed a promising result of the HTML document. This concept can be further extended and used on more decorators for the listdown package. 
 
 
 ### 4.4 facet_wrap directly to facet_trelliscope with plotly
 
-The  __facet_wrap2ts__ was successful in turning ggplot objects with facet argument into trelliscope plots in listdown. However, during big data set visualizations, we saw the power of ggplotly as a decorator from example 3.1. 
-
+The  __facet_wrap2ts__ was successful in turning ggplot objects with facet argument into trelliscope plots in listdown. However, during big data set visualizations, we saw the power of ggplotly as a decorator from example 3.1. It would be appriopriate to combine library plotly with trelliscope, and implement it into a listdown decorator. This fulfills the needs of decorators when users produce documents via a listdown workflow that is intended for big data visualizations. From the original trelliscope package, plotly was supported as one of the arguments in function __facet_trelliscope()__. If we added the arguments and set the default __as_plotly = TRUE__, the output shall be interactive, while the layout remains the same of using telliscope. 
 
 #### 4.4.1 Function facet_tsplotly
 
+The function __facet_tsplotly__ was created based on  __facet_wrap2ts__. The majority of workflow remains identical except during the function call constructing step. The extra argument __as_plotly__ was fed into the function call during the call construction process, and gets evaluated with the new call. As with the same that if p does not have a facet, then the ggplot object  would remain untouched. 
+
+
 ```{r}
+# If p is an ggplot object
 facet_tsplotly <- function(p) {
   if (is(p$facet, "Facet") && !is(p, "FacetNull")) {
     v = p$facet$vars()
@@ -483,6 +489,7 @@ facet_tsplotly <- function(p) {
     form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
     c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),
                      ncol = 2,path=".", as_plotly = TRUE))
+    #the function call with the plotly argument gets evaluated 
     p + eval(c)
   }  else p
 }
@@ -490,6 +497,8 @@ facet_tsplotly <- function(p) {
 
 
 #### 4.4.2 Testing facet_tsplotly on Gapminder Data set
+
+To testify if the decorator method is working. Again, the RDS file created for the gapminder data set from chapter 3.2.1 will be used. The decorator in the newly created  listown object _ld_gapminder_trellis_plotly_ was changed to __facet_tsplotly__ this time. 
 
 ```{r}
 library(plotly)
@@ -510,14 +519,49 @@ ld_make_chunks(ld_gapminder_trellis_plotly))
   system("open gapminder_trellis_plotly-example.html")
 ```
 
-
+The output was interactive. Each individual observations for each country was interactive. Improving the power of the overall visualization. 
 
 
 # CH5 Case Study: Reporting number of new cases and Death information from COVID Data
-From the previous examples, the trelliscopeJS works especially well with big data set having variables with multiple levels. The plotly interactive plots show more details on individual plots. 
+
+# 5.1 The Data Set
+From the previous chapters, the trelliscope works especially well with big data set having variables with multiple levels. The plotly interactive plots showed more details on each individual plots. The decorator function combining the two methods was created and testified. In this chapter, lets go back to the full COVID-19 data. The data set was sourced from World Health Organization offical website. All data was provided to the date before this paper was completely finished. Based on the description (https://covid19.who.int/info/)The full data set contains the following informations:
+
+- Date_reported
+The date reported variable was in the class type of dates. The variable records the date of the information reported to WHO.
+
+- Country_code
+The Country code variable is the ISO (International Organization for Standardization) Alpha-2 coundtry codes. The column was in the character string class.
+
+- Country
+The Country variable contains the names of all the WHO membership countries, some names aslo stands for political regions or areas if not claimed to be a country. The column type is also character string class.  
+
+- WHO_region
+The WHO region variable was previously introduced back in the first case study. The six big WHO regions are: African Region, Region of the Americas, South-East Asia Region, European Region, Eastern Mediterranean Region, and Western Pacific Region. This column is also a character string class, the column recorded the abbreviations of the regions instead of the full names. 
+
+- New_cases
+The new cases variable records the number of new confirmed cases each day by subtracting previous cumulative case count from current cumulative cases count from WHO. The column was recorded in the class integers.
+
+- Cumulative_cases
+The cumulative cases records the confirmed cases reported to WHO up to the date in date reported. The column was in the integer string class.
+
+- New_deaths
+
+The new deaths variable records the new confirmed deaths each day. The calculation methods were the same as recording the new cases number and is recorded as integer class. 
+
+- Cumulative_deaths
+
+The cumulative deaths number was recorded the same as the cumulative cases number, and is recorded as the integer class. 
 
 
-## 5.1 Applying the decorator
+ For the motivation of the listdown package, the narrative components are 
+
+
+
+
+
+## 5.2 Applying the decorator
+
 ```{r}
 library(trelliscopejs)
 library(listdown)
