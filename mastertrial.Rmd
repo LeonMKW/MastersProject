@@ -574,7 +574,8 @@ library(rmarkdown)
 #Reading in the data
 covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
                      colClasses=c("Date", rep("character", 3), 
-                                   rep("numeric", 4)))
+                                   rep("numeric", 4))) 
+colnames(covidcountries)[1] <- gsub('^...','',colnames(covidcountries)[1])
 
 # Creating the list
 comp_comp_covid_trellis <- list(
