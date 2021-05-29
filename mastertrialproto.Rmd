@@ -514,6 +514,83 @@ ld_make_chunks(ld_covid_tellis_latest))
 ```
 
 
+```{r echo=FALSE}
+library(trelliscopejs)
+library(listdown)
+library(tidyverse)
+library(rmarkdown)
+
+
+
+
+facet_tsplotlytry <- function(p, ...) {
+  if (is(p$facet, "Facet") && !is(p, "FacetNull")) {
+    v = p$facet$vars()
+    o = ggplot()
+    FacetNull = o$facet
+    p$facet = FacetNull
+    form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
+    c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),
+                     ncol = 2,path= ., as_plotly = TRUE))
+    #the function call with the plotly argument gets evaluated 
+    p + eval(c)
+  }  else p
+}
+
+
+
+
+#Reading in the data
+covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
+                     colClasses=c("Date", rep("character", 3), 
+                                   rep("numeric", 4))) 
+colnames(covidcountries)[1] <- gsub('^...','',colnames(covidcountries)[1])
+
+# Creating the list
+comp_comp_covid_trellis <- list(
+  Data = covidcountries,
+  `New COVID-19 details per day for each Country` = ggplot(covidcountries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country), size = 0.6) + 
+  geom_line(aes(x=Date_reported, y=New_cases, group=Country), size = 0.4) +  scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") +
+    theme_bw() +
+  labs(title = "COVID-19 Details by Country") + 
+    facet_wrap(vars(Country)),
+
+`Cases against Death facet` = ggplot(filter(covidcountries, New_cases >= 0)) + 
+    geom_point(aes(x = New_cases,y = New_deaths), alpha=.2) +
+    scale_x_sqrt() +
+    scale_y_sqrt() +
+    facet_wrap(vars(WHO_region)) +
+    labs(title = "Number of COVID cases against death by WHO region by facet")
+  
+    )
+
+
+#Save file to the disk
+ saveRDS(comp_comp_covid_trellis, "comp-comp_covid_trellis.rds")
+ 
+ 
+# Creating the listdown package
+ld_covid_trellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
+package = c("ggplot2","trelliscopejs", "DT"),
+decorator = list(ggplot = facet_tsplotly, 
+                 data.frame = datatable)
+)
+
+
+# Adding a header
+covid_trellis_example <- c(
+ as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_covid_trellis))
+
+# Rendering
+ writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
+  render("covid_trellis-example.Rmd",html_document())
+  system("open covid_trellis-example.html")
+  
+```
+
 
 
 
