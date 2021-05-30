@@ -5,3 +5,7 @@ covid-example.rmd
 covid-decorator-example.Rmd
 covid_trellis-example.Rmd
 *.rds
+.Rhistory
+*.jsonp
+lib
+appfiles

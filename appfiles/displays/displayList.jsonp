@@ -6,7 +6,7 @@ __loadDisplayList__f94c586c([
     "n": 237,
     "height": 500,
     "width": 500,
-    "updated": "2021-05-29 21:48:51",
+    "updated": "2021-05-30 16:20:24",
     "keySig": "f840f7658a458ae1784ae9a5ba2b709e"
   },
   {
@@ -16,17 +16,7 @@ __loadDisplayList__f94c586c([
     "n": 142,
     "height": 500,
     "width": 500,
-    "updated": "2021-05-29 20:46:30",
+    "updated": "2021-05-30 15:19:51",
     "keySig": "6c71dcaf175cfb5dfa3b8fbd5839dab0"
-  },
-  {
-    "group": "common",
-    "name": "by_WHO_region",
-    "desc": "Number of COVID cases against death by WHO region by facet",
-    "n": 7,
-    "height": 500,
-    "width": 500,
-    "updated": "2021-05-29 21:43:24",
-    "keySig": "05a41ef2c7d9114ad550c6875fa9513a"
   }
 ])
