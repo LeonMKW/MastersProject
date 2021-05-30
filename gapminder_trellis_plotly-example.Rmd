@@ -14,12 +14,6 @@ library(plotly)
 cc_list <- readRDS("comp-comp_gapminder.rds")
 ```
 
-# Data
-
-```{r}
-cc_list$Data
-```
-
 # life expectancy
 
 ```{r}
