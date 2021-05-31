@@ -5,9 +5,42 @@ date: "31/05/2021"
 output: html_document
 ---
 
-Comments
+Comments: The i frame not working for embedding the html when I knit this html. The htmls from the 5 folders and the html names are: 
+
+covideexample/covid-decorator-example.html
+
+```{r results="asis", echo=FALSE}
+cat('<iframe src="covideexample/covid-decorator-example.html" width=920 height=600 frameBorder=0>
+</iframe>')
+```
+
+ggtre/gapminder_trellis-example.html
+
+```{r results="asis", echo=FALSE}
+cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 frameBorder=0>
+</iframe>')
+```
+
+wrap2ts/gapminder_trellis_generic-example.html
+
+```{r results="asis", echo=FALSE}
+cat('<iframe src="wrap2ts/gapminder_trellis_generic-example.html" width=920 height=600 frameBorder=0>
+</iframe>')
+```
+
+tsplotly/gapminder_trellis_plotly-example.html
+
+```{r results="asis", echo=FALSE}
+cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 height=600 frameBorder=0>
+</iframe>')
+```
+
+
+covidfinal/covid_trellis-example.html
 
 ```{r results="asis", echo=FALSE}
 cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 frameBorder=0>
 </iframe>')
 ```
+
+
