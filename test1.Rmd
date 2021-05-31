@@ -1,0 +1,13 @@
+---
+title: "test1"
+author: "Mingkun Wu"
+date: "31/05/2021"
+output: html_document
+---
+
+Comments
+
+```{r results="asis", echo=FALSE}
+cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 frameBorder=0>
+</iframe>')
+```

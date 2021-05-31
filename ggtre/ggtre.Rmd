@@ -1,0 +1,91 @@
+---
+title: "ggtre"
+author: "Mingkun Wu"
+date: "31/05/2021"
+output: html_document
+---
+
+```{r libraries, include = FALSE, echo=FALSE, warning=FALSE,message=FALSE}
+Sys.setenv(LANG = "en")
+library(listdown)
+library(ggplot2)
+library(gtsummary)
+library(flextable)
+library(dplyr)
+library(rmarkdown)
+library(plotly)
+library(gapminder)
+library(trelliscopejs)
+library(DT)
+library(knitr)
+```
+
+```{r gapminder-trellis-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+# Creating the computational components, this time without the 'facet_wrap' call.
+library(gapminder)
+
+comp_comp_gapminder_trellis <- list(
+  `life expectancy full` = ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
+  xlim(1948, 2011) + ylim(10, 95) + 
+  theme_bw() + 
+  labs(title = "life expectancy by continent"))
+
+#Save file to the disk
+ saveRDS(comp_comp_gapminder_trellis, "comp-comp_gapminder_trellis.rds")
+```
+
+```{r gapminder-trellis-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
+library(listdown)
+# Adding trelliscope call in the initial expressions, notice the description: Path ="."
+
+ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder_trellis.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs"),
+decorator = list(ggplot = ggtre), 
+init_expr = {
+  ggtre = function(x) x + facet_trelliscope(~ country + continent,
+                                           nrow = 2, ncol = 7, width = 300, path = ".")
+}
+)
+ld_gapminder_trellis
+```
+
+```{r gapminder-trellis-example, echo=FALSE, message=FALSE, warning=FALSE}
+library(rmarkdown)
+gapminder_trellis_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis))
+
+ writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
+  render("gapminder_trellis-example.Rmd",html_document())
+  system("open gapminder_trellis-example.html")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

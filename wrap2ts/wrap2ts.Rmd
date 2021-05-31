@@ -1,0 +1,117 @@
+---
+title: "wrap2ts"
+author: "Mingkun Wu"
+date: "31/05/2021"
+output: html_document
+---
+
+```{r libraries, include = FALSE, echo=FALSE, warning=FALSE,message=FALSE}
+Sys.setenv(LANG = "en")
+library(listdown)
+library(ggplot2)
+library(gtsummary)
+library(flextable)
+library(dplyr)
+library(rmarkdown)
+library(plotly)
+library(gapminder)
+library(trelliscopejs)
+library(DT)
+library(knitr)
+```
+
+```{r facetwrap2ts}  
+# Created a generic function for trelliscope
+# y is an ggplot object
+facet_wrap2ts <- function(y){
+  if (is(y$facet, "Facet") && !is(y, "FacetNull")) {
+  ## get variables
+  v = y$facet$vars()
+  ## construct Null facet to replace it
+  o = ggplot()
+  facetNull = o$facet
+  y$facet = facetNull
+  ## construct the formula
+  form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
+  ## construct call
+  c = as.call(list(quote(facet_trelliscope), form,
+                   ncol = 2, path="."))
+  y + eval(c)
+  } else y
+}
+```
+
+```{r gapminder-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(ggplot2)
+library(gapminder)
+library(listdown)
+library(gapminder)
+library(trelliscopejs)
+library(ggplot2)
+library(tidyverse)
+library(DT)
+library(rmarkdown)
+
+# Load the gapminder data set.
+data(gapminder)
+# gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
+
+ 
+# Creating the computational components
+comp_comp_gapminder <- list(
+  `life expectancy` = ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
+  xlim(1948, 2011) + ylim(10, 95) + 
+  theme_bw() + 
+  labs(title = "life expectancy by continent") +
+  facet_wrap(~ country + continent))
+
+#Save file to the disk
+ saveRDS(comp_comp_gapminder, "comp-comp_gapminder.rds")
+```
+
+```{r gapminder-trellis-generic-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+## Same data set as the first example, switching the decorator this time instead of adding initial expression
+ld_gapminder_trellis_generic <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs"),
+decorator = list(ggplot = facet_wrap2ts)
+)
+
+gapminder_trellis_generic_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots trelliscope generic",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis_generic))
+
+ld_gapminder_trellis_generic
+# Make the document
+writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example.Rmd")
+ render("gapminder_trellis_generic-example.Rmd",html_document())
+ system("open gapminder_trellis_generic-example.html")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
