@@ -25,14 +25,14 @@ cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 fra
 wrap2ts/gapminder_trellis_generic-example.html
 
 ```{r results="asis", echo=FALSE}
-cat('<iframe src="wrap2ts/gapminder_trellis_generic-example.html" width=920 height=600 frameBorder=0>
+cat('<iframe src="wrap2ts/gapminder_trellis_generic-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
 tsplotly/gapminder_trellis_plotly-example.html
 
 ```{r results="asis", echo=FALSE}
-cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 height=600 frameBorder=0>
+cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
@@ -40,7 +40,7 @@ cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 heig
 covidfinal/covid_trellis-example.html
 
 ```{r results="asis", echo=FALSE}
-cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 frameBorder=0>
+cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
