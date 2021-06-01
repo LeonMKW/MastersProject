@@ -18,7 +18,7 @@ htmltools::includeHTML("./covideexample/covid-decorator-example.html")
 ggtre/gapminder_trellis-example.html
 
 ```{r results="asis", echo=FALSE}
-cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 frameBorder=0>
+cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
