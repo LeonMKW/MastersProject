@@ -10,11 +10,6 @@ Comments: The i frame not working for embedding the html when I knit this html. 
 covideexample/covid-decorator-example.html
 
 
-```{r results="asis", echo=FALSE}
-cat('<iframe src="covideexample/covid-decorator-example.html" width=920 height=600 frameBorder=0 data-external="1">
-</iframe>')
-```
-
 ```{r}
 htmltools::includeHTML("./covideexample/covid-decorator-example.html")
 ```
@@ -25,10 +20,6 @@ ggtre/gapminder_trellis-example.html
 ```{r results="asis", echo=FALSE}
 cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 frameBorder=0>
 </iframe>')
-```
-
-```{r}
-htmltools::includeHTML("./ggtre/gapminder_trellis-example.html")
 ```
 
 wrap2ts/gapminder_trellis_generic-example.html
