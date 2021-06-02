@@ -1,5 +1,5 @@
 ---
-title: "mastertrial"
+title: "Large Data Visualization techniques using decorators and Listdown Package"
 author: "Mingkun Wu"
 date: "11/26/2020"
 output:
@@ -26,7 +26,7 @@ library(knitr)
 
 # Abstract 
 
-Statisticians and analysts have been using R for a long time. R programming environment has reproducible document standards embedded, such as R markdown. While R markdown generate documents itself programmatically, it requires the programmer to manually construct the structure of a file as a whole reproducible document. For the majority of work done as prose contents, often accompanied with narrative explanations and contexts, the ```listdown``` Package available on the Comprehensive R Archive Network (CRAN) provides a programmatic solution to generate documents containing computational and narrative components efficiently, including tasks with visualizations. This paper demonstrates multiple methods to implant interactive plots and graphics to a document when users generate reproducible documents using the listdown Package. These methods are supported by the ```plotly``` and ```trelliscopeJS``` packages available on CRAN. The concepts are illustrated using the gapminder dataset from the ```gapminder``` package, and will be applied to a current analytical task on COVID-19 data sourced from the World Health Organisation. 
+Statisticians and analysts have been using R (Ihaka, 1998) for a long time. R programming environment has it's formal document standards embedded, such as R markdown. While R markdown generate documents itself programmatically, it requires the programmer to manually construct the structure of a file as a whole reproducible document. For the majority of work done as prose contents, often accompanied with narrative explanations and contexts, the ```listdown``` Package available on the Comprehensive R Archive Network (CRAN) provides a programmatic solution to generate documents containing computational and narrative components efficiently, including tasks with visualizations. This paper demonstrates multiple methods to implant interactive plots and graphics to a document when users generate reproducible documents using the listdown Package. These methods are supported by the ```plotly``` and ```trelliscopeJS``` packages available on CRAN. The concepts are illustrated using the gapminder dataset from the ```gapminder``` package, and will be applied to a current analytical task on COVID-19 data sourced from the World Health Organisation. 
 
 Keywords: reproducible documents, effective visualizations, big data visualizations
 
