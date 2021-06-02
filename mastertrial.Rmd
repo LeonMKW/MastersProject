@@ -361,7 +361,7 @@ In the previous writings, trelliscopejs package was mentionaed several times as 
 
 ## 3.2.3 Facetting using Package TrelliscopeJS 
 
-After using __facet_trelliscope()__, the gapminder data set returns an visual output much more interpretable than before. However, this was created in a normal R markdown workflow. 
+After using __facet_trelliscope()__, the gapminder data set returns an visual output much more interpretable than before. However, this was created in a normal R markdown workflow, the output was included in reference. 
 
 ```
 # What trelliscope would look like when we use trelliscope instead of facet
