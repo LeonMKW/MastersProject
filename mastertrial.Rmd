@@ -61,7 +61,7 @@ The remainder of this paper will go through as follows. The next chapter explain
 
 Lets suppose the data analyzing part and all coding work has completed for an analysis. The results of the analysis containing summary tables, data tables and plots which we referred to computational components earlier, are collected into lists of objects and saved as a RDS or RDATA format file. They are in the order of which the author would like to present them separately in respect to the whole analysis, the next thing is to produce the components from the lists into a document like a html file. This is a typical order of a data analyzing work processes, but it is not definite. The computational components are not required to be turned into lists, but it is often the case for R users when dealing with multiple computational components. The objects in RDS and RDATA format files can be restored and reproduced in R environment easily, and has many advantages.
 
-Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is particularly important to centralize them. They have multiple properties obtained naturally when turned into lists. Firstly, changing them into elements of a list generically provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components. Nonetheless, the data cleaning and other processes iteratively repeats each time generating documents for presentation whenever knitr is used in a R markdown file. A R markdown file generally lacks semantic structure. When all computational components and narrative components are stored in one single file manually paragraphed by the author, extracting and editing components partially in a R markdown file often leads to increase of workloads after the changes are committed. 
+Sometimes, the computational components along with the results they produce are stored in multiple locations, or in many cases, on different machines. It is especially important to centralize them. They have multiple properties obtained naturally when turned into lists. Firstly, changing them into elements of a list generically provides a hierarchical structure for centralizing. Secondly, for most data, even on large scales, the actual presented contents are relatively small. Storing them into lists allows easier access and aligns with the concepts of centering. Last but not least, if the elements in the list are not in the order of a presentation desired, or changes accordingly, manipulating the order is much more convenient than non-centralized components. Nonetheless, the data cleaning and other processes iteratively repeats each time generating documents for presentation whenever knitr is used in a R markdown file. A R markdown file generally lacks semantic structure. When all computational components and narrative components are stored in one single file manually paragraphed by the author, extracting and editing components partially in a R markdown file often leads to increase of workloads after the changes are committed. 
 
 During a statistical analysis, the analytical process and results can be seen as two parts which can be stored separately. If the results contain graphs and plots, they could be further stored in single named lists. As everything is organized in named lists, listdown has several advantages compared to normal R markdown files containing all computational and narrative components. First, it allows multiple pathways working in parallel from the same data. When the experiment and objective is different based on the same data set, computational components are expected to be different. This will affect the narrative components such as contexts and discussions, but the data set along with other processes such as cleaning and tidying remains constant. Since the different “pathways” can be stored into different lists, listdown package allows users to selectively pick the reproducible lists along with the narrative components. R markdown files shows the experiment in a serial way if different analyses from the same data are stored in the same file, or users will have to open two R markdown files with the same computational component for processing in both R markdown files. 
 
@@ -222,7 +222,7 @@ From the html document produced using listdown, the output of the computational 
 
 ##### 2.3.6 Number of New Cases and Death
 
-The third and fourth graph reveals the relationship of number of new cases and number of death in the specified time frame. The advantage of facetting becomes obvious in this situation. Scattered points spreaded around the bottom left corner of the graph area, such high dense of observation makes interpretation almost impossible. The final plot subsets the original scatterplot into different regions, and used different color cues to highlight each region uniquely. Almost all regions shows a high number of death as the number new cases increases, and follows a positive linear relationship except for European region. With the increasing number of new cases, the number of death seperates into two extremes. On one side of the Y-shaped branch, the number of death accompanied by number of new cases are significantly lower than other regions and vice versa on the other branch. According to WHO website and Wikipedia's page COVID-19 pandemic in Europe, the lack of Vigilance and failure of taking effective action in most European countries leads to the high death number over the who region. 
+The third and fourth graph reveals the relationship of number of new cases and number of death in the specified time frame. The advantage of facetting becomes obvious in this situation. Scattered points spreaded around the bottom left corner of the graphing area, such high dense of observation makes interpretation almost impossible. The final plot subsets the original scatterplot into different regions, and used different color cues to highlight each region uniquely. Almost all regions shows a high number of death as the number new cases increases, and follows a positive linear relationship except for European region. With the increasing number of new cases, the number of death seperates into two extremes. On one side of the Y-shaped branch, the number of death accompanied by number of new cases are significantly lower than other regions and vice versa on the other branch. According to WHO website and Wikipedia's page COVID-19 pandemic in Europe, the lack of Vigilance and failure of taking effective action in most European countries leads to the high death number over the who region. 
 
 
 # CH3 The Usage of Decorators 
@@ -379,7 +379,7 @@ ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) +
 
 There are several reasons trelliscopeJS may be even more efficient when it is implemented into listdown compared to a normal R markdown output. Firstly, big data outputs are usually produced with more complexed computational components. Part of listdown's purpose was to make the output documents more "content based" instead of "coding and techniqucal based". The computational component's output can be displayed in an more elegant format without excessive code chunk control options, authors have higher work efficiency when producing trelliscope in a listdown workflow compared to a normal R markdown workflow. 
 
-Secondly, big data visualizations are often presented to a large number of audiences whether it is used for explanatory or predictive analysis. While the author may save some time producing and creating the visualizations, it is important for the audience to focus on the outputs. The interpretation for these multi-panel plots may take up hours or even days of time before any conclusion can be found for experts. On ther other hand, if trelliscope visualizations are used for example, in an exhibition or presentation open to public, audience with little to no statistical knowledge are expected. The standardization of all computational components, especially graphical outputs helps readers in capturing key information regardless the targeted occasions. Both listdown and trelliscopejs packages were created in the common purpose based on the points mentioned above. 
+Secondly, big data visualizations are often presented to a large number of audience whether it is used for explanatory or predictive analysis. While the author may save some time producing and creating the visualizations, it is important for the audience to focus on the outputs. The interpretation for these multi-panel plots may take up hours or even days of time before any conclusion can be found for experts. On ther other hand, if trelliscope visualizations are used for example, in an exhibition or presentation open to public, audience with little to no statistical knowledge are expected. The standardization of all computational components, especially graphical outputs helps readers in capturing key information regardless the targeted occasions. Both listdown and trelliscopejs packages were created in the common purpose based on the points mentioned above. 
 
 Last but not least, previous studies mentioned the importance of obtaining full saturated information from big data, specifically in marketing (Keahey, 2013) and clinical health data (Kane,Jiang and Urbanek, 2020). One could influence the strategical plan and investment funds for a company like IBM (Keahey, 2013), the other could find cures to intractable diseases. Trelliscopejs has the ability to organize all visualizations and listdown has the ability to organized the computational components producing the visualizations. 
 
@@ -632,7 +632,7 @@ From the previous chapters, the trelliscope works especially well with big data 
 The date reported variable was in the class type of dates. The variable records the date of the information reported to WHO.
 
 - Country_code
-The Country code variable is the ISO (International Organization for Standardization) Alpha-2 coundtry codes. The column was in the character string class.
+The Country code variable is the ISO (International Organization for Standardization) Alpha-2 coundtry codes. The column was recorded with character strings.
 
 - Country
 The Country variable contains the names of all the WHO membership countries, some names aslo stands for political regions or areas if not claimed to be a country. The column type is also character string class.  
@@ -654,15 +654,15 @@ The new deaths variable records the new confirmed deaths each day. The calculati
 
 The cumulative deaths number was recorded the same as the cumulative cases number, and is recorded as the integer class. 
 
-As the data was obtained from WHO directly, a few data cleaning and tidying are required before plotting. 
+As the data was obtained from WHO in raw csv files, a few data cleaning and tidying were required before plotting. The overall process was smooth as the quality of the data was very high. 
 
 ## 5.2 Applying the decorator
-In this case study, we created a new list named "comp_comp_covid_trellis". This list contains the data and the ggplot object with a facet variable of countries, the interest in this study was the number of new cases by country. After the list was created ad stored as RDS file, the listdown object _ld_covid_trellis_ was created. The decorators in this listdown object are:
+In this case study, we created a new list named "comp_comp_covid_trellis". This list contains the data and the ggplot object with a facet variable of countries, the interest in this study was the difference in number of new cases by each different country. After the list was created ad stored as RDS file, the listdown object _ld_covid_trellis_ was created. The decorators in this listdown object are:
 
 - Method __datatable__ were used instead of data.frame for showing the data set.
 - Method __facet_tsplotly__ were used in all ggplot class objects for plotting. 
 
-A header was then added, the final html document _covid_trellis-example.html_ was rendered. 
+A simple header was then added, the final html document _covid_trellis-example.html_ was rendered and included below. 
 
 ```{r covid-trellis-step1, echo=FALSE, message=FALSE, warning=FALSE}
 library(trelliscopejs)
@@ -718,25 +718,62 @@ cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 fr
 ```
 
 ## 5.3 Discussion
-
-In the html document rendered from chapter 5.2, several features were included as are discussed below. 
+ 
+From the embedded html document rendered from chapter 5.2, several features were included as are discussed below.
 
 ### The Data Table
 
-From results provided by the interactive data table, there are over 120,000 rows of observations in total. If this data was displayed using the original data.frame method, it would be insufficient for readers scrolling through all of them before any other analysis can be displayed. On top of the much tidied interface, the observations are ordered primarily by the alphabetical order of country names, then by the data reported in the given time frame. For country names that starts in the middle, the search bar feature provides an alternative approach rather than scrolling though the entries. 
+From results provided by the interactive data table, there are over 120,000 rows of observations in total. If this data was displayed using the original data.frame method, it would be insufficient for readers scrolling through all of them before any other analytical graphics can be displayed. On top of the much tidied interface, the observations are ordered primarily by the alphabetical order of country names, then by the data reported in the given time frame. For country names that starts in the middle, the search bar feature provides an alternative approach rather than scrolling though the entries. These changes can save a huge amount of time for authors and provides an user-friendly interface for viewers. The data table interface even works better with the visualization using trelliscope system following up. The capture below is a screen shot from the original HTML document. Please refer to the HTML embedded data table for it's corresponding interactive version.
+
+```{r, out.width="100%", out.height="100%"}
+knitr::include_graphics("datatable.PNG")
+```
 
 ### The Visualization
 
-The final result of the visualization had a elegant and neat layout compared to all of the previous examples. For the interpretations of each country, some significant conclusions are discussed in this section while the rest are left for the viewers of the paper to explore. Interpretations in the section are followed in the alphabetical order of the country names. 
+The final result of the visualization had a elegant and neat layout compared to all of the previous examples. The data for this case study was also much bigger compared to previous examples. For the interpretations of each country, some representative findings are discussed in this section while the rest are left for the viewers of the paper to explore. Interpretations are followed in the alphabetical order of the country names, the display are captured as screen shots for the purpose of this paper, hence they are not interactive. Please refer to the trelliscope system for their corresponding interactive counterparts. 
+
+- China
+
+```{r, out.width="100%", out.height="100%"}
+knitr::include_graphics("China.PNG")
+```
+
+From the plot of China, where the COVID-19 was first discovered to have symptoms on humans initially, the rise of number of new cases was rapid and severe. The single day peak number of new cases discovered was on the 13th of February, 2020, at 15152 new cases. While this "outlier-like" single day number was discrepant to the number provided from the Wikipedia page of Statistics of the COVID-19 pandemic in mainland China (https://en.wikipedia.org), it was then discovered accordingly to the National Health Commsion (http://en.nhc.gov.cn/) the previous records of new cases was not completely recorded and was justified and added on in this particular day before reporting to WHO. Then China has effectively lowered the number of new cases daily with a series of actions. However, up to the date before this paper was finalized, there is a rebound trend, with 743 new cases daily recorded on the 23rd of May, 2021. The time frame of the peak number and the rebounding trend would have not been noticed without using the decorator here. 
+
+- India
+
+```{r, out.width="100%", out.height="100%"}
+knitr::include_graphics("India.PNG")
+```
+
+To Find the plot of India, the sorting feature of trelliscope was applied. The main interest of India was the daily number of new cases increases out of control lately. The trend was clearly displayed in the plot, and reached a peak of 414188 cases on the 7th of May, 2021. However, if the overall tend was not plotted, a small rise in the number of new cases has occurred during Sepetember, 2020. The daily number of new cases in India has gained focus worldwide, several medias has criticized India's continuous poor action and policy decisions, little knowing the decrease in new cases between October 2020 till March 2021. 
 
 
+- The United States of America
 
+```{r, out.width="100%", out.height="100%"}
+knitr::include_graphics("UnitedStatesofAmerica.PNG")
+```
+
+Because United States of America was behind in the alphabetical order of countries, it is found using the filter feature in trelliscope. The filter feature works like the search feature in data table, instead of browsing through the countries, users can be navigated to the visualization from the conditions in filtering directly. The other details of interest are also visible below the graphing area, such as the highest deaths number recorded daily. The U.S. shows a cyclical behavior in the number of new cases, and had the highest new cases number 312247 recorded on the 10th of January, 2021. 
+
+
+- United States of America and India
+
+```{r, out.width="100%", out.height="100%"}
+knitr::include_graphics("GermanyvsSpain.PNG")
+```
+
+It is also possible to make comparisons between two countries individually. This plot was made possible by using  the customizable grid option. Users can select displaying multiple columns and rows in the same graphing zone, and each zone's displaying information can be selected individually using the filter conditions. The two countries shown, Germany and Spain are not only closely located geographically, but also had very similar cumulative new cases number. However, the trend and pattern of new cases across the same time frame were very different. The combination of the trelliscope features shown in this visualization is particularly useful for comparison and exploratory analyses. On top of the comparison capabilities, the date and new case numbers for each point of interest are revealed. The plotly tool bars also allows zooming into a portion of the data for much detailed interpretation, or users can choose to view the overall system in full screen allowing for non-overlapping x and y axis scaling. 
 
 
 # CH6 Conclusion and Further Work
 
 ## 6.1 Conclusion
-In a typical statistical task, the listdown package has great advantage of more efficient and optimal workflow compared to normal workflows, especially with the combination of trelliscopejs package. All of these would not have been achievable without decorators. While the advantage of such combination demonstrated easiness in several aspects on both the author's side and the interpreter's side, it shall be kept in mind of when this tool can be deployed appropriately. For occasions where visualizations are crucial for reach the goal, and the audience are much more broader than statistical experts, these visualization computational components and the decorators works flawlessly. In situations whereas detailed quantative analytical tasks are carreid out, a full process used in statistics must be required. The steps includes but are not limited to hypotheses setting, statistical testing, assumption checking, executive summary, technical summary, discussion and conclusions. Most of the steps requires narrative components. Visualization can be applied to some of these steps as either the final output or used as an assistance, but it will never be sufficient enough for all the tasks. In fact, computational components itself may not be effective on completing a qualitative statistical task alone. On the other hand, despite narrative components can be included into a listdown object as character elements using the chunk options, it contraries the intention of authors creating the listdown package, and can be less efficient in comparison to using a normal R markdown workflow.
+In a typical statistical task, the listdown package has great advantage of more efficient and optimal workflow compared to normal workflows, especially with the combination of trelliscopejs package. All of these would not have been achievable without decorators. While the advantage of such combination demonstrated easiness in several aspects on both the author's prospect and the interpreter's prospect, it shall be kept in mind of when this tool can be deployed appropriately. For occasions where visualizations are crucial for reach the goal, and the targeted audience are much more broader than statistical experts, these visualization computational components and the decorators works flawlessly. 
+
+In other situations whereas detailed quantative tasks are carried out, a full analytical process used in statistics must be required. The steps often includes but are not limited to hypotheses setting, statistical testing, assumption checking, executive summary, technical summary, discussion and conclusions. Most of the steps require narrative components. Visualization can be applied to some of these steps as either the final output or used as an assistance, but it will never be sufficient enough as the only result for all the tasks. In fact, computational components itself may not be effective on completing a qualitative statistical task alone. On the other hand, despite narrative components can be included into listdown as character elements using the chunk options decorator by setting the __results = "as.is"__, it contraries the intention of the authors whom originally created the listdown package, and are considered less efficient in comparison to using a normal R markdown workflow.
 
 
 ## 6.2 Further Work
