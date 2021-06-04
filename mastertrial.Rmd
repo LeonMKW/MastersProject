@@ -26,7 +26,7 @@ library(knitr)
 
 # Abstract 
 
-Statisticians and analysts have been using R (Ihaka, 1998) for a long time. R programming environment has it's formal document standards embedded, such as R markdown. While R markdown generate documents itself programmatically, it requires the programmer to manually construct the structure of a file as a whole reproducible document. For the majority of coding work done as prose contents, namely computational components, the output are the main interest, and is often followed with contexts, defined as narrative components. The __listdown__ Package available on the __Comprehensive R Archive Network (CRAN)__ provides a programmatic solution to generate documents containing computational and narrative components efficiently, including computational components of visualizations. This paper demonstrates multiple methods implanting interactive plotting systems and graphical packages in R to a output document when users generate reproducible documents using the listdown Package. These methods are mainly supported by the ```plotly``` and ```trelliscopeJS``` packages available on CRAN. The concepts are illustrated using the gapminder data set from the ```gapminder``` package, and will be applied to a current analytical task on COVID-19 data sourced from the World Health Organization (https://www.who.int). 
+Statisticians and analysts have been using R (Ihaka, 1998) for a long time. R programming environment has it's formal document standards embedded, such as R markdown. While R markdown generate documents itself programmatically, it requires the programmer to manually construct the structure of a file as a whole reproducible document. For the majority of coding work done as prose contents, namely computational components, the output are the main interest. The __listdown__ Package (Kane,Jiang and Urbanek, 2020) available on the __Comprehensive R Archive Network (CRAN)__ provides a programmatic solution to generate documents containing computational and narrative components efficiently, including computational components of data visualizations. However, as the demand for big data visualizations increase rapidly in the past decades, the capable tools for these tasks such as package __trelliscopejs__ (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) is not natively supported in high efficient workflows of __listdown__. This paper demonstrates multiple methods implanting interactive plotting systems and graphical packages in R to a output document when users generate reproducible documents using the listdown Package. These methods are mainly supported by the __plotly__ (Sievert, 2020) and __trelliscopeJS__ packages available on CRAN. The concepts are illustrated using the gapminder data set from the __gapminder__ package, and will be applied to a current analytical task on COVID-19 data sourced from the World Health Organization (https://www.who.int). 
 
 _Keywords: reproducible documents, effective visualizations, big data visualizations_
 
@@ -34,15 +34,15 @@ _Keywords: reproducible documents, effective visualizations, big data visualizat
 
 ## 1.1 Overview
 
-R language has been an popular computing language since it's first appearance back in the 90s. R has many features dedicated but not limited to statistical computing, data analysis and other revelant tasks across a greater number of industries and fields. In addition to the IDE (Intergrated Development Enviroment) software R studio, a large number of R packages are also available, intended for users to focus more on the "goal" instead of the "coding". In the rest of chapter 1, the paper discusses how reproducibility and compatibility of multiple statistical tasks can be contained in one single document by using R markdown, followed by data visualizations in R. The rest of this paper mainly focuses on the decorators of the already released __listdown__ package (Kane,Jiang and Urbanek, 2020). While big data visualization tasks has become much more achievable in R with the release of many famous visualization packages, we will try to embed these features into listdown, especially the idea of facetting. The intention will be explained first followed by the methods. Then, the methods and functions are testified. Finally, a case study will be carried out using the methods created. 
+R language has been a popular computing language since its first appearance back in the 90s. R has many features dedicated but not limited to statistical computing, data analysis and other revelant tasks across a greater number of industries and fields. In addition to the IDE (Intergrated Development Enviroment) software R studio, a large number of R packages are also available, intended for users to focus more on the "goal" instead of the "coding". The paper discusses how reproducibility and compatibility of multiple statistical tasks can be contained in one single document using high efficient workflows, followed by data visualizations in R. While big data visualization tasks has become much more achievable in R with the release of many famous visualization packages such as __trelliscopeJS__ (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013), listdown does not have native support for it so far. The goal is to embed the features of these packages into listdown, especially the idea of facetting. The result is a powerful big data visualization tool with high efficiency workflows. All of these can be achieved by creating __decorators__ for the __listdown__ package (Kane,Jiang and Urbanek, 2020). Finally, an application of the methods created will be demonstrated on the current COVID-19 pandemic data sets sourced from the World Health Organization (https://www.who.int). 
 
 ## 1.2 R markdown 
 
 The R markdown (Baumer, Cetinkaya-Rundel, Bray, Loi, and Horton, 2014) demonstrates the possibility of constructing reproducible documents using R language. The format allows author to integrate R codes, written work, data tables, visualization plots and much more information into one directly structured document. Among scientific writings and analytical reports knitted using R markdown, the majority are made up of codes and narrative writings. The codes are usually but not limited to common computing languages, such as R, Python, SQL and others. The writings which contextualize the codes usually follow the codes. Sometimes descriptive writings are also placed between the codes using a hash, and is usually comments of the code lines. In this paper, the chunk of computing codes that produces outputs and the narrative writings that describes the outputs will be referred to computational components and narrative components respectively (Kane,Jiang and Urbanek, 2020). 
 
-Statistical analysis tends to be more reachable and interpretable to public audience accompanied by the rapid rise of computing abilities. While the statistical computing threshold lowers with the invention of R language, the needs to integrate computationally derived objects with narrative explanations arise. The usage of R markdown centralizes different data types with a specific format, further process with the technical work in a computationally organized way. Usually in most data analyzing tasks, the first thing is data cleaning and tidying. However, this processes usually requires other environments and configuration to manipulate. Such steps have different needs in computational purpose than report or presentations. It may not become fully shown using R code or other languages natively supported by R, but authors often use narrative texts to describe the associate processes. These narrative texts can be fully embedded in the R markdown file for readers to follow without opening other documents. Before a highly informative presentation, multiple explanatory analyses are often carried out. These explanatory analyses contain numerous amounts of table, plots and graphs, most of them have comments and notes. R markdown can save the robust components and generate documents without spending time on layouts and formats. 
+Statistical analysis tends to be more reachable and interpretable to public audience accompanied by the rapid rise of computing abilities. While the statistical computing threshold lowers with the invention of R language, the needs to integrate computationally derived objects with narrative explanations arise. The usage of R markdown centralizes different data types with a specific format, further process with the technical work in a computationally organized way. Usually in most data analyzing tasks, the first thing is data cleaning and tidying. However, this processes usually requires other environments and configuration to manipulate. Such steps have different needs in computational purpose than report or presentations. It may not be fully shown using R code or other languages natively supported by R, but authors often use narrative texts to describe the associate processes. These narrative texts can be fully embedded in the R markdown file for readers to follow without opening other documents. Before a highly informative presentation, multiple explanatory analyses are often carried out. These explanatory analyses contain numerous amounts of table, plots and graphs, most of them have comments and notes. R markdown can save the robust components and generate documents without spending time on layouts and formats. 
 
-The advantage of R markdown’s narrative feature can be shown in multiple prospects. Firstly, R markdown is as described in its name, a Markdown syntaxed mark-up language of R. By using combinations of codes and embedding symbols to control the formatting and layout of a R object file, users gets the desired final output document. All of these are easy to achieve without extensive skills in coding and consumes less time and effort to learn. Packages such as bookdown (Xie, 2016) demonstrates the easiness for users indenting to edit long narrative components in contrast of using another commonly-used markup language – Latex. While latex may be more expressive in terms of proficiency in terms of academical writing, the coding alike syntax required to produce documents takes a substantial amount of time and effort to learn and is relatively more complicated than R markdown’s syntax. On the other hand, statistical reports and presentations often contains numerous computational and narrative components. R markdown supports multiple file formats once a R object is completed and ready for publication. The function in R markdown for this objective is called “knit”. The process includes running all computational components, then formats the outputs along with the narrative components. 
+The advantage of R markdown’s narrative feature can be shown in multiple prospects. Firstly, R markdown is as described in its name, a Markdown syntaxed mark-up language of R. By using combinations of codes and embedding symbols to control the formatting and layout of a R object file, users get the desired final output document. All of these are easy to achieve without extensive skills in coding and consume less time and effort to learn. Packages such as bookdown (Xie, 2016) demonstrates the easiness for users intending to edit long narrative components in contrast of using another commonly-used markup language – Latex. While latex may be more expressive in terms of proficiency for academical writing, the coding alike syntax required to produce documents takes a substantial amount of time and effort to learn and is relatively more complicated than R markdown’s syntax. On the other hand, statistical reports and presentations often contains numerous computational and narrative components. R markdown supports multiple file formats once a R object is completed and ready for publication. The function in R markdown for this objective is called “knit”. The process includes running all computational components, then formatting the outputs along with the narrative components. 
 
 In R markdown, each computational component starts with three backwards apostrophes, with the language name and the code chunk options between the curly brackets shall be enclosed by three backwards apostrophes correspondingly. During the knitting process, computation components along with their results are laid out precedingly. Each narrative component, which is so called ordinary text with out code is combined within the computational components, resulting in a desired file. The final result is also customizable not only as in pdf or HTML format, but also includes editable formats such as Microsoft word documents. This conforms with the intention for a typical statistical report or presentation, that is, to make audience understand statistics with less to no statistical knowledge (Baumer, Cetinkaya-Rundel, Bray, Loi, and Horton, 2014).  R markdown fulfills this concept by offering modifiable documents for collaborators and other users to develop narrative components based on the statistical analysis results generated beforehand. 
 
@@ -50,14 +50,14 @@ While PDF and Word formats are commonly used by researchers in the fields for th
 
 ## 1.3 Visualizations
 
-The tools for presenting an interactive visualization was introduced previously. The remaining problem or perhaps one of the major limitations in order to create an effective interactive plot may be the big data sets most statistical tasks come across with nowadays (Ali, Gupta, Nayak and Lenka, 2016). The explosive growth of data becomes a trend and is still expanding fast accompanied by multiple factors such as the popularization 5G and IoT (Internet of Things). Statistical presentations and reports requiring visualizations on big data sets becomes more challenging and creative. Interactive graphics provides an ultimate solution, increasing the display power compared to a static plot (Weissgerber, Garovic, Savic, Winham and Milic, 2016). Among the various techniques on big data visualization problems, the principle of subsetting a large data set into multiple smaller ones and presenting them parallel are adapted by many solutions, including the famous ```ggplot2``` package (Wickham, 2011) that most R markdown users are familiar with. The idea of Trelliscope displays (Becker, Cleveland & Shyu, 1996) provided a framework on multipanel graphics, and demonstrated its huge potential in big data visualizations. However, it was not until package ```TrelliscopeJS``` (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) made the interactivity of trelliscope display possible, and further enhanced the idea by implanting interactive functions to ggplot items, the interface is especially effective for data with multiple categorical responses. In this paper, multiple graphical computational components are created using the above mentioned packages, but we will start with simple examples such as the ```plotly``` package (Sievert, 2020), which turns static ggplot objects into interactive plots. The strength and weakness of each method, along with solutions on improving the functions effectively for their usage in the listdown package are then followed with examples. 
+The tools for presenting an interactive visualization was introduced previously. The remaining problem or perhaps one of the major limitations in creating an effective interactive plot may be the big data sets most statistical tasks come across with nowadays (Ali, Gupta, Nayak and Lenka, 2016). The explosive growth of data becomes a trend and is still expanding fast accompanied by multiple factors such as the popularization 5G and IoT (Internet of Things). Statistical presentations and reports requiring visualizations on big data sets becomes more challenging and creative. Interactive graphics provides an ultimate solution, increasing the display power compared to a static plot (Weissgerber, Garovic, Savic, Winham and Milic, 2016). Among the various techniques on big data visualization problems, the principle of subsetting a large data set into multiple smaller ones and presenting them in parallel are adapted by many solutions, including the famous __ggplot2__ package (Wickham, 2011) that most R markdown users are familiar with. The idea of Trelliscope displays (Becker, Cleveland & Shyu, 1996) provided a framework on multipanel graphics, and demonstrated its huge potential in big data visualizations. However, it was not until package __TrelliscopeJS__ (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) made the interactivity of trelliscope display possible, and further enhanced the idea by implanting interactive functions to ggplot items, the interface is especially effective for data with multiple categorical responses. In this paper, multiple graphical computational components are created using the above mentioned packages, but we will start with simple examples such as the __plotly__ package (Sievert, 2020), which turns static ggplot objects into interactive plots. The strength and weakness of each method, along with solutions on improving the functions effectively for their usage in the listdown package are then followed with examples. 
 
 The remainder of this paper will go through as follows. The next chapter explains the motivaion of the listdown package and workflow on how the listdown generates documents from scratch. This is a background literature review summoning the previous work done by the package's developers (Kane,Jiang and Urbanek, 2020) using real world COVID -19data. This chapter also introduced the background of the data as it is used later on. Chapter 3 discussed the implementation of decorators using the same data from chapter 2, along with an executive summary on the graphical outputs. Chapter 4 focused on solving more complicated visualizations by writing functions to the decorator of the listdown package. Chapter 5 applied the mechanisms to the COVID-19 data, and revealed the relationship of new cases and death number of each country by a specific time frame. The final chapter discussed the results of the output, concluded the limitations and further work. 
 
 
-# CH2 Previous Work 
+# CH2 Package Listdown
 
-## 2.1 Motivation behind the Listdown Package
+## 2.1 High Efficiency Workflows
 
 Lets suppose the data analyzing part and all coding work has completed for an analysis. The results of the analysis containing summary tables, data tables and plots which we referred to computational components earlier, are collected into lists of objects and saved as a RDS or RDATA format file. They are in the order of which the author would like to present them separately in respect to the whole analysis, the next thing is to produce the components from the lists into a document like a html file. This is a typical order of a data analyzing work processes, but it is not definite. The computational components are not required to be turned into lists, but it is often the case for R users when dealing with multiple computational components. The objects in RDS and RDATA format files can be restored and reproduced in R environment easily, and has many advantages.
 
@@ -66,13 +66,13 @@ Sometimes, the computational components along with the results they produce are 
 During a statistical analysis, the analytical process and results can be seen as two parts which can be stored separately. If the results contain graphs and plots, they could be further stored in single named lists. As everything is organized in named lists, listdown has several advantages compared to normal R markdown files containing all computational and narrative components. First, it allows multiple pathways working in parallel from the same data. When the experiment and objective is different based on the same data set, computational components are expected to be different. This will affect the narrative components such as contexts and discussions, but the data set along with other processes such as cleaning and tidying remains constant. Since the different “pathways” can be stored into different lists, listdown package allows users to selectively pick the reproducible lists along with the narrative components. R markdown files shows the experiment in a serial way if different analyses from the same data are stored in the same file, or users will have to open two R markdown files with the same computational component for processing in both R markdown files. 
 
 In addition, R markdown does not hold any data dedicated for the file itself. In order for a computational component in R markdown that reads in the data to work, the data set has to be stored or set to a pathway specifying the location of the data, depending on either it is saved locally or on a server. 
+
 To overcome the above mentioned aspects, package listdown (Kane,Jiang and Urbanek, 2020) was introduced providing functions to programmatically create R markdown files from named lists. By using functions from the package, the components can be turned into a single named list, organized in a hierarchical structure. The contents of each list denoted, including the name and type of R object can be viewed in dendrograms. On top of the lists, decorators and other customizable functions can be added to assist the problem of visualizing. This is particular useful when large datasets are added to its corresponding computational component list and the author intends to present them. Large data sets requires a substantial amount of space to be fully shown.
 
 Another advantage for using the listdown package is its capability to avoid repetitive work when data analysis updates. This is partially useful when data analysis process is updated frequently while the data source remains in the same format and standard. Once the computational components for data cleaning and process are constructed and stored into the list, the analysis may change the output such as results and plots. It may further change the narrative components. However, updating analysis methods does not mean deprecating the previous methods, listdown package allows different workflows and pathways to be stored and reproduced at anytime with  knitr, this vastly improves efficiency and drops tedious repetitive works while maintaining the objectives desired. Some useful areas of statistical analysis benefiting from the listdown package are mainly but not limited to its usage in clinical trial and medical data (Kane,Jiang and Urbanek, 2020). The final case study verifies this statement. 
 
 
-## 2.2 Workflow
-### 2.2.1 Working Steps
+## 2.2 Listdown Working Steps
 The workflow for users using the listdown package are described as the follows:
 
 1. The computational components in R are turned into list of objects, Each computational components are named, and is part of the named list. 
@@ -95,6 +95,54 @@ The data set regions from the __COVID-regions-2021.csv__ file ( World Health Org
 Once data has been read into R, the computational component is reproduced and stored along with the data into a named list, in this case, it is called _"comp_covid"_. It is then saved to the current directory as a R object. 
 
 #### 2.3.1 Making a list of computational Components
+
+```
+# Creating the computational components
+computational_components_covid <- list( 
+  `New cases per day for each region` = ggplot(regions) + 
+    geom_area(aes(Date_reported, New_cases, colour=WHO_region, fill=WHO_region), 
+              stat="smooth", 
+              alpha=.2, position="identity",
+              method="loess", span=.1)+ labs(title = "Number of daily COVID cases by WHO region") +
+    scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+    scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+                 expand = expansion(0),
+                 label = label_date_short()),
+
+`New cases per day for each region facet` = ggplot(regions, 
+                                                   aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region,
+                                                                stat = "smooth",  method="loess", span=.1)) + geom_area( alpha=.5) + 
+  facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region facet") + scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+     scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+                 expand = expansion(0),
+                 label = label_date_short()),
+
+
+`Cases against Death` = ggplot(data = regions,
+       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point(alpha = .2) + 
+    scale_x_sqrt() +
+    scale_y_sqrt() +
+  labs(title = "Number of COVID cases against death by WHO region"),
+     
+
+`Cases against Death facet` = ggplot(filter(regions, New_cases >= 0),
+       aes(New_cases, New_deaths, colour=WHO_region)) + 
+    geom_point(alpha=.2) +
+    scale_x_sqrt() +
+    scale_y_sqrt() +
+    facet_wrap(vars(WHO_region)) +
+    theme(aspect.ratio=1, legend.position="none") +
+    labs(title = "Number of COVID cases against death by WHO region by facet")
+
+)
+
+#Save file to the disk
+ saveRDS(computational_components_covid, "comp-comp_covid.rds")
+ 
+comp_covid <- readRDS("comp-comp_covid.rds")
+
+ld_cc_dendro(comp_covid)
+```
 
 ```{r covid-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
 library(listdown)
@@ -154,6 +202,8 @@ ld_cc_dendro(comp_covid)
 
 ```
 
+
+
 After reading in our computational component that has been saved, the next step is to create a listdown object. The function __ld_cc_dendro()__ shows each object in the listdown in an descending order of depth (Kane,Jiang and Urbanek, 2020). Because every object in the component is named, it is also labeled in prior to the description of each object. 
 
 
@@ -168,6 +218,18 @@ From the previous step, the list containing the plots now saved as a R object na
 3. Initial expressions that gets evaluated before knitting is included using __init_expr()__, this will be demonstrated later in chapter 3. 
 
 4. The chunk options can be controlled two ways. The first being normal chunk options, which can be specified straight away, the second is by using __decorator_chunk_opts()__ , and can be subjected to a class given. 
+
+```
+#Making a listdown object
+library(listdown)
+library(knitr)
+ld_new <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
+package = c("ggplot2", "tidyverse","scales"))
+
+class(ld_new)
+ld_new
+```
+
 
 ```{r covid-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
 #Making a listdown object
@@ -185,7 +247,17 @@ From the output, we can see ld_new is a listdown class object, the descriptions 
 
 #### 2.3.3 Header Options
 
-The listdown object named __ld_new__ is now ready to create the document. To regularize the document output in terms of formats, it is further processed with a header. The listdown package has native support in R markdown and __workflowr__ as yml objects (Kane,Jiang and Urbanek, 2020). The header objects are part of the list in the document, and can be edited by using ```ld_rmarkdown_header()```. By calling the document name, a glimpse of the document content is shown, the names are clearly listed out along with the type of objects author intends to include. This step is optional as described in the previous working steps. 
+The listdown object named __ld_new__ is now ready to create the document. To regularize the document output in terms of formats, it is further processed with a header. The listdown package has native support in R markdown and __workflowr__ as yml objects (Kane,Jiang and Urbanek, 2020). The header objects are part of the list in the document, and can be edited by using ```ld_rmarkdown_header()```. By calling the document name, a glimpse of the document content is shown, the names are clearly listed out along with the type of objects author intends to include. This step is optional as described in the previous working steps, however, it is always important to include a name for the outputs as it follows the principle of proportional ink (Wilke, 2019). 
+
+```
+covidexample <- c(
+ as.character(ld_rmarkdown_header("Covid plots",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_new))
+
+covidexample
+```
 
 ```{r covid-example-step3, echo=FALSE, message=FALSE, warning=FALSE}
 covidexample <- c(
@@ -200,6 +272,15 @@ covidexample
 While the next major step is rendering the listdown object __covidexample__ into a _html_ document, there are still several steps included between. Firstly, by using generic R markdown function __writeLines()__, the listdown object is written into a R markdown file and is automatically saved into the pathway of the working directory of the current file. Next, it is rendered into a _HTML_ document using the __render()__ function generically from ```Rmarkdown```. Then the document can be knitted and shown using the __system()__ function or opened outside R. 
 
 #### 2.3.4 Creating a HTML document from R markdown 
+
+```
+library(knitr)
+library(rmarkdown)
+# Write the document.
+writeLines(covidexample, "covid-example.Rmd")
+render("covid-example.Rmd",html_document())
+system("open covid-example.html")
+```
 
 ```{r covid-example-step4}
 library(knitr)
@@ -228,7 +309,7 @@ cat(paste(readLines("covid-example.knit.md"), collapse="\n"))
 
 ##### 2.3.5 Number of New Cases
 
-From the html document produced using listdown, the output of the computational components are shown directly to the reader. The first plot shows the number of new covid cases by regions. The tiny spike raised in the Western Pacific region's office indicated when the virus was first discovered in the People's Republic of China, and soon began it's transmission across the other regions. By March,the region of the Americas and the region of Europeans has increasing new cases inevitably. While European region seems to see a steady drop till July, the South-East Asia Region, Eastern Mediterranean Region and Africa region has shown noticeable number of new cases. Region of Americas at this time had new cases increasing rapidly towards the first peak. Region of Europeans soon showed an increase in the new cases after July, and the rate of increase is also increasing. Regions of America had the same trend with a higher rate of increase at the third quarter, along with region of Europeans, is contributing number of new cases much higher than other regions  towards the end of 2020. The situation up till today still does not seem to be optimistic, the final case study will reveal more information for the updated data set. The Second graph plotted regions separately along a common unaligned scale. The overlapping areas from the first plot can now be visualized clearer. Facetting by regions completely resolved the overshading problem, However, separation by regions for new cases is not as effective as showing the number of new cases against death in the third and fourth graph. 
+From the html document produced using listdown, the output of the computational components are shown directly to the reader. The first plot shows the number of new covid cases by regions. The tiny spike raised in the Western Pacific region's office indicated when the virus was first discovered in the People's Republic of China, and soon began it's transmission across the other regions. By March,the region of the Americas and the region of Europeans has increasing new cases inevitably. While European region seems to see a steady drop till July, the South-East Asia Region, Eastern Mediterranean Region and Africa region has shown noticeable number of new cases. Region of Americas at this time had new cases increasing rapidly towards the first peak. Region of Europeans soon showed an increase in the new cases after July, and the rate of increase is also increasing. Regions of America had the same trend with a higher rate of increase at the third quarter, along with region of Europeans, is contributing number of new cases much higher than other regions  towards the end of 2020. The situation up till today still does not seem to be optimistic, the final case study will reveal more information for the updated data set. The Second graph plotted regions separately along a common unaligned scale. The overlapping areas from the first plot can now be visualized with high clarity. Facetting by regions completely resolved the overshading problem. However, separation by regions for new cases is not as effective as showing the number of new cases against death in the third and fourth graph. 
 
 ##### 2.3.6 Number of New Cases and Death
 
@@ -237,15 +318,18 @@ The third and fourth graph reveals the relationship of number of new cases and n
 
 # CH3 The Usage of Decorators 
 
+In the previous chapter, the complete workflow of creating a document using listdown package is demonstrated with a real world data. The example is relatively simple and straight forward. The advantage of adding a __facet__ greatly reduces typical problems in big data visualizations (Ali, Gupta, Nayak and Lenka, 2016). After a glimpse of the document once it is rendered and produced, two main points of interest arises immediatley. After all, the plots are informative, but they are also static. This limits the overall demonstrative ability of both plots. As the data set contains information for each individual day in the time frame consistently, but only the overall trends and robust numbers are shown in the first set of plots. More detailed information are lost in a trade-off to revealing the robust trend of new cases daily by regions. In the second set of plots, the scattered points also fails to give any addition information of the exact observation, even though it had the data information of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), the listdown package adapts this idea and allows author implanting addition decorators to the original listdown object during the processing of producing the document. The decorator control of listdown could be customized for an interactive plot, for example, Package plotly (Sievert, 2020). The package provides a native support turning ggplot objects into interactive HTML widgets. 
+
 ## 3.1 Case Study: COVID-19 Dataset Example with decorators 
 
-In the previous chapter, the complete workflow of creating a document using listdown package is demonstrated with a real world data. The example is relatively simple and straight forward. After a glimpse of the document once it is rendered and produced, two main points of interest arises. After all, the plots are informative, but they are also static. This limits the overall demonstrative ability of both plots. As the data set contains information for each individual day in the time frame consistently, but only the overall trends and robust numbers are shown in the first set of plots. More detailed information are lost in a trade-off to revealing the robust trend of new cases daily by regions. In the second set of plots, the scattered points also fails to give any addition information of the exact observation, even though it had the data information of doing so. The identification feature of a visualization can be greatly improved using interactive graphics (Cook, Swayne & Buja, 2007), the listdown package adapts this idea and allows author implanting addition decorators to the original listdown object during the processing of producing the document. The decorator control of listdown could be customized for an interactive plot, for example, Package plotly (Sievert, 2020). The package provides a native support turning ggplot objects into interactive HTML widgets. 
+The same set of data from chapter 2 was used. Little different from the previous list _computational_components_covid_, the data _regions_ was added in. This time, two decorators were added into the listdown item, __"ggplot = ggplotly"__ and __"data.frame = datatable"__. 
 
-```{r covid-decorator-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+```
 #Add in data and decorators
 library(listdown)
 library(DT)
 
+# Data now added in for decorator datatable
 computational_components_covid$Data <- regions
 saveRDS(computational_components_covid, "comp-comp_covid.rds")
 
@@ -258,7 +342,25 @@ ld_decorator
 
 ```
 
-In this example, the RDS file __comp-comp_covid.rds__ remains the same as the previous example. The data used were also inserted into the listdown object. Now we ca use the datatabe decorator to display the data. From the description of the ld object, the computational components are identical, the only difference tends to be the decorators and it's associated packages imported.
+```{r covid-decorator-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+#Add in data and decorators
+library(listdown)
+library(DT)
+
+# Data now added in for decorator datatable
+computational_components_covid$Data <- regions
+saveRDS(computational_components_covid, "comp-comp_covid.rds")
+
+ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
+package = c("ggplot2", "tidyverse","scales","DT","plotly"),
+decorator = list(ggplot = ggplotly,
+                 data.frame = datatable))
+class(ld_decorator)
+ld_decorator
+
+```
+
+In this step, the RDS file __comp-comp_covid.rds__ contains the extra data, which was not in the previous example. Once data is inserted into the listdown object, we can use the __datatabe__ decorator from library __DT__ to display the data, instead of its original class __data.frame__. From the description of the ld object, named _ld_new_, the computational components are identical, the only difference tends to be the decorators and it's associated packages imported.
 
 <!-- NOT SURE -->
 
@@ -267,6 +369,16 @@ Referring to step 3 in chapter 2.2.1, the decorator is a description of the func
 <!-- NOT SURE -->
 
 
+```
+library(rmarkdown)
+coviddecoratorexample <- c(
+  as.character(ld_rmarkdown_header("covid-example")),
+          ld_make_chunks(ld_decorator))
+
+writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
+render("covid-decorator-example.Rmd",html_document())
+system("open covid-decorator-example.html")
+```
 
 ```{r covid-decorator-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
 library(rmarkdown)
@@ -285,12 +397,20 @@ htmltools::includeHTML("./covideexample/covid-decorator-example.html")
 
 ##### 3.1.1 Number of New Cases with decorators
 
-After using ggplotly as a decorator method, the exact numbers of new cases can new be assessed directly in the plotting area. To be general, only the highest number of new cases from each region with the date observed will be report. The rest of the information are left with interest for the readers to interpret and explore. The first set of plots shows the highest number of new cases in a single day in the given time frame was 769,644 cases observed from the region of Americas, and it was the 19th of September 2020. The highest new cases observed in a single day in the regions of Africa was the 3rd of January, 2021, with the exact number of 40456. The highest new cases observed in a single day in the regions of Eastern Mediterranean was the 1st of December, 2020, with the exact number of 62206. The highest new cases observed in a single day in the regions of European was the 8th of November, 2020, with the exact number of 346573. The highest new cases observed in a single day in the regions of South East Asia was the 23th of December, 2020, with the exact number of 78377. Finally, the "lowest" region with highest observed number of new cases in a single day was Western Pacific region, at the number of 15155, on the 13th of February, 2020.
+After using ggplotly as a decorator method, the exact numbers of new cases can new be assessed directly in the plotting area. To be general, only the highest number of new cases from each region with the date observed will be report. The rest of the information are left with interest for the readers to interpret and explore. The first set of plots shows the highest number of new cases in a single day in the given time frame was 769,644 cases observed from the region of Americas, and it was the 19th of September 2020. The highest new cases observed in a single day in the regions of Africa was the 3rd of January, 2021, with the exact number of 40456. The highest new cases observed in a single day in the regions of Eastern Mediterranean was the 1st of December, 2020, with the exact number of 62206. The highest new cases observed in a single day in the regions of European was the 8th of November, 2020, with the exact number of 346573. The highest new cases observed in a single day in the regions of South East Asia was the 23th of December, 2020, with the exact number of 78377. Finally, the "lowest" region with highest observed number of new cases in a single day was Western Pacific region, at the number of 15155, on the 13th of February, 2020. 
+
+
+The number of new cases can not only be interpreted by moving the mouse pointer over the graphing zone, but also displayed in order by _Date_reported_ and _New_cases_ in the data table. If the viewer is looking for observation under specific conditions, such as a given date, the search function allows direct access within the matching search. Same from the previous example, the entire webpage with these features embedded were created using the listdown workflows. No additional steps were done outside this R markdown document since the first example.  
 
 
 ##### 3.1.2 Number of New Cases and Death with decorators
 
-The highest number of death and the date observed were also revealed. To be general, the information will be reported like chapter 3.1.1, rest of the information are also with interest for the readers to interpret and explore. 
+The highest number of death and the date observed were also revealed. To be general, the information will be reported like chapter 3.1.1, rest of the information are also with interest for the readers to interpret and explore. In addition from the plot in chapter 2.3.4, the daily highest number of deaths was from Region of the Americas, with a single day number of new cases at 565201, the deaths was 12407. To check for the exact date of this observations, we selected ordering the _New_deaths_ variable in descending order, and refer to the _Date_reported_ variable. The date was 22nd of Janruary, 2021. 
+
+
+The linkage use of plotly and datatable revealed this finding in almost no time. On top of this HTML webpage, it was produced with listdown's high efficiency workflows. If the task was done without decorators, the viewers will never see the exact numbers unless scrolling through the 2628 views of observations. Or the author will have to produce the whole document in a seperate normal R markdown workflow saving everything in its very own directory. 
+
+
 
 ## 3.2 Decorators for more complicated computational compontents
 
@@ -303,6 +423,40 @@ The previous example reflected the improvements in visual perception by using de
 ### 3.2.1 Visualizing the Gapminder Data Set
 
 The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown workflow process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much plots inserted onto the same panel. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. This package provides us a potential tool expanding each seperate plot on multiple panels, which will be discussed later in the paper. 
+
+```
+# Load the gapminder data set.
+data(gapminder)
+# gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
+
+ 
+# Creating the computational components
+comp_comp_gapminder <- list(
+  `life expectancy` = ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
+  xlim(1948, 2011) + ylim(10, 95) + 
+  theme_bw() + 
+  labs(title = "life expectancy by continent") +
+  facet_wrap(~ country + continent))
+
+#Save file to the disk
+ saveRDS(comp_comp_gapminder, "comp-comp_gapminder.rds")
+
+ 
+# A not very effective visualization
+ld_gapminder <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder"))
+
+gapminder_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder))
+
+writeLines(gapminder_example, "gapminder-example.Rmd")
+render("gapminder-example.Rmd",html_document())
+system("open gapminder-example.html")
+```
+
 
 ```{r gapminder-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -363,7 +517,7 @@ render("gapminder-example.Rmd",html_document(), run_pandoc=FALSE, quiet=TRUE)
 cat(paste(readLines("gapminder-example.knit.md"), collapse="\n"))
 ```
 
-From the output shown, simple __facet_wrap()__ fails to show a informative visualization. The scales were out of proportion and the observations were too dense. With the introduction of trelliscopejs, a potential solution arises. 
+From the output shown, simple __facet_wrap()__ fails to show a informative visualization. The scales were out of proportion and the observations were too dense. With the introduction of trelliscopejs, a solution arises. 
 
 ### 3.2.2 Trelliscopejs
 
@@ -387,7 +541,7 @@ knitr::include_graphics("normaltrelliscope.PNG")
 ```
 
 
-### 3.3 Motivations of implementing trelliscopeJS into listdown
+### 3.3 Motivations of implementing Trelliscope into listdown
 
 There are several reasons trelliscopeJS may be even more efficient when it is implemented into listdown compared to a normal R markdown output. Firstly, big data outputs are usually produced with more complexed computational components. Part of listdown's purpose was to make the output documents more "content based" instead of "coding and techniqucal based". The computational component's output can be displayed in an more elegant format without excessive code chunk control options, authors have higher work efficiency when producing trelliscope in a listdown workflow compared to a normal R markdown workflow. 
 
@@ -396,7 +550,7 @@ Secondly, big data visualizations are often presented to a large number of audie
 Last but not least, previous studies mentioned the importance of obtaining full saturated information from big data, specifically in marketing (Keahey, 2013) and clinical health data (Kane,Jiang and Urbanek, 2020). One could influence the strategical plan and investment funds for a company like IBM (Keahey, 2013), the other could find cures to intractable diseases. Trelliscopejs has the ability to organize all visualizations and listdown has the ability to organized the computational components producing the visualizations. 
 
 
-Implementing a trelliscope system into listdown sounds like a staggered computing task, but listdown has a argument specially designed for describing the output methods, and this is achieved by modifying the decorators, demonstrated in chapter 3.1 using plotly. In the next chapter, several approaches are designed to achieve this goal. 
+Implementing a trelliscope system into listdown sounds like a staggered computing task, but listdown has an argument specially designed for describing the output methods, and this is achieved by modifying the decorators, demonstrated in chapter 3.1 using plotly. In the next chapter, several approaches are taken to achieve this goal. 
 
 # CH4 Solution using Decorators
 
@@ -405,6 +559,21 @@ As previous examples demonstrated. The decorator indicates a name of method or f
 ## 4.1 Adding telliscopejs facet for Gapminder in listdown
 
 To exclude the facet argument, we recreated the computational component with no facet arguments, and save the list into an RDS file named _comp-comp_gapminder_trellis.rds_. Everything else remains the same  within a normal R markdown workflow. 
+
+```
+# Creating the computational components, this time without the 'facet_wrap' call.
+library(gapminder)
+
+comp_comp_gapminder_trellis <- list(
+  `life expectancy full` = ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
+  xlim(1948, 2011) + ylim(10, 95) + 
+  theme_bw() + 
+  labs(title = "life expectancy by continent"))
+
+#Save file to the disk
+ saveRDS(comp_comp_gapminder_trellis, "comp-comp_gapminder_trellis.rds")
+```
+
 
 ```{r gapminder-trellis-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
 # Creating the computational components, this time without the 'facet_wrap' call.
@@ -422,6 +591,21 @@ comp_comp_gapminder_trellis <- list(
 
 The new function __ggtre()__ is created in the intial expression. The function consists of two parts, the first being the original function call. In this example, it was the ggplot objects in the listfown file. The second part is the __facet_trelliscope()__ arguments with the facetting variables and other parameters. The additional argument here is the pathway of the function call. Trelliscope had a bug, it attempts to find the variable attributes with default, which is NULLdata. By adding a pathway using __path="."__ argument, facet_trelliscope now changes the pathway to the current working directory. once knitr is called from rendering the listdown object, initial expression gets evaluated first. The decorator method is directed to the right pathway containing the elements need for the trelliscope argument. 
 
+```
+# Adding trelliscope call in the initial expressions, notice the description: Path ="."
+
+ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder_trellis.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs"),
+decorator = list(ggplot = ggtre), 
+init_expr = {
+  ggtre = function(x) x + facet_trelliscope(~ country + continent,
+                                           nrow = 2, ncol = 7, width = 300, path = ".")
+}
+)
+ld_gapminder_trellis
+```
+
+
 ```{r gapminder-trellis-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
 library(listdown)
 # Adding trelliscope call in the initial expressions, notice the description: Path ="."
@@ -438,6 +622,19 @@ ld_gapminder_trellis
 ```
 
 From the description of the listdown method above, the initial expression that gets to run immediately after packages are loaded are now included. The decorator method for ggplot class objects are now rendered using the method __ggtre()__ described in the initial expression. The next chunk of codes follows a normal listdown workflow and produces the docuemnt _gapminder_trellis-example.html_, implementing trelliscope to ggplot. 
+
+```
+gapminder_trellis_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis))
+
+writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
+render("gapminder_trellis-example.Rmd",html_document())
+system("open gapminder_trellis-example.html")
+```
+
 
 ```{r gapminder-trellis-example, echo=FALSE, message=FALSE, warning=FALSE}
 library(rmarkdown)
@@ -532,6 +729,28 @@ This function works as follows:
 
 To testify if the function works for the gapminder data set, the same listdown object was used from chapter 3.2.1. This time, the initial expression was removed, and the decorator was changed to the new function. the listdown object was saved as _ld_gapminder_trellis_generic_. After adding the headers, we rendered the document to check the outputs. 
 
+
+```
+# Same data set as the first example, switching the decorator this time instead of adding initial expression
+ld_gapminder_trellis_generic <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs"),
+decorator = list(ggplot = facet_wrap2ts)
+)
+
+gapminder_trellis_generic_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots trelliscope generic",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis_generic))
+
+ld_gapminder_trellis_generic
+# Make the document
+writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example.Rmd")
+render("gapminder_trellis_generic-example.Rmd",html_document())
+system("open gapminder_trellis_generic-example.html")
+```
+
+
 ```{r gapminder-trellis-generic-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
 ## Same data set as the first example, switching the decorator this time instead of adding initial expression
 ld_gapminder_trellis_generic <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
@@ -607,6 +826,27 @@ facet_tsplotly <- function(p, ...) {
 
 To testify if the decorator method is working. Again, the RDS file created for the gapminder data set from chapter 3.2.1 will be used. The decorator in the newly created listown object _ld_gapminder_trellis_plotly_ was changed to __facet_tsplotly__ this time. 
 
+```
+library(plotly)
+## Still the same data set as the first example
+ld_gapminder_trellis_plotly <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+package = c("ggplot2","gapminder", "trelliscopejs","plotly"),
+decorator = list(ggplot = facet_tsplotly)
+)
+
+gapminder_trellis_plotly_example <- c(
+ as.character(ld_rmarkdown_header("gapminder plots trelliscope plotly",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_gapminder_trellis_plotly))
+ld_gapminder_trellis_plotly
+
+writeLines(gapminder_trellis_plotly_example, "gapminder_trellis_plotly-example.Rmd")
+render("gapminder_trellis_plotly-example.Rmd",html_document())
+system("open gapminder_trellis_plotly-example.html")
+```
+
+
 ```{r gapminder-trellis-plotly-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
 library(plotly)
 ## Still the same data set as the first example
@@ -635,7 +875,7 @@ cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 heig
 The output was interactive. Each individual observations for each country was interactive. Improving the power of the overall visualization. 
 
 
-# CH5 Case Study: Reporting number of new cases and Death information from COVID Data
+# CH5 Decorator Application: Reporting number of new cases and Death information from COVID Data
 
 # 5.1 The Data Set
 From the previous chapters, the trelliscope works especially well with big data set having variables with multiple levels. The plotly interactive plots showed more details on each individual plots. The decorator function combining the two methods was created and testified. In this chapter, lets go back to the full COVID-19 data. The data set was sourced from World Health Organization offical website. All data was provided to the date before this paper was completely finished. Based on the description (https://covid19.who.int/info/)The full data set contains the following information:
@@ -681,6 +921,33 @@ In this case study, we created a new list named "comp_comp_covid_trellis". This 
 - Method __facet_tsplotly__ were used in all ggplot class objects for plotting. 
 
 A simple header was then added, the final html document _covid_trellis-example.html_ was rendered and included below. 
+
+```
+#Save the list object
+saveRDS(comp_comp_covid_trellis, "comp-comp_covid_trellis.rds")
+ 
+ 
+# Creating the listdown package
+ld_covid_trellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
+package = c("ggplot2","trelliscopejs", "DT"),
+decorator = list(ggplot = facet_tsplotly, 
+                 data.frame = datatable)
+)
+
+
+# Adding a header
+covid_trellis_example <- c(
+ as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS",
+author = "Leon",
+ date = "2021")),
+ld_make_chunks(ld_covid_trellis))
+
+# Making the document
+writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
+render("covid_trellis-example.Rmd",html_document())
+system("open covid_trellis-example.html")
+```
+
 
 ```{r covid-trellis-step1, echo=FALSE, message=FALSE, warning=FALSE}
 library(trelliscopejs)
