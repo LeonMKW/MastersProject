@@ -34,7 +34,7 @@ _Keywords: reproducible documents, effective visualizations, big data visualizat
 
 ## 1.1 Overview
 
-R language has been a popular computing language since its first appearance back in the 90s (Ihaka & Gentleman, 1996). R has many features dedicated but not limited to statistical computing, data analysis and other revelant tasks across a greater number of industries and fields. In addition to the IDE (Intergrated Development Enviroment) software R studio, a large number of R packages are also available, intended for users to focus more on the "goal" instead of the "coding". The paper discusses how reproducibility and compatibility of multiple statistical tasks can be contained in one single document using high efficient workflows, followed by data visualizations in R. While big data visualization tasks has become much more achievable in R with the release of many famous visualization packages such as __trelliscopeJS__ (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013), listdown does not have native support for it so far. The goal is to embed the features of these packages into listdown, especially the idea of facetting. The result is a powerful big data visualization tool with high efficiency workflows. All of these can be achieved by creating __decorators__ for the __listdown__ package (Kane,Jiang and Urbanek, 2020). Finally, an application of the methods created will be demonstrated on the current COVID-19 pandemic data sets sourced from the World Health Organization (https://www.who.int). 
+R language has been a popular computing language since its first appearance back in the 90s (Ihaka & Gentleman, 1996). R has many features dedicated but not limited to statistical computing, data analysis and other relevant tasks across a greater number of industries and fields. In addition to the IDE (Integrated Development Environment) software R studio, a large number of R packages are also available, intended for users to focus more on the "goal" instead of the "coding". The paper discusses how reproducibility and compatibility of multiple statistical tasks can be contained in one single document using high efficient workflows, followed by data visualizations in R. While big data visualization tasks has become much more achievable in R with the release of many famous visualization packages such as __trelliscopeJS__ (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013), listdown does not have native support for it so far. The goal is to embed the features of these packages into listdown, especially the idea of facetting. The result is a powerful big data visualization tool with high efficiency workflows. All of these can be achieved by creating __decorators__ for the __listdown__ package (Kane,Jiang and Urbanek, 2020). Finally, an application of the methods created will be demonstrated on the current COVID-19 pandemic data sets sourced from the World Health Organization (https://www.who.int). 
 
 ## 1.2 R markdown 
 
@@ -419,10 +419,10 @@ The number of new cases can not only be interpreted by moving the mouse pointer 
 
 ##### 3.1.2 Number of New Cases and Death with decorators
 
-The highest number of death and the date observed were also revealed. To be general, the information will be reported like chapter 3.1.1, rest of the information are also with interest for the readers to interpret and explore. In addition from the plot in chapter 2.3.4, the daily highest number of deaths was from Region of the Americas, with a single day number of new cases at 565201, the deaths was 12407. To check for the exact date of this observations, we selected ordering the _New_deaths_ variable in descending order, and refer to the _Date_reported_ variable. The date was 22nd of Janruary, 2021. 
+The highest number of death and the date observed were also revealed. To be general, the information will be reported like chapter 3.1.1, rest of the information are also with interest for the readers to interpret and explore. In addition from the plot in chapter 2.3.4, the daily highest number of deaths was from Region of the Americas, with a single day number of new cases at 565201, the deaths was 12407. To check for the exact date of this observations, we selected ordering the _New_deaths_ variable in descending order, and refer to the _Date_reported_ variable. The date was 22nd of January, 2021. 
 
 
-The linkage use of plotly and datatable revealed this finding in almost no time. On top of this HTML webpage, it was produced with listdown's high efficiency workflows. If the task was done without decorators, the viewers will never see the exact numbers unless scrolling through the 2628 views of observations. Or the author will have to produce the whole document in a seperate normal R markdown workflow saving everything in its very own directory. 
+The linkage use of plotly and datatable revealed this finding in almost no time. On top of this HTML webpage, it was produced with listdown's high efficiency workflows. If the task was done without decorators, the viewers will never see the exact numbers unless scrolling through the 2628 views of observations. Or the author will have to produce the whole document in a separate normal R markdown workflow saving everything in its very own directory. 
 
 
 
@@ -535,7 +535,7 @@ From the output shown, simple __facet_wrap()__ fails to show a informative visua
 
 ### 3.2.2 Trelliscopejs
 
-In the previous writings, trelliscope displays was mentionaed several times as a substitution to facetting functions in ggplot. The idea behind trelliscope (Becker, Cleveland & Shyu, 1996) was described as D&R, standing for divide and recombine (Guha, Hafen, Rounds, Xia, Li, Xi, & Cleveland, 2012) during the development of package __trelliscopeJS__. The idea was an approach on methods to display large complex data visualizations. In a trelliscope system, the data set are splited into subets, with a visualization method applied to each subsets. The output is a structurally arrayed panel each displaying a portion of the original data (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013). Different from the original trelliscope displays, once the panel becomes interactive, functions such as filtering, sorting and searching can be implemented. These derivative features of an interactive interface provides huge convenience that static trelliscope displays does not have. To implant this approach into ggplot2 interface, __facet_trelliscope()__ was introduced. The next example shows a simple change in the function solving the problem in chapter 3.2.1. 
+In the previous writings, trelliscope displays was mentioned several times as a substitution to facetting functions in ggplot. The idea behind trelliscope (Becker, Cleveland & Shyu, 1996) was described as D&R, standing for divide and recombine (Guha, Hafen, Rounds, Xia, Li, Xi, & Cleveland, 2012) during the development of package __trelliscopeJS__. The idea was an approach on methods to display large complex data visualizations. In a trelliscope system, the data set are splited into subsets, with a visualization method applied to each subsets. The output is a structurally arrayed panel each displaying a portion of the original data (Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013). Different from the original trelliscope displays, once the panel becomes interactive, functions such as filtering, sorting and searching can be implemented. These derivative features of an interactive interface provides huge convenience that static trelliscope displays does not have. To implant this approach into ggplot2 interface, __facet_trelliscope()__ was introduced. The next example shows a simple change in the function solving the problem in chapter 3.2.1. 
 
 ## 3.2.3 Facetting using Package TrelliscopeJS 
 
@@ -557,9 +557,9 @@ knitr::include_graphics("normaltrelliscope.PNG")
 
 ### 3.3 Motivations of implementing Trelliscope into listdown
 
-There are several reasons trelliscopeJS may be even more efficient when it is implemented into listdown compared to a normal R markdown output. Firstly, big data outputs are usually produced with more complexed computational components. Part of listdown's purpose was to make the output documents more "content based" instead of "coding and techniqucal based". The computational component's output can be displayed in an more elegant format without excessive code chunk control options, authors have higher work efficiency when producing trelliscope in a listdown workflow compared to a normal R markdown workflow. 
+There are several reasons trelliscopeJS may be even more efficient when it is implemented into listdown compared to a normal R markdown output. Firstly, big data outputs are usually produced with more complicated computational components. Part of listdown's purpose was to make the output documents more "content based" instead of "coding and techniqucal based". The computational component's output can be displayed in an more elegant format without excessive code chunk control options, authors have higher work efficiency when producing trelliscope in a listdown workflow compared to a normal R markdown workflow. 
 
-Secondly, big data visualizations are often presented to a large number of audience whether it is used for explanatory or predictive analysis. While the author may save some time producing and creating the visualizations, it is important for the audience to focus on the outputs. The interpretation for these multi-panel plots may take up hours or even days of time before any conclusion can be found for experts. On ther other hand, if trelliscope visualizations are used for example, in an exhibition or presentation open to public, audience with little to no statistical knowledge are expected. The standardization of all computational components, especially graphical outputs helps readers in capturing key information regardless the targeted occasions. Both listdown and trelliscopejs packages were created in the common purpose based on the points mentioned above. 
+Secondly, big data visualizations are often presented to a large number of audience whether it is used for explanatory or predictive analysis. While the author may save some time producing and creating the visualizations, it is important for the audience to focus on the outputs. The interpretation for these multi-panel plots may take up hours or even days of time before any conclusion can be found for experts. On the other hand, if trelliscope visualizations are used for example, in an exhibition or presentation open to public, audience with little to no statistical knowledge are expected. The standardization of all computational components, especially graphical outputs helps readers in capturing key information regardless the targeted occasions. Both listdown and trelliscopejs packages were created in the common purpose based on the points mentioned above. 
 
 Last but not least, previous studies mentioned the importance of obtaining full saturated information from big data, specifically in marketing (Keahey, 2013) and clinical health data (Kane,Jiang and Urbanek, 2020). One could influence the strategical plan and investment funds for a company like IBM (Keahey, 2013), the other could find cures to intractable diseases. Trelliscopejs has the ability to organize all visualizations and listdown has the ability to organized the computational components producing the visualizations. 
 
@@ -568,9 +568,9 @@ Implementing a trelliscope system into listdown sounds like a staggered computin
 
 # CH4 Solution using Decorators
 
-As previous examples demonstrated. The decorator indicates a name of method or function that are applied to the stated class of object in the listdown file during kniting process. The goal is to swap __facet_wrap()__ with __facet_trelliscope()__, and it requires partially changing the function call of the ggplot object in listdown. One fast solution was to exclude the __facet_wrap()__ function from the listdown file and add __facet_trelliscope()__ through __initial_expr()__ argument. The code chunk in __initial_expr()__ is inserted immediately once the required libraries are loaded. When render is called kntting the listdown object, codes in __initial_expr()__ is evaluated before the listdown objects are rendered. The following example demonstrates this approach.
+As previous examples demonstrated. The decorator indicates a name of method or function that are applied to the stated class of object in the listdown file during kniting process. The goal is to swap __facet_wrap()__ with __facet_trelliscope()__, and it requires partially changing the function call of the ggplot object in listdown. One fast solution was to exclude the __facet_wrap()__ function from the listdown file and add __facet_trelliscope()__ through __initial_expr()__ argument. The code chunk in __initial_expr()__ is inserted immediately once the required libraries are loaded. When render is called knitting the listdown object, codes in __initial_expr()__ is evaluated before the listdown objects are rendered. The following example demonstrates this approach.
 
-## 4.1 Adding telliscopejs facet for Gapminder in listdown
+## 4.1 Adding trelliscopejs facet for Gapminder in listdown
 
 To exclude the facet argument, we recreated the computational component with no facet arguments, and save the list into an RDS file named _comp-comp_gapminder_trellis.rds_. Everything else remains the same  within a normal R markdown workflow. 
 
@@ -603,7 +603,7 @@ comp_comp_gapminder_trellis <- list(
  saveRDS(comp_comp_gapminder_trellis, "comp-comp_gapminder_trellis.rds")
 ```
 
-The new function __ggtre()__ is created in the intial expression. The function consists of two parts, the first being the original function call. In this example, it was the ggplot objects in the listfown file. The second part is the __facet_trelliscope()__ arguments with the facetting variables and other parameters. The additional argument here is the pathway of the function call. Trelliscope had a bug, it attempts to find the variable attributes with default, which is NULLdata. By adding a pathway using __path="."__ argument, facet_trelliscope now changes the pathway to the current working directory. once knitr is called from rendering the listdown object, initial expression gets evaluated first. The decorator method is directed to the right pathway containing the elements need for the trelliscope argument. 
+The new function __ggtre()__ is created in the initial expression. The function consists of two parts, the first being the original function call. In this example, it was the ggplot objects in the listdown file. The second part is the __facet_trelliscope()__ arguments with the facetting variables and other parameters. The additional argument here is the pathway of the function call. Trelliscope had a bug, it attempts to find the variable attributes with default, which is NULLdata. By adding a pathway using __path="."__ argument, facet_trelliscope now changes the pathway to the current working directory. once knitr is called from rendering the listdown object, initial expression gets evaluated first. The decorator method is directed to the right pathway containing the elements need for the trelliscope argument. 
 
 ```
 # Adding trelliscope call in the initial expressions, notice the description: Path ="."
@@ -635,7 +635,7 @@ init_expr = {
 ld_gapminder_trellis
 ```
 
-From the description of the listdown method above, the initial expression that gets to run immediately after packages are loaded are now included. The decorator method for ggplot class objects are now rendered using the method __ggtre()__ described in the initial expression. The next chunk of codes follows a normal listdown workflow and produces the docuemnt _gapminder_trellis-example.html_, implementing trelliscope to ggplot. 
+From the description of the listdown method above, the initial expression that gets to run immediately after packages are loaded are now included. The decorator method for ggplot class objects are now rendered using the method __ggtre()__ described in the initial expression. The next chunk of codes follows a normal listdown workflow and produces the document _gapminder_trellis-example.html_, implementing trelliscope to ggplot. 
 
 ```
 gapminder_trellis_example <- c(
@@ -741,7 +741,7 @@ This function works as follows:
 
 #### 4.3.2 Testing facet_wrap2ts on Gapminder Data set
 
-To testify if the function works for the gapminder data set, the same listdown object was used from chapter 3.2.1. This time, the initial expression was removed, and the decorator was changed to the new function. the listdown object was saved as _ld_gapminder_trellis_generic_. After adding the headers, we rendered the document to check the outputs. 
+To testify if the function works for the gapminder data set, the same listdown object was used from chapter 3.2.1. This time, the initial expression was removed, and the decorator was changed to the new function. The listdown object was saved as _ld_gapminder_trellis_generic_. After adding the headers, we rendered the document to check the outputs. 
 
 
 ```
@@ -795,7 +795,7 @@ After applying the __facet_wrap2ts__ decorator function, the rendering showed a 
 
 ### 4.4 facet_wrap directly to facet_trelliscope with plotly
 
-The  __facet_wrap2ts__ was successful in turning ggplot objects with facet argument into trelliscope plots in listdown. However, during big data set visualizations, we saw the power of ggplotly as a decorator from example 3.1. It would be appriopriate to combine library plotly with trelliscope, and implement it into a listdown decorator. This fulfills the needs of decorators when users produce documents via a listdown workflow that is intended for big data visualizations. From the original trelliscope package, plotly was supported as one of the arguments in function __facet_trelliscope()__. If we added the arguments and set the default __as_plotly = TRUE__, the output shall be interactive, while the layout remains the same of using telliscope. 
+The  __facet_wrap2ts__ was successful in turning ggplot objects with facet argument into trelliscope plots in listdown. However, during big data set visualizations, we saw the power of ggplotly as a decorator from example 3.1. It would be appropriate to combine library plotly with trelliscope, and implement it into a listdown decorator. This fulfills the needs of decorators when users produce documents via a listdown workflow that is intended for big data visualizations. From the original trelliscope package, plotly was supported as one of the arguments in function __facet_trelliscope()__. If we added the arguments and set the default __as_plotly = TRUE__, the output shall be interactive, while the layout remains the same of using trelliscope. 
 
 #### 4.4.1 Function facet_tsplotly
 
@@ -892,7 +892,7 @@ The output was interactive. Each individual observations for each country was in
 # CH5 Decorator Application: Reporting number of new cases and Death information from COVID Data
 
 # 5.1 The Data Set
-From the previous chapters, the trelliscope works especially well with big data set having variables with multiple levels. The plotly interactive plots showed more details on each individual plots. The decorator function combining the two methods was created and testified. In this chapter, lets go back to the full COVID-19 data. The data set was sourced from World Health Organization offical website. All data was provided to the date before this paper was completely finished. Based on the description (https://covid19.who.int/info/)The full data set contains the following information:
+From the previous chapters, the trelliscope works especially well with big data set having variables with multiple levels. The plotly interactive plots showed more details on each individual plots. The decorator function combining the two methods was created and testified. In this chapter, lets go back to the full COVID-19 data. The data set was sourced from World Health Organization official website. All data was provided to the date before this paper was completely finished. Based on the description (https://covid19.who.int/info/)The full data set contains the following information:
 
 - Date_reported
 
@@ -934,7 +934,7 @@ In this case study, we created a new list named "comp_comp_covid_trellis". This 
 - Method __datatable__ were used instead of data.frame for showing the data set.
 - Method __facet_tsplotly__ were used in all ggplot class objects for plotting. 
 
-A simple header was then added, the final html document _covid_trellis-example.html_ was rendered and included below. 
+A full header was then added, the final HTML document _covid_trellis-example.html_ was rendered and included below. 
 
 ```
 #Save the list object
@@ -1018,7 +1018,7 @@ cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 fr
 
 ## 5.3 Discussion
  
-From the embedded html document rendered from chapter 5.2, several features were included as are discussed below.
+From the embedded HTML document rendered from chapter 5.2, several features were included as are discussed below.
 
 ### The Data Table
 
@@ -1038,7 +1038,7 @@ The final result of the visualization had a elegant and neat layout compared to 
 knitr::include_graphics("China.PNG")
 ```
 
-From the plot of China, where the COVID-19 was first discovered to have symptoms on humans initially, the rise of number of new cases was rapid and severe. The single day peak number of new cases discovered was on the 13th of February, 2020, at 15152 new cases. While this "outlier-like" single day number was discrepant to the number provided from the Wikipedia page of Statistics of the COVID-19 pandemic in mainland China (https://en.wikipedia.org), it was then discovered accordingly to the National Health Commsion (http://en.nhc.gov.cn/) the previous records of new cases was not completely recorded and was justified and added on in this particular day before reporting to WHO. Then China has effectively lowered the number of new cases daily with a series of actions. However, up to the date before this paper was finalized, there is a rebound trend, with 743 new cases daily recorded on the 23rd of May, 2021. The time frame of the peak number and the rebounding trend would have not been noticed without individual plotting.  
+From the plot of China, where the COVID-19 was first discovered to have symptoms on humans initially, the rise of number of new cases was rapid and severe. The single day peak number of new cases discovered was on the 13th of February, 2020, at 15152 new cases. While this "outlier-like" single day number was discrepant to the number provided from the Wikipedia page of Statistics of the COVID-19 pandemic in mainland China (https://en.wikipedia.org), it was then discovered accordingly to the National Health Commission (http://en.nhc.gov.cn/) the previous records of new cases was not completely recorded and was justified and added on in this particular day before reporting to WHO. Then China has effectively lowered the number of new cases daily with a series of actions. However, up to the date before this paper was finalized, there is a rebound trend, with 743 new cases daily recorded on the 23rd of May, 2021. The time frame of the peak number and the rebounding trend would have not been noticed without individual plotting.  
 
 - India
 
@@ -1046,7 +1046,7 @@ From the plot of China, where the COVID-19 was first discovered to have symptoms
 knitr::include_graphics("India.PNG")
 ```
 
-To Find the plot of India, the sorting feature of trelliscope was applied. The main interest of India was the daily number of new cases increases out of control lately. The trend was clearly displayed in the plot, and reached a peak of 414188 cases on the 7th of May, 2021. However, if the overall tend was not plotted, a small rise in the number of new cases has occurred during Sepetember, 2020. The daily number of new cases in India has gained focus worldwide, several medias has criticized India's continuous poor action and policy decisions, little knowing the decrease in new cases between October 2020 till March 2021. 
+To Find the plot of India, the sorting feature of trelliscope was applied. The main interest of India was the daily number of new cases increases out of control lately. The trend was clearly displayed in the plot, and reached a peak of 414188 cases on the 7th of May, 2021. However, if the overall tend was not plotted, a small rise in the number of new cases has occurred during September, 2020. The daily number of new cases in India has gained focus worldwide, several medias has criticized India's continuous poor action and policy decisions, little knowing the decrease in new cases between October 2020 till March 2021. 
 
 
 - The United States of America
@@ -1075,7 +1075,7 @@ In a typical statistical task, the listdown package has great advantage of more 
 While the advantage of such combination demonstrated easiness in several aspects on both the author's prospect and the interpreter's prospect, it shall be kept in mind of when this tool can be deployed appropriately. 
 
 
-For occasions whereas detailed quantative tasks are carried out, a full analytical process used in statistics must be required. The steps often includes but are not limited to hypotheses setting, statistical testing, assumption checking, executive summary, technical summary, discussion and conclusions. Most of the steps require narrative components. Visualization can be applied to some of these steps as either the final output or used as an assistance, but it will never be sufficient enough being the only result for all the tasks. In fact, computational components itself may not be effective on completing a qualitative statistical task alone (Kane,Jiang and Urbanek, 2020). On the other hand, despite narrative components can be included into listdown as character elements using the chunk options decorator by setting the __results = "as.is"__, it contraries the intention of the authors whom originally created the listdown package, and are considered less efficient in comparison to using a normal R markdown workflow. 
+For occasions whereas detailed quantitative tasks are carried out, a full analytical process used in statistics must be required. The steps often includes but are not limited to hypotheses setting, statistical testing, assumption checking, executive summary, technical summary, discussion and conclusions. Most of the steps require narrative components. Visualization can be applied to some of these steps as either the final output or used as an assistance, but it will never be sufficient enough being the only result for all the tasks. In fact, computational components itself may not be effective on completing a qualitative statistical task alone (Kane,Jiang and Urbanek, 2020). On the other hand, despite narrative components can be included into listdown as character elements using the chunk options decorator by setting the __results = "as.is"__, it contraries the intention of the authors whom originally created the listdown package, and are considered less efficient in comparison to using a normal R markdown workflow. 
 
 
 In situations whereas visualizations are crucial for reaching the goal, or the targeted audience are much more broader than statistical experts or professional researchers, these computational components and the decorators works flawlessly in the listdown package, providing an effective and powerful tool for data visualizations. 
