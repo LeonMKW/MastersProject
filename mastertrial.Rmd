@@ -4,17 +4,17 @@ author: "Mingkun Wu"
 date: "11/26/2020"
 always_allow_html: true
 output:
+  html_document:
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
   pdf_document:
     highlight: kate
     number_sections: yes
     toc: yes
     toc_depth: 2
     keep_tex: true
-  html_document:
-    number_sections: yes
-    theme: journal
-    toc: yes
-    toc_depth: 2
 ---
 
 ```{r libraries, include = FALSE, echo=FALSE, warning=FALSE,message=FALSE}
@@ -256,12 +256,11 @@ knitr::opts_chunk$set(warning = FALSE)
 library(rmarkdown)
 # Write chunks
 writeLines(covidexample, "covid-example.Rmd")
-render("covid-example.Rmd",html_document(), run_pandoc=FALSE, quiet=TRUE)
+render("covid-example.Rmd",html_document(), quiet=TRUE)
 ```
 
-
-```{r covid-example-out1, results="asis", echo=FALSE}
-cat(paste(readLines("covid-example.knit.md"), collapse="\n"))
+```{r results="asis", echo=FALSE, include=is.html}
+htmltools::includeHTML("covid-example.html")
 ```
 
 #### Number of New Cases
@@ -412,11 +411,11 @@ knitr::opts_chunk$set(warning = FALSE)
 library(rmarkdown)
 # Write chunks
 writeLines(gapminder_example, "gapminder-example.Rmd")
-render("gapminder-example.Rmd",html_document(), run_pandoc=FALSE, quiet=TRUE)
+render("gapminder-example.Rmd",html_document(), quiet=TRUE)
 ```
 
-```{r gapminderexampleout1, results="asis", echo=FALSE}
-cat(paste(readLines("gapminder-example.knit.md"), collapse="\n"))
+```{r results="asis", echo=FALSE, include=is.html}
+htmltools::includeHTML("gapminder-example.html")
 ```
 
 From the output shown, simple __facet_wrap()__ fails to show a informative visualization. The scales were out of proportion and the observations were too dense. With the introduction of trelliscopejs, a solution arises. 
@@ -505,7 +504,7 @@ gapminder_trellis_example <- c(
 ```
 
 ```{r results="asis", echo=FALSE, include=is.html}
-cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 frameBorder=0 data-external="1">
+cat('<iframe src="ggtre/gapminder_trellis-example.html" width=950 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
@@ -587,7 +586,7 @@ writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example
 ```
 
 ```{r results="asis", echo=FALSE, include=is.html}
-cat('<iframe src="wrap2ts/gapminder_trellis_generic-example.html" width=920 height=600 frameBorder=0 data-external="1">
+cat('<iframe src="wrap2ts/gapminder_trellis_generic-example.html" width=950 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
@@ -646,7 +645,7 @@ ld_gapminder_trellis_plotly
 ```
 
 ```{r results="asis", include=is.html, echo=FALSE}
-cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 height=600 frameBorder=0 data-external="1">
+cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=950 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
@@ -747,7 +746,7 @@ covid_trellis_example <- c(
 #  system("open covid_trellis-example.html")
 ```
 ```{r results="asis", echo=FALSE, include=is.html}
-cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 frameBorder=0 data-external="1">
+cat('<iframe src="covidfinal/covid_trellis-example.html" width=950 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
 
@@ -824,11 +823,11 @@ While the decorators now works with trelliscope and plotly, there are still some
 Keeping the above discussions in mind, the listdown package with a powerful visualization decorator will have much wider usage scenarios and higher popularity in the age of big data. 
 
 
-# Appendix {-}
+# Appendix
 
 ## Packages
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 library(listdown)
 library(ggplot2)
 library(scales)
@@ -845,7 +844,7 @@ library(knitr)
 
 ## COVID-19 Examples
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 # Read in the regions data set.
 regions = read.csv("COVID-regions-2021.csv", 
                     colClasses=c("character", "Date", rep("numeric", 2)))
@@ -924,7 +923,7 @@ writeLines(covidexample, "covid-example.Rmd")
 
 ## COVID-19 Decorator Examples
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 #Add in data and decorators, Data added in this time
 computational_components_covid$Data <- regions
 saveRDS(computational_components_covid, "comp-comp_covid.rds")
@@ -940,16 +939,13 @@ coviddecoratorexample <- c(
           ld_make_chunks(ld_new_data))
 
 writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
-#render("covid-decorator-example.Rmd",html_document())
-#system("open covid-decorator-example.html")
 ```
 
-Gapminder Examples
+## Gapminder Examples
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 # Load the gapminder data set.
 data(gapminder)
-# gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
 
 # Creating the computational components
 comp_comp_gapminder <- list(
@@ -974,13 +970,11 @@ author = "Leon",
 ld_make_chunks(ld_gapminder))
 
 writeLines(gapminder_example, "gapminder-example.Rmd")
-#render("gapminder-example.Rmd",html_document())
-#system("open gapminder-example.html")
 ```
 
 ## Gapminder using Trelliscope
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 # What trelliscope would look like when we use trelliscope instead of facet
 library(ggplot2)
 library(trelliscopejs)
@@ -992,7 +986,7 @@ ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) +
 
 ## Solution Using function __ggtre__
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 # Creating the computational components, this time without the 'facet_wrap' call.
 library(gapminder)
 
@@ -1026,13 +1020,11 @@ ld_make_chunks(ld_gapminder_trellis))
 
 #Rendering html file
 writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
-#ender("gapminder_trellis-example.Rmd",html_document())
-#system("open gapminder_trellis-example.html")
 ```
 
 ## Function __facet_wrap2ts__
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 # Created a generic function for trelliscope
 # y is an ggplot object
 facet_wrap2ts <- function(y){
@@ -1068,13 +1060,11 @@ ld_gapminder_trellis_generic
 
 # Make the document
 writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example.Rmd")
-#render("gapminder_trellis_generic-example.Rmd",html_document())
-#system("open gapminder_trellis_generic-example.html")
 ```
 
 ## Function facet_tsplotly 
 
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 # If p is an ggplot object
 facet_tsplotly <- function(p, ...) {
   if (is(p$facet, "Facet") && !is(p, "FacetNull")) {
@@ -1104,12 +1094,10 @@ ld_make_chunks(ld_gapminder_trellis_plotly))
 ld_gapminder_trellis_plotly
 
 writeLines(gapminder_trellis_plotly_example, "gapminder_trellis_plotly-example.Rmd")
-#render("gapminder_trellis_plotly-example.Rmd",html_document())
-#system("open gapminder_trellis_plotly-example.html")
 ```
 
 ## COVID-19 Case Study
-```{r}
+```{r echo=TRUE, results=FALSE, warnings=FALSE}
 
 #Reading in the data and cleaning
 covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
@@ -1155,9 +1143,7 @@ ld_make_chunks(ld_covid_trellis))
 
 
 # Making the document
- writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
-# render("covid_trellis-example.Rmd",html_document())
-# system("open covid_trellis-example.html")
+writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
 ```
 
 
