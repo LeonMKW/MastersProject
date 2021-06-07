@@ -2,17 +2,23 @@
 title: "Large Data Visualization techniques using High Efficiency Workflows"
 author: "Mingkun Wu"
 date: "11/26/2020"
+always_allow_html: true
 output:
-  html_document:
-    toc: true
+  pdf_document:
+    highlight: kate
+    number_sections: yes
+    toc: yes
     toc_depth: 2
-    number_sections: true
-
-  pdf_document: default
+    keep_tex: true
+  html_document:
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
 ---
 
 ```{r libraries, include = FALSE, echo=FALSE, warning=FALSE,message=FALSE}
-Sys.setenv(LANG = "en")
+Sys.setenv(LANG = "en_NZ.UTF-8")
 library(listdown)
 library(ggplot2)
 library(gtsummary)
@@ -25,8 +31,13 @@ library(trelliscopejs)
 library(DT)
 library(knitr)
 
+is.html <- knitr:::pandoc_to() == "html"
+is.tex <- !is.html
+
+#knit_theme$set("seashell")
+
 options(prompt=" > ", continue="   ")
-knitr::opts_chunk$set(echo=TRUE, prompt=TRUE, results=TRUE, collapse=TRUE, comment="  ", error=TRUE, fig.width=7, fig.height=5, fig.cap='', dpi=100)
+# knitr::opts_chunk$set(echo=TRUE, prompt=TRUE, results=TRUE, collapse=TRUE, comment="  ", error=TRUE, fig.width=7, fig.height=5, fig.cap='', dpi=100)
 
 ```
 
@@ -118,60 +129,15 @@ Once data has been read into R, the computational component is reproduced and st
 
 ### Making a list of Computational Components
 
-```
-# Creating the computational components
-computational_components_covid <- list( 
-  `New cases per day for each region` = ggplot(regions) + 
-    geom_area(aes(Date_reported, New_cases, colour=WHO_region, fill=WHO_region), 
-              stat="smooth", 
-              alpha=.2, position="identity",
-              method="loess", span=.1)+ labs(title = "Number of daily COVID cases by WHO region") +
-    scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
-    scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
-                 expand = expansion(0),
-                 label = label_date_short()),
-
-`New cases per day for each region facet` = ggplot(regions, 
-                                                   aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region,
-                                                                stat = "smooth",  method="loess", span=.1)) + geom_area( alpha=.5) + 
-  facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region facet") + scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
-     scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
-                 expand = expansion(0),
-                 label = label_date_short()),
-
-
-`Cases against Death` = ggplot(data = regions,
-       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point(alpha = .2) + 
-    scale_x_sqrt() +
-    scale_y_sqrt() +
-  labs(title = "Number of COVID cases against death by WHO region"),
-     
-
-`Cases against Death facet` = ggplot(filter(regions, New_cases >= 0),
-       aes(New_cases, New_deaths, colour=WHO_region)) + 
-    geom_point(alpha=.2) +
-    scale_x_sqrt() +
-    scale_y_sqrt() +
-    facet_wrap(vars(WHO_region)) +
-    theme(aspect.ratio=1, legend.position="none") +
-    labs(title = "Number of COVID cases against death by WHO region by facet")
-
-)
-
-#Save file to the disk
- saveRDS(computational_components_covid, "comp-comp_covid.rds")
- 
-comp_covid <- readRDS("comp-comp_covid.rds")
-
-ld_cc_dendro(comp_covid)
-```
-
-```{r covid-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 library(listdown)
 library(ggplot2)
 library(tidyverse)
 library(scales)
 library(dplyr)
+```
+
+```{r covid-example-step1, message=FALSE, warning=FALSE}
 # Read in the regions data set.
 regions = read.csv("COVID-regions-2021.csv", 
                     colClasses=c("character", "Date", rep("numeric", 2)))
@@ -182,41 +148,43 @@ computational_components_covid <- list(
     geom_area(aes(Date_reported, New_cases, colour=WHO_region, fill=WHO_region), 
               stat="smooth", 
               alpha=.2, position="identity",
-              method="loess", span=.1)+ labs(title = "Number of daily COVID cases by WHO region") +
+              method="loess", span=.1) +
+    labs(title = "Number of daily COVID cases by WHO region") +
     scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
     scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
                  expand = expansion(0),
                  label = label_date_short()),
 
-`New cases per day for each region facet` = ggplot(regions, 
-                                                   aes(x = Date_reported, y = New_cases, col = WHO_region, fill = WHO_region,
-                                                                stat = "smooth",  method="loess", span=.1)) + geom_area( alpha=.5) + 
-  facet_wrap(.~WHO_region) + labs(title = "Number of daily COVID cases by WHO region facet") + scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
-     scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
-                 expand = expansion(0),
-                 label = label_date_short()),
-
+`New cases per day for each region facet` =
+   ggplot(regions, aes(x = Date_reported, y = New_cases,
+                       col = WHO_region, fill = WHO_region,
+                       stat = "smooth",  method="loess", span=.1)) +
+   geom_area( alpha=.5) + 
+  facet_wrap(.~WHO_region) +
+  labs(title = "Number of daily COVID cases by WHO region facet") +
+  scale_y_continuous(expand = rep(0,4),labels = label_comma()) +
+  scale_x_date(limits = as.Date(c("2020-01-01", "2021-03-15")),
+               expand = expansion(0),
+               label = label_date_short()),
 
 `Cases against Death` = ggplot(data = regions,
-       aes(x=New_cases, y=New_deaths, color = WHO_region)) + geom_point(alpha = .2) + 
-    scale_x_sqrt() +
-    scale_y_sqrt() +
-  labs(title = "Number of COVID cases against death by WHO region"),
+    aes(x=New_cases, y=New_deaths, color = WHO_region)) +
+    geom_point(alpha = .2) + 
+    scale_x_sqrt() + scale_y_sqrt() +
+    labs(title = "Number of COVID cases against death by WHO region"),
      
 
 `Cases against Death facet` = ggplot(filter(regions, New_cases >= 0),
-       aes(New_cases, New_deaths, colour=WHO_region)) + 
+    aes(New_cases, New_deaths, colour=WHO_region)) + 
     geom_point(alpha=.2) +
-    scale_x_sqrt() +
-    scale_y_sqrt() +
+    scale_x_sqrt() + scale_y_sqrt() +
     facet_wrap(vars(WHO_region)) +
     theme(aspect.ratio=1, legend.position="none") +
     labs(title = "Number of COVID cases against death by WHO region by facet")
-
 )
 
 #Save file to the disk
- saveRDS(computational_components_covid, "comp-comp_covid.rds")
+saveRDS(computational_components_covid, "comp-comp_covid.rds")
  
 comp_covid <- readRDS("comp-comp_covid.rds")
 
@@ -241,18 +209,6 @@ From the previous step, the list containing the plots now saved as a R object na
 
 4. The chunk options can be controlled two ways. The first being normal chunk options, which can be specified straight away, the second is by using __decorator_chunk_opts()__ , and can be subjected to a class given. 
 
-```
-#Making a listdown object
-library(listdown)
-library(knitr)
-ld_new <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
-package = c("ggplot2", "tidyverse","scales"))
-
-class(ld_new)
-ld_new
-```
-
-
 ```{r covid-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
 #Making a listdown object
 library(listdown)
@@ -271,22 +227,10 @@ From the output, we can see ld_new is a listdown class object, the descriptions 
 
 The listdown object named __ld_new__ is now ready to create the document. To regularize the document output in terms of formats, it is further processed with a header. The listdown package has native support in R markdown and __workflowr__ as yml objects (Kane,Jiang and Urbanek, 2020). The header objects are part of the list in the document, and can be edited by using ```ld_rmarkdown_header()```. By calling the document name, a glimpse of the document content is shown, the names are clearly listed out along with the type of objects author intends to include. This step is optional as described in the previous working steps, however, it is always important to include a name for the outputs as it follows the principle of proportional ink (Wilke, 2019). 
 
-```
-covidexample <- c(
- as.character(ld_rmarkdown_header("Covid plots",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_new))
-
-covidexample
-```
-
-```{r covid-example-step3, echo=FALSE, message=FALSE, warning=FALSE}
-covidexample <- c(
- as.character(ld_rmarkdown_header("Covid plots",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_new))
+```{r covid-example-step3, message=FALSE, warning=FALSE}
+covidexample <-
+  c(as.character(ld_rmarkdown_header("Covid plots", author = "Leon", date = "2021")),
+    ld_make_chunks(ld_new))
 
 covidexample
 ```
@@ -295,16 +239,7 @@ While the next major step is rendering the listdown object __covidexample__ into
 
 ### Creating a HTML document from R markdown 
 
-```
-library(knitr)
-library(rmarkdown)
-# Write the document.
-writeLines(covidexample, "covid-example.Rmd")
-render("covid-example.Rmd",html_document())
-system("open covid-example.html")
-```
-
-```{r covid-example-step4}
+```{r covid-example-step4, include=FALSE}
 library(knitr)
 library(rmarkdown)
 # Write the document.
@@ -346,25 +281,7 @@ In the previous chapter, the complete workflow of creating a document using list
 
 The same set of data from chapter 2 was used. Little different from the previous list _computational_components_covid_, the data _regions_ was added in. This time, two decorators were added into the listdown item, __"ggplot = ggplotly"__ and __"data.frame = datatable"__. 
 
-```
-#Add in data and decorators
-library(listdown)
-library(DT)
-
-# Data now added in for decorator datatable
-computational_components_covid$Data <- regions
-saveRDS(computational_components_covid, "comp-comp_covid.rds")
-
-ld_decorator <- listdown(load_cc_expr = readRDS("comp-comp_covid.rds"),
-package = c("ggplot2", "tidyverse","scales","DT","plotly"),
-decorator = list(ggplot = ggplotly,
-                 data.frame = datatable))
-class(ld_decorator)
-ld_decorator
-
-```
-
-```{r covid-decorator-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
+```{r covid-decorator-example-step1, message=FALSE, warning=FALSE}
 #Add in data and decorators
 library(listdown)
 library(DT)
@@ -391,31 +308,38 @@ Referring to step 3 in chapter 2.2.1, the decorator is a description of the func
 <!-- NOT SURE -->
 
 
-```
+```{r covid-decorator-example-step2, message=FALSE, warning=FALSE}
 library(rmarkdown)
 coviddecoratorexample <- c(
   as.character(ld_rmarkdown_header("covid-example")),
           ld_make_chunks(ld_decorator))
-
+```
+```{r echo=FALSE}
 writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
-render("covid-decorator-example.Rmd",html_document())
-system("open covid-decorator-example.html")
-```
-
-```{r covid-decorator-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
-library(rmarkdown)
-coviddecoratorexample <- c(
-  as.character(ld_rmarkdown_header("covid-example")),
-          ld_make_chunks(ld_decorator))
-
-# writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
-# render("covid-decorator-example.Rmd",html_document())
+render("covid-decorator-example.Rmd", html_document())
 # system("open covid-decorator-example.html")
 ```
 
-```{r results="asis", echo=FALSE}
+```{r results="asis", echo=FALSE, include=is.html}
 htmltools::includeHTML("./covideexample/covid-decorator-example.html")
 ```
+
+```{r include=!is.html, out.width="80%"}
+knitr::include_graphics("latexpics/decoratorexample1.PNG")
+```
+```{r include=!is.html, out.width="80%"}
+knitr::include_graphics("latexpics/decoratorexample2.PNG")
+```
+```{r include=!is.html, out.width="80%"}
+knitr::include_graphics("latexpics/decoratorexample3.PNG")
+```
+```{r include=!is.html, out.width="80%"}
+knitr::include_graphics("latexpics/decoratorexample4.PNG")
+```
+```{r include=!is.html, out.width="80%"}
+knitr::include_graphics("latexpics/decoratorexample5.PNG")
+```
+
 
 ### Number of New Cases with decorators
 
@@ -446,42 +370,7 @@ The previous example reflected the improvements in visual perception by using de
 
 The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown workflow process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much plots inserted onto the same panel. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. This package provides us a potential tool expanding each seperate plot on multiple panels, which will be discussed later in the paper. 
 
-```
-# Load the gapminder data set.
-data(gapminder)
-# gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
-
- 
-# Creating the computational components
-comp_comp_gapminder <- list(
-  `life expectancy` = ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
-  xlim(1948, 2011) + ylim(10, 95) + 
-  theme_bw() + 
-  labs(title = "life expectancy by continent") +
-  facet_wrap(~ country + continent))
-
-#Save file to the disk
- saveRDS(comp_comp_gapminder, "comp-comp_gapminder.rds")
-
- 
-# A not very effective visualization
-ld_gapminder <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
-package = c("ggplot2","gapminder"))
-
-gapminder_example <- c(
- as.character(ld_rmarkdown_header("gapminder plots",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder))
-
-writeLines(gapminder_example, "gapminder-example.Rmd")
-render("gapminder-example.Rmd",html_document())
-system("open gapminder-example.html")
-```
-
-
-```{r gapminder-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
-
+```{r echo=FALSE}
 library(ggplot2)
 library(gapminder)
 library(listdown)
@@ -491,37 +380,28 @@ library(ggplot2)
 library(tidyverse)
 library(DT)
 library(rmarkdown)
+```
 
+```{r gapminder-example-step1, message=FALSE, warning=FALSE}
 # Load the gapminder data set.
 data(gapminder)
-# gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
 
- 
 # Creating the computational components
 comp_comp_gapminder <- list(
   `life expectancy` = ggplot( gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
-  xlim(1948, 2011) + ylim(10, 95) + 
-  theme_bw() + 
-  labs(title = "life expectancy by continent") +
-  facet_wrap(~ country + continent))
+     xlim(1948, 2011) + ylim(10, 95) + theme_bw() + 
+     labs(title = "life expectancy by continent") +
+     facet_wrap(~ country + continent))
 
 #Save file to the disk
- saveRDS(comp_comp_gapminder, "comp-comp_gapminder.rds")
+saveRDS(comp_comp_gapminder, "comp-comp_gapminder.rds")
 
- 
 # A not very effective visualization
 ld_gapminder <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
 package = c("ggplot2","gapminder"))
 
-gapminder_example <- c(
- as.character(ld_rmarkdown_header("gapminder plots",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder))
-
- # writeLines(gapminder_example, "gapminder-example.Rmd")
- #  render("gapminder-example.Rmd",html_document())
- #  system("open gapminder-example.html")
+gapminder_example <- c(as.character(ld_rmarkdown_header("gapminder plots",
+    author = "Leon", date = "2021")), ld_make_chunks(ld_gapminder))
 ```
 
 ```{r gapminderexamplemake1, include=FALSE}
@@ -549,17 +429,13 @@ In the previous writings, trelliscope displays was mentioned several times as a 
 
 After using __facet_trelliscope()__, the gapminder data set returns an visual output much more interpretable than before. However, this was created in a normal R markdown workflow. 
 
-```
+```{r}
 library(ggplot2)
 library(trelliscopejs)
 library(gapminder)
 ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) +
   xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
-  facet_trelliscope(~ country + continent, nrow = 2, ncol = 7, width = 300)
-```
-
-```{r, out.width="100%", out.height="100%"}
-knitr::include_graphics("normaltrelliscope.PNG")
+  facet_trelliscope(~ country + continent, nrow = 2, ncol = 7, width = 300, path=".")
 ```
 
 
@@ -582,30 +458,15 @@ As previous examples demonstrated. The decorator indicates a name of method or f
 
 To exclude the facet argument, we recreated the computational component with no facet arguments, and save the list into an RDS file named _comp-comp_gapminder_trellis.rds_. Everything else remains the same  within a normal R markdown workflow. 
 
-```
+
+```{r gapminder-trellis-example-step1, echo=TRUE, message=FALSE, warning=FALSE}
 # Creating the computational components, this time without the 'facet_wrap' call.
 library(gapminder)
 
 comp_comp_gapminder_trellis <- list(
   `life expectancy full` = ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
-  xlim(1948, 2011) + ylim(10, 95) + 
-  theme_bw() + 
-  labs(title = "life expectancy by continent"))
-
-#Save file to the disk
- saveRDS(comp_comp_gapminder_trellis, "comp-comp_gapminder_trellis.rds")
-```
-
-
-```{r gapminder-trellis-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
-# Creating the computational components, this time without the 'facet_wrap' call.
-library(gapminder)
-
-comp_comp_gapminder_trellis <- list(
-  `life expectancy full` = ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) + 
-  xlim(1948, 2011) + ylim(10, 95) + 
-  theme_bw() + 
-  labs(title = "life expectancy by continent"))
+                           xlim(1948, 2011) + ylim(10, 95) + theme_bw() + 
+                           labs(title = "life expectancy by continent"))
 
 #Save file to the disk
  saveRDS(comp_comp_gapminder_trellis, "comp-comp_gapminder_trellis.rds")
@@ -613,65 +474,37 @@ comp_comp_gapminder_trellis <- list(
 
 The new function __ggtre()__ is created in the initial expression. The function consists of two parts, the first being the original function call. In this example, it was the ggplot objects in the listdown file. The second part is the __facet_trelliscope()__ arguments with the facetting variables and other parameters. The additional argument here is the pathway of the function call. Trelliscope had a bug, it attempts to find the variable attributes with default, which is NULLdata. By adding a pathway using __path="."__ argument, facet_trelliscope now changes the pathway to the current working directory. once knitr is called from rendering the listdown object, initial expression gets evaluated first. The decorator method is directed to the right pathway containing the elements need for the trelliscope argument. 
 
-```
-# Adding trelliscope call in the initial expressions, notice the description: Path ="."
-
-ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder_trellis.rds"),
-package = c("ggplot2","gapminder", "trelliscopejs"),
-decorator = list(ggplot = ggtre), 
-init_expr = {
-  ggtre = function(x) x + facet_trelliscope(~ country + continent,
-                                           nrow = 2, ncol = 7, width = 300, path = ".")
-}
-)
-ld_gapminder_trellis
-```
-
-
-```{r gapminder-trellis-example-step2, echo=FALSE, message=FALSE, warning=FALSE}
+```{r gapminder-trellis-example-step2, echo=TRUE, message=FALSE, warning=FALSE}
 library(listdown)
 # Adding trelliscope call in the initial expressions, notice the description: Path ="."
 
-ld_gapminder_trellis <- listdown(load_cc_expr = readRDS("comp-comp_gapminder_trellis.rds"),
-package = c("ggplot2","gapminder", "trelliscopejs"),
-decorator = list(ggplot = ggtre), 
-init_expr = {
-  ggtre = function(x) x + facet_trelliscope(~ country + continent,
-                                           nrow = 2, ncol = 7, width = 300, path = ".")
-}
-)
+ld_gapminder_trellis <-
+  listdown(load_cc_expr = readRDS("comp-comp_gapminder_trellis.rds"),
+                package = c("ggplot2","gapminder", "trelliscopejs"),
+              decorator = list(ggplot = ggtre), 
+              init_expr = {
+                  ggtre = function(x) x +
+                          facet_trelliscope(~ country + continent,
+                                            nrow = 2, ncol = 7, width = 300, path = ".")
+                          })
 ld_gapminder_trellis
 ```
 
 From the description of the listdown method above, the initial expression that gets to run immediately after packages are loaded are now included. The decorator method for ggplot class objects are now rendered using the method __ggtre()__ described in the initial expression. The next chunk of codes follows a normal listdown workflow and produces the document _gapminder_trellis-example.html_, implementing trelliscope to ggplot. 
 
-```
-gapminder_trellis_example <- c(
- as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis))
-
-writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
-render("gapminder_trellis-example.Rmd",html_document())
-system("open gapminder_trellis-example.html")
-```
-
-
-```{r gapminder-trellis-example, echo=FALSE, message=FALSE, warning=FALSE}
+```{r gapminder-trellis-example, echo=TRUE, message=FALSE, warning=FALSE}
 library(rmarkdown)
 gapminder_trellis_example <- c(
  as.character(ld_rmarkdown_header("gapminder plots using trelliscope",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis))
-
- # writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
+              author = "Leon", date = "2021")), ld_make_chunks(ld_gapminder_trellis))
+```
+```{r include=FALSE}
+ writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
  #  render("gapminder_trellis-example.Rmd",html_document())
  #  system("open gapminder_trellis-example.html")
 ```
 
-```{r results="asis", echo=FALSE}
+```{r results="asis", echo=FALSE, include=is.html}
 cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
@@ -710,27 +543,6 @@ facet_wrap2ts <- function(y){
 
 ```
 
-```
-# Created a generic function for trelliscope
-# y is an ggplot object
-facet_wrap2ts <- function(y){
-  if (is(y$facet, "Facet") && !is(y, "FacetNull")) {
-  ## get variables
-  v = y$facet$vars()
-  ## construct Null facet to replace it
-  o = ggplot()
-  facetNull = o$facet
-  y$facet = facetNull
-  ## construct the formula
-  form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
-  ## construct call
-  c = as.call(list(quote(facet_trelliscope), form,
-                   ncol = 2, path="."))
-  y + eval(c)
-  } else y
-}
-```
-
 This function works as follows: 
 
 1. we assume y is a ggplot class object in the list of objects, and it has an argument for facet. The first __if__ statement states that facet argument of the ggplot object y must have a facet and must not be the class "facetNULL", or empty, which means there simply is no facet. Then the transformation process is continued. 
@@ -752,48 +564,29 @@ This function works as follows:
 To testify if the function works for the gapminder data set, the same listdown object was used from chapter 3.2.1. This time, the initial expression was removed, and the decorator was changed to the new function. The listdown object was saved as _ld_gapminder_trellis_generic_. After adding the headers, we rendered the document to check the outputs. 
 
 
-```
-# Same data set as the first example, switching the decorator this time instead of adding initial expression
-ld_gapminder_trellis_generic <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
-package = c("ggplot2","gapminder", "trelliscopejs"),
-decorator = list(ggplot = facet_wrap2ts)
-)
+
+```{r gapminder-trellis-generic-example-step1, echo=TRUE, message=FALSE, warning=FALSE}
+## Same data set as the first example, switching the decorator this time instead of adding initial expression
+ld_gapminder_trellis_generic <-
+  listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+                package = c("ggplot2","gapminder", "trelliscopejs"),
+              decorator = list(ggplot = facet_wrap2ts)
+  )
 
 gapminder_trellis_generic_example <- c(
  as.character(ld_rmarkdown_header("gapminder plots trelliscope generic",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis_generic))
+              author = "Leon", date = "2021")), ld_make_chunks(ld_gapminder_trellis_generic))
 
 ld_gapminder_trellis_generic
+```
+```{r include=FALSE}
 # Make the document
 writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example.Rmd")
-render("gapminder_trellis_generic-example.Rmd",html_document())
-system("open gapminder_trellis_generic-example.html")
-```
-
-
-```{r gapminder-trellis-generic-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
-## Same data set as the first example, switching the decorator this time instead of adding initial expression
-ld_gapminder_trellis_generic <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
-package = c("ggplot2","gapminder", "trelliscopejs"),
-decorator = list(ggplot = facet_wrap2ts)
-)
-
-gapminder_trellis_generic_example <- c(
- as.character(ld_rmarkdown_header("gapminder plots trelliscope generic",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis_generic))
-
-ld_gapminder_trellis_generic
-# Make the document
- # writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example.Rmd")
  #  render("gapminder_trellis_generic-example.Rmd",html_document())
  #  system("open gapminder_trellis_generic-example.html")
 ```
 
-```{r results="asis", echo=FALSE}
+```{r results="asis", echo=FALSE, include=is.html}
 cat('<iframe src="wrap2ts/gapminder_trellis_generic-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
@@ -827,69 +620,32 @@ facet_tsplotly <- function(p, ...) {
 }
 ```
 
-```
-# If p is an ggplot object
-facet_tsplotly <- function(p, ...) {
-  if (is(p$facet, "Facet") && !is(p, "FacetNull")) {
-    v = p$facet$vars()
-    o = ggplot()
-    FacetNull = o$facet
-    p$facet = FacetNull
-    form = eval(parse(text=paste0("~ ", paste(v, collapse=" + "))))
-    c = as.call(list(quote(facet_trelliscope), eval(parse(text=paste0("~ ", paste(v, collapse=" + ")))),
-                     ncol = 2,path=".", as_plotly = TRUE))
-    #the function call with the plotly argument gets evaluated 
-    p + eval(c)
-  }  else p
-}
-```
-
 ### Testing facet_tsplotly on Gapminder Data set
 
 To testify if the decorator method is working. Again, the RDS file created for the gapminder data set from chapter 3.2.1 will be used. The decorator in the newly created listown object _ld_gapminder_trellis_plotly_ was changed to __facet_tsplotly__ this time. 
 
-```
+```{r gapminder-trellis-plotly-example-step1, echo=TRUE, message=FALSE, warning=FALSE}
 library(plotly)
+
 ## Still the same data set as the first example
-ld_gapminder_trellis_plotly <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
-package = c("ggplot2","gapminder", "trelliscopejs","plotly"),
-decorator = list(ggplot = facet_tsplotly)
+ld_gapminder_trellis_plotly <-
+  listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
+                package = c("ggplot2","gapminder", "trelliscopejs", "plotly"),
+              decorator = list(ggplot = facet_tsplotly)
 )
 
 gapminder_trellis_plotly_example <- c(
  as.character(ld_rmarkdown_header("gapminder plots trelliscope plotly",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis_plotly))
+              author = "Leon", date = "2021")), ld_make_chunks(ld_gapminder_trellis_plotly))
 ld_gapminder_trellis_plotly
-
-writeLines(gapminder_trellis_plotly_example, "gapminder_trellis_plotly-example.Rmd")
-render("gapminder_trellis_plotly-example.Rmd",html_document())
-system("open gapminder_trellis_plotly-example.html")
 ```
-
-
-```{r gapminder-trellis-plotly-example-step1, echo=FALSE, message=FALSE, warning=FALSE}
-library(plotly)
-## Still the same data set as the first example
-ld_gapminder_trellis_plotly <- listdown(load_cc_expr = readRDS("comp-comp_gapminder.rds"),
-package = c("ggplot2","gapminder", "trelliscopejs","plotly"),
-decorator = list(ggplot = facet_tsplotly)
-)
-
-gapminder_trellis_plotly_example <- c(
- as.character(ld_rmarkdown_header("gapminder plots trelliscope plotly",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_gapminder_trellis_plotly))
-ld_gapminder_trellis_plotly
-
+```{r include=FALSE}
  # writeLines(gapminder_trellis_plotly_example, "gapminder_trellis_plotly-example.Rmd")
  #  render("gapminder_trellis_plotly-example.Rmd",html_document())
  #  system("open gapminder_trellis_plotly-example.html")
 ```
 
-```{r results="asis", echo=FALSE}
+```{r results="asis", include=is.html, echo=FALSE}
 cat('<iframe src="tsplotly/gapminder_trellis_plotly-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
@@ -944,34 +700,8 @@ In this case study, we created a new list named "comp_comp_covid_trellis". This 
 
 A full header was then added, the final HTML document _covid_trellis-example.html_ was rendered and included below. 
 
-```
-#Save the list object
-saveRDS(comp_comp_covid_trellis, "comp-comp_covid_trellis.rds")
- 
- 
-# Creating the listdown package
-ld_covid_trellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
-package = c("ggplot2","trelliscopejs", "DT"),
-decorator = list(ggplot = facet_tsplotly, 
-                 data.frame = datatable)
-)
 
-
-# Adding a header
-covid_trellis_example <- c(
- as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_covid_trellis))
-
-# Making the document
-writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
-render("covid_trellis-example.Rmd",html_document())
-system("open covid_trellis-example.html")
-```
-
-
-```{r covid-trellis-step1, echo=FALSE, message=FALSE, warning=FALSE}
+```{r covid-trellis-step1, echo=TRUE, message=FALSE, warning=FALSE}
 library(trelliscopejs)
 library(listdown)
 library(tidyverse)
@@ -985,41 +715,38 @@ names(covidcountries)[1] <- "Date_reported"
 # Creating the list
 comp_comp_covid_trellis <- list(
   Data = covidcountries,
-  `New COVID-19 details per day for each Country` = ggplot(covidcountries) + geom_point(aes(x=Date_reported, y=New_cases, group=Country), size = 0.6) + 
-  geom_line(aes(x=Date_reported, y=New_cases, group=Country), size = 0.4) +  scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") +
+  `New COVID-19 details per day for each Country` = ggplot(covidcountries) +
+    geom_point(aes(x=Date_reported, y=New_cases, group=Country), size = 0.6) + 
+    geom_line(aes(x=Date_reported, y=New_cases, group=Country), size = 0.4) +
+    scale_x_date(date_breaks = "3 month", date_labels =  "%b %Y") +
     theme_bw() +
-  labs(title = "COVID-19 Details by Country") + 
+    labs(title = "COVID-19 Details by Country") + 
     facet_wrap(vars(Country))
-
-    )
-
+  )
 
 #Save file to the disk
- saveRDS(comp_comp_covid_trellis, "comp-comp_covid_trellis.rds")
+saveRDS(comp_comp_covid_trellis, "comp-comp_covid_trellis.rds")
  
- 
-# Creating the listdown package
-ld_covid_trellis <- listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
-package = c("ggplot2","trelliscopejs", "DT"),
-decorator = list(ggplot = facet_tsplotly, 
-                 data.frame = datatable)
+# Creating the listdown object
+ld_covid_trellis <-
+  listdown(load_cc_expr = readRDS("comp-comp_covid_trellis.rds"),
+                package = c("ggplot2","trelliscopejs", "DT"),
+              decorator = list(ggplot = facet_tsplotly, 
+                               data.frame = datatable)
 )
-
 
 # Adding a header
 covid_trellis_example <- c(
- as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS",
-author = "Leon",
- date = "2021")),
-ld_make_chunks(ld_covid_trellis))
-
-# Making the document
- # writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
- #  render("covid_trellis-example.Rmd",html_document())
- #  system("open covid_trellis-example.html")
+ as.character(ld_rmarkdown_header("Covid plots using trelliscopeJS", author = "Leon",
+              date = "2021")), ld_make_chunks(ld_covid_trellis))
 ```
-
-```{r results="asis", echo=FALSE}
+```{r include=FALSE}
+# Making the document
+ writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
+# render("covid_trellis-example.Rmd",html_document())
+#  system("open covid_trellis-example.html")
+```
+```{r results="asis", echo=FALSE, include=is.html}
 cat('<iframe src="covidfinal/covid_trellis-example.html" width=920 height=600 frameBorder=0 data-external="1">
 </iframe>')
 ```
@@ -1101,7 +828,7 @@ Keeping the above discussions in mind, the listdown package with a powerful visu
 
 ## Packages
 
-```
+```{r}
 library(listdown)
 library(ggplot2)
 library(scales)
@@ -1118,7 +845,7 @@ library(knitr)
 
 ## COVID-19 Examples
 
-```
+```{r}
 # Read in the regions data set.
 regions = read.csv("COVID-regions-2021.csv", 
                     colClasses=c("character", "Date", rep("numeric", 2)))
@@ -1164,7 +891,7 @@ computational_components_covid <- list(
 
 #Save file to the disk
 saveRDS(computational_components_covid, "comp-comp_covid.rds")
- omp_covid <- readRDS("comp-comp_covid.rds")
+ comp_covid <- readRDS("comp-comp_covid.rds")
 
 ld_cc_dendro(comp_covid)
 
@@ -1190,14 +917,14 @@ library(rmarkdown)
 
 # Write the document.
 writeLines(covidexample, "covid-example.Rmd")
-ender("covid-example.Rmd",html_document())
-system("open covid-example.html")
+#render("covid-example.Rmd",html_document())
+#system("open covid-example.html")
 
 ```
 
 ## COVID-19 Decorator Examples
 
-```
+```{r}
 #Add in data and decorators, Data added in this time
 computational_components_covid$Data <- regions
 saveRDS(computational_components_covid, "comp-comp_covid.rds")
@@ -1213,13 +940,13 @@ coviddecoratorexample <- c(
           ld_make_chunks(ld_new_data))
 
 writeLines(coviddecoratorexample, "covid-decorator-example.Rmd")
-render("covid-decorator-example.Rmd",html_document())
-system("open covid-decorator-example.html")
+#render("covid-decorator-example.Rmd",html_document())
+#system("open covid-decorator-example.html")
 ```
 
 Gapminder Examples
 
-```
+```{r}
 # Load the gapminder data set.
 data(gapminder)
 # gapminder$country[gapminder$country == "Cote d'Ivoire"] = "CotedIvoire"
@@ -1247,25 +974,25 @@ author = "Leon",
 ld_make_chunks(ld_gapminder))
 
 writeLines(gapminder_example, "gapminder-example.Rmd")
-render("gapminder-example.Rmd",html_document())
-system("open gapminder-example.html")
+#render("gapminder-example.Rmd",html_document())
+#system("open gapminder-example.html")
 ```
 
 ## Gapminder using Trelliscope
 
-```
+```{r}
 # What trelliscope would look like when we use trelliscope instead of facet
 library(ggplot2)
 library(trelliscopejs)
 library(gapminder)
 ggplot(gapminder) + geom_point(aes(x = year, y = lifeExp)) +
   xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
-  facet_trelliscope(~ country + continent, nrow = 2, ncol = 7, width = 300)
+  facet_trelliscope(~ country + continent, nrow = 2, ncol = 7, width = 300, path=".")
 ```
 
 ## Solution Using function __ggtre__
 
-```
+```{r}
 # Creating the computational components, this time without the 'facet_wrap' call.
 library(gapminder)
 
@@ -1299,13 +1026,13 @@ ld_make_chunks(ld_gapminder_trellis))
 
 #Rendering html file
 writeLines(gapminder_trellis_example, "gapminder_trellis-example.Rmd")
-render("gapminder_trellis-example.Rmd",html_document())
-system("open gapminder_trellis-example.html")
+#ender("gapminder_trellis-example.Rmd",html_document())
+#system("open gapminder_trellis-example.html")
 ```
 
 ## Function __facet_wrap2ts__
 
-```
+```{r}
 # Created a generic function for trelliscope
 # y is an ggplot object
 facet_wrap2ts <- function(y){
@@ -1341,13 +1068,13 @@ ld_gapminder_trellis_generic
 
 # Make the document
 writeLines(gapminder_trellis_generic_example, "gapminder_trellis_generic-example.Rmd")
-render("gapminder_trellis_generic-example.Rmd",html_document())
-system("open gapminder_trellis_generic-example.html")
+#render("gapminder_trellis_generic-example.Rmd",html_document())
+#system("open gapminder_trellis_generic-example.html")
 ```
 
 ## Function facet_tsplotly 
 
-```
+```{r}
 # If p is an ggplot object
 facet_tsplotly <- function(p, ...) {
   if (is(p$facet, "Facet") && !is(p, "FacetNull")) {
@@ -1377,12 +1104,12 @@ ld_make_chunks(ld_gapminder_trellis_plotly))
 ld_gapminder_trellis_plotly
 
 writeLines(gapminder_trellis_plotly_example, "gapminder_trellis_plotly-example.Rmd")
-render("gapminder_trellis_plotly-example.Rmd",html_document())
-system("open gapminder_trellis_plotly-example.html")
+#render("gapminder_trellis_plotly-example.Rmd",html_document())
+#system("open gapminder_trellis_plotly-example.html")
 ```
 
 ## COVID-19 Case Study
-```
+```{r}
 
 #Reading in the data and cleaning
 covidcountries <- read.csv("WHO-COVID-19-global-data.csv",
@@ -1429,8 +1156,8 @@ ld_make_chunks(ld_covid_trellis))
 
 # Making the document
  writeLines(covid_trellis_example, "covid_trellis-example.Rmd")
-  render("covid_trellis-example.Rmd",html_document())
-  system("open covid_trellis-example.html")
+# render("covid_trellis-example.Rmd",html_document())
+# system("open covid_trellis-example.html")
 ```
 
 
