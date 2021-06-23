@@ -327,7 +327,7 @@ From the html document produced using listdown, the output of the computational 
 
 ##### 2.3.6 Number of New Cases and Death
 
-The third and fourth graph reveals the relationship of number of new cases and number of death in the specified time frame. The advantage of facetting becomes obvious in this situation. Scattered points spreaded around the bottom left corner of the graphing area, such high dense of observation makes interpretation almost impossible. The final plot subsets the original scatterplot into different regions, and used different color cues to highlight each region uniquely. Almost all regions shows a high number of death as the number new cases increases, and follows a positive linear relationship except for European region. With the increasing number of new cases, the number of death seperates into two extremes. On one side of the Y-shaped branch, the number of death accompanied by number of new cases are significantly lower than other regions and vice versa on the other branch. According to WHO website and Wikipedia's page COVID-19 pandemic in Europe, the lack of Vigilance and failure of taking effective action in most European countries leads to the high death number over the who region. 
+The third and fourth graph reveals the relationship of number of new cases and number of death in the specified time frame. The advantage of facetting becomes obvious in this situation. Scattered points spread around the bottom left corner of the graphing area, such high dense of observation makes interpretation almost impossible. The final plot subsets the original scatterplot into different regions, and used different color cues to highlight each region uniquely. Almost all regions shows a high number of death as the number new cases increases, and follows a positive linear relationship except for European region. With the increasing number of new cases, the number of death separates into two extremes. On one side of the Y-shaped branch, the number of death accompanied by number of new cases are significantly lower than other regions and vice versa on the other branch. According to WHO website and Wikipedia's page COVID-19 pandemic in Europe, the lack of Vigilance and failure of taking effective action in most European countries leads to the high death number over the who region. 
 
 
 # CH3 The Usage of Decorators 
@@ -436,7 +436,7 @@ The previous example reflected the improvements in visual perception by using de
 
 ### 3.2.1 Visualizing the Gapminder Data Set
 
-The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown workflow process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much plots inserted onto the same panel. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. This package provides us a potential tool expanding each seperate plot on multiple panels, which will be discussed later in the paper. 
+The original data was loaded and added into the list of files. From the description (Bryan, 2017), the gapminder data set contains information on the life expectancy, GDP per captia and population of 142 countries with their continents from 1952 to 2007. In comparison to the case study from chapter 2.3, the designated facetting variable increased from 6 to 142. We will repeat the listdown workflow process, the RDS file saved are used in the next chapter for advanced solutions. The chunk of codes below produces a ggplot with __facet_wrap()__ using listdown. the final layout is folded because of too much plots inserted onto the same panel. The trelliscopejs package(Hafen, Gosink, McDermott, Rodland, Kleese-Van Dam and Cleveland, 2013) converts ggplot with __facet_wrap()__ argument into individual plots with interactive interface. This package provides us a potential tool expanding each separate plot on multiple panels, which will be discussed later in the paper. 
 
 ```
 # Load the gapminder data set.
@@ -670,11 +670,11 @@ cat('<iframe src="ggtre/gapminder_trellis-example.html" width=920 height=600 fra
 
 ## 4.2 A More Generalized Solution
 
-Each country can now be shown clearly like the output from a normal R markdown workflow. Despite this simple and quick approach has reached the ultimate goal, it has multiple problems that needs to be considered. Firstly, in this approach, the function in the listdown file was modified to fit the requirement for using __ggtre()__ added. To be more exact, we deliberately deleted the __facet_wrap()__ argument from the ggplot object "life expectancy full" in the list "comp_comp_gapminder_trellis" to suit the function in initial expression. Secondly, the initial expression are passed onto all objects of the same class within the same listdown file. If there were some ggplot objects in the listdown file that the author do not wish to seperate, it is not possible when this function is applied. Thirdly, the variables in __ggtre()__ are fixed for each listdown file. This means only the same variables are used in all ggplot objects in a data set, if there were any ggplot objects which does not have the variable described in __ggtre()__, this approach would not work. It was also suggested the number of initial expression and the complexity of the initial expression shall be kept minimal (Kane,Jiang and Urbanek, 2020). The initial expression is considerably long in this case, and could be even longer if further arguments were added. A more generalized approach shall be developed. 
+Each country can now be shown clearly like the output from a normal R markdown workflow. Despite this simple and quick approach has reached the ultimate goal, it has multiple problems that needs to be considered. Firstly, in this approach, the function in the listdown file was modified to fit the requirement for using __ggtre()__ added. To be more exact, we deliberately deleted the __facet_wrap()__ argument from the ggplot object "life expectancy full" in the list "comp_comp_gapminder_trellis" to suit the function in initial expression. Secondly, the initial expression are passed onto all objects of the same class within the same listdown file. If there were some ggplot objects in the listdown file that the author do not wish to separate, it is not possible when this function is applied. Thirdly, the variables in __ggtre()__ are fixed for each listdown file. This means only the same variables are used in all ggplot objects in a data set, if there were any ggplot objects which does not have the variable described in __ggtre()__, this approach would not work. It was also suggested the number of initial expression and the complexity of the initial expression shall be kept minimal (Kane,Jiang and Urbanek, 2020). The initial expression is considerably long in this case, and could be even longer if further arguments were added. A more generalized approach shall be developed. 
 
 
 ### 4.3 facet_wrap to facet_trelliscope
-The common ground for  __facet_wrap()__ and __facet_trelliscope()__ is their concept of dividing the data into smaller subsets and recombine them into either a panel or multiple arrays of plots. For the two different arguments, the variable used as the subsetting condition is the same through out the process. If a function could pull the facetting variables out from __facet_wrap()__, then places it into __facet_trelliscope()__, then we could get rid of the __facet_wrap()__ in the function without the need to modify the original ggplot funtion from listdown. The only problem remains is the facetting layer left in the old ggplot arguments which needs to be removed and replaced by the new trelliscope facets. The function __facet_wrap2ts()__ was designed to solve the issues mention above. This solves the problem from chapter 4.1 in a more generalized way, no modifications needs to be carried out on the original ggplot function in listdown. 
+The common ground for  __facet_wrap()__ and __facet_trelliscope()__ is their concept of dividing the data into smaller subsets and recombine them into either a panel or multiple arrays of plots. For the two different arguments, the variable used as the subsetting condition is the same through out the process. If a function could pull the facetting variables out from __facet_wrap()__, then places it into __facet_trelliscope()__, then we could get rid of the __facet_wrap()__ in the function without the need to modify the original ggplot function from listdown. The only problem remains is the facetting layer left in the old ggplot arguments which needs to be removed and replaced by the new trelliscope facets. The function __facet_wrap2ts()__ was designed to solve the issues mention above. This solves the problem from chapter 4.1 in a more generalized way, no modifications needs to be carried out on the original ggplot function in listdown. 
 
 #### 4.3.1 Function facet_wrap2ts
 
@@ -737,7 +737,7 @@ This function works as follows:
 
 6. The last step is to call the original ggplot object y combined with the evaluated result of the new function __c__. This returns an output that shall look identical to using __facet_trelliscope()__ in normal R markdown files.
 
-7. There are also cases this decorator is applied improperly, for example when the ggplot object y does not contain any facet arguments, that is the attribute being facetNULL. This is encountered by using the __else__ from the if loop. The output remains the exact same of y untouched. If users intend to add a __facet_wrap()__ as a decorator, then function style __ggtre__ can be used. It requires the user to manually set the variables for facetting, and the decorator function shall be included as an intial expression, which gets evaluated before the knitting process. 
+7. There are also cases this decorator is applied improperly, for example when the ggplot object y does not contain any facet arguments, that is the attribute being facetNULL. This is encountered by using the __else__ from the if loop. The output remains the exact same of y untouched. If users intend to add a __facet_wrap()__ as a decorator, then function style __ggtre__ can be used. It requires the user to manually set the variables for facetting, and the decorator function shall be included as an initial expression, which gets evaluated before the knitting process. 
 
 #### 4.3.2 Testing facet_wrap2ts on Gapminder Data set
 
@@ -838,7 +838,7 @@ facet_tsplotly <- function(p, ...) {
 
 #### 4.4.2 Testing facet_tsplotly on Gapminder Data set
 
-To testify if the decorator method is working. Again, the RDS file created for the gapminder data set from chapter 3.2.1 will be used. The decorator in the newly created listown object _ld_gapminder_trellis_plotly_ was changed to __facet_tsplotly__ this time. 
+To testify if the decorator method is working. Again, the RDS file created for the gapminder data set from chapter 3.2.1 will be used. The decorator in the newly created listdown object _ld_gapminder_trellis_plotly_ was changed to __facet_tsplotly__ this time. 
 
 ```
 library(plotly)
@@ -892,6 +892,7 @@ The output was interactive. Each individual observations for each country was in
 # CH5 Decorator Application: Reporting number of new cases and Death information from COVID Data
 
 # 5.1 The Data Set
+
 From the previous chapters, the trelliscope works especially well with big data set having variables with multiple levels. The plotly interactive plots showed more details on each individual plots. The decorator function combining the two methods was created and testified. In this chapter, lets go back to the full COVID-19 data. The data set was sourced from World Health Organization official website. All data was provided to the date before this paper was completely finished. Based on the description (https://covid19.who.int/info/)The full data set contains the following information:
 
 - Date_reported
@@ -900,11 +901,11 @@ The date reported variable was in the class type of dates. The variable records 
 
 - Country_code
 
-The Country code variable is the ISO (International Organization for Standardization) Alpha-2 coundtry codes. The column was recorded with character strings.
+The Country code variable is the ISO (International Organization for Standardization) Alpha-2 country codes. The column was recorded with character strings.
 
 - Country
 
-The Country variable contains the names of all the WHO membership countries, some names aslo stands for political regions or areas if not claimed to be a country. The column type is also character string class.  
+The Country variable contains the names of all the WHO membership countries, some names also stands for political regions or areas if not claimed to be a country. The column type is also character string class.  
 
 - WHO_region
 
